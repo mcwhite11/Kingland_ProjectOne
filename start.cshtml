@@ -4,14 +4,15 @@
         //@Response.Redirect("Default.cshtml");
     }
 
-    int form = Request.QueryString["form"].AsInt(); //Set equal to get data or whatever?
+    int form = Request.QueryString["form"].AsInt();
+    
 
     /**
 
     require_once('functions/validatePermissions.php');
     */
 
-    if ( form.Equals(null) ) {
+    if ( form == 0 ) {
         form = 1;
     }
 }
@@ -90,12 +91,14 @@
 									// this all relates to the progress bar on the new hire side of the site
 									
 									//grabs a variable from the database to check if the additional info form is done
-									include('functions/connect.php');
-									$addInfo = mysqli_query($con,"SELECT * FROM addInfo WHERE user = '" . $_SESSION['user'] . "'");
-									while ($addInfoRow = mysqli_fetch_array($addInfo)) {
-										$aiStat = $addInfoRow['isDone'];
-									}
-									
+
+@{
+        //Connnect to database and query to check credentials
+        //var db = Database.Open("temp");
+        //var addInfo = db.QuerySingle("SELECT * FROM users WHERE user =  @0 and pass = @1", user, pass);
+        //var aiStat = @addInfo.isDone;
+
+        }
 									//grabs a variable from the database to check if the direct deposit form is done
 									$authAgree = mysqli_query($con,"SELECT * FROM authAgree WHERE user = '" . $_SESSION['user'] . "'");
 									while ($authAgreeRow = mysqli_fetch_array($authAgree)) {
@@ -198,9 +201,7 @@
                                  @{
 									switch ( @form ) {
                                      case 1:
-                                        <text>
-                                            Form 1
-                                        </text>
+                                        @RenderPage("forms/form1.cshtml");
                                      break;
 
                                      case 2:
