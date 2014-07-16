@@ -1,20 +1,55 @@
 ﻿@{
-   
+    var user = Session["user"];    
+
+   //Forward users not logged in back to the homepage.
     if (Session["user"] == null) {
-        //@Response.Redirect("Default.cshtml");
+       Response.Redirect("Default.cshtml");
     }
 
+    //Grab the form from get?form=x to load that form
     int form = Request.QueryString["form"].AsInt();
     
-
-    /**
-
-    require_once('functions/validatePermissions.php');
-    */
-
+    //If no form specified, set it to the first.
     if ( form == 0 ) {
         form = 1;
     }
+
+    //Some permissions updating.. do this later.
+    //require_once('functions/validatePermissions.php');
+
+    // this all relates to the progress bar on the new hire side of the site
+
+    //Connnect to database and query to check if this form is done
+    var db = Database.Open("temp");
+
+    //Check Add Info
+    var formInfo = db.QuerySingle("SELECT * FROM addInfo WHERE user =  @0", user);
+    var aiStat = @formInfo.isDone;
+
+    //Check Direct Deposit
+    formInfo = db.QuerySingle("SELECT * FROM authAgree WHERE user =  @0", user);
+    var ddStat = @formInfo.isDone;
+
+    //Check Safe Harbor
+    formInfo = db.QuerySingle("SELECT * FROM safeHarbor WHERE user =  @0", user);
+    var shStat = @formInfo.isDone;
+
+    //Check tech Agree
+    formInfo = db.QuerySingle("SELECT * FROM techAgree WHERE user =  @0", user);
+    var taStat = @formInfo.isDone;
+
+    //Check handbookReceipt
+    formInfo = db.QuerySingle("SELECT * FROM handbookReceipt WHERE user =  @0", user);
+    var ehStat = @formInfo.isDone;
+
+    //Check tax info
+    formInfo = db.QuerySingle("SELECT * FROM users WHERE user =  @0", user);
+    var w4Stat = @formInfo.w4Done;
+    var i9Stat = @formInfo.i9Done;
+    var iaTaxStat = @formInfo.iaTaxDone;
+        
+    //Keeping track of the number of forms done
+    int progress = 0;
 }
 
 <!DOCTYPE html>
@@ -85,96 +120,41 @@
 						<div class="welcome">
 							<h3> 
 								<span class="colored">Getting Started with Kingland Systems</span>
-							</h3>
-							
-                            <?php
-									// this all relates to the progress bar on the new hire side of the site
+							</h3>				
 									
-									//grabs a variable from the database to check if the additional info form is done
-
-@{
-        //Connnect to database and query to check credentials
-        //var db = Database.Open("temp");
-        //var addInfo = db.QuerySingle("SELECT * FROM users WHERE user =  @0 and pass = @1", user, pass);
-        //var aiStat = @addInfo.isDone;
-
-        }
-									//grabs a variable from the database to check if the direct deposit form is done
-									$authAgree = mysqli_query($con,"SELECT * FROM authAgree WHERE user = '" . $_SESSION['user'] . "'");
-									while ($authAgreeRow = mysqli_fetch_array($authAgree)) {
-										$ddStat = $authAgreeRow['isDone'];
-									}
-									
-									//grab a variable from the database to check if the safe harbor form is complete
-									$safeHarbor = mysqli_query($con,"SELECT * FROM safeHarbor WHERE user = '" . $_SESSION['user'] . "'");
-									while ($safeHarborRow = mysqli_fetch_array($safeHarbor)) {
-										$shStat = $safeHarborRow['isDone'];
-									}
-									
-									//grab a variable from the database to check if the student consent form is complete
-									$studentConsent = mysqli_query($con,"SELECT * FROM studentConsent WHERE user = '" . $_SESSION['user'] . "'");
-									while ($studentConsentRow = mysqli_fetch_array($studentConsent)) {
-										$svStat = $studentConsentRow['isDone'];
-									}
-									
-									//grab a variable from the database to check if the tech agree form is complete
-									$techAgree = mysqli_query($con,"SELECT * FROM techAgree WHERE user = '" . $_SESSION['user'] . "'");
-									while ($techAgreeRow = mysqli_fetch_array($techAgree)) {
-										$taStat = $techAgreeRow['isDone'];
-									}
-									
-									//grab a variable from the database to check if the employee handbook form is complete
-									$handbookReceipt = mysqli_query($con,"SELECT * FROM handbookReceipt WHERE user = '" . $_SESSION['user'] . "'");
-									while ($handbookReceiptRow = mysqli_fetch_array($handbookReceipt)) {
-										$ehStat = $handbookReceiptRow['isDone'];
-									}
-									
-									//grab a variable from the database to check if the tax forms form is complete
-									$list = mysqli_query($con,"SELECT * FROM users WHERE user = '" . $_SESSION['user'] . "'");
-									while ($row = mysqli_fetch_array($list)) {
-										$w4Stat = $row['w4Done'];
-										$i9Stat = $row['i9Done']; 
-										$iaTaxStat = $row['iaTaxDone'];
-									}
-									// variable used to keep track of how many forms are done
-									$progress = 0;
-									
-									echo "<a href='start.php?form=1'>Additional Information</a> | ";
-									
-									if ( $aiStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=2'>Direct Deposit</a> | ";
-									} if ( $ddStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=3'>Student Verification</a> | ";
-									} if ( $svStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=4'>Employee Handbook</a> | ";
-									} if ( $ehStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=5'>Safe Harbor</a> | ";
-									} if ( $shStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=6'>Technology Agreement</a> | ";
-									} if ( $taStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=7'>W-4 Tax Form</a> | ";
-									} if ( $w4Stat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=8'>I-9 Eligibility form</a> | ";
-									} if ( $i9Stat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=9'>Iowa State Tax Form</a> | ";
-									} if ( $iaTaxStat ) {
-										$progress += 1;
-										echo "<a href='start.php?form=10'>Review and Submit</a> ";
-									}
-									
-									echo " <br> <meter id='progressBar' value='" . $progress ."' min='0' max='9' style='height: 15px; width: 84%;'></meter> <br>";
-									
-									//end of progress bar stuff
-								?> 
-                              
+						    <a href='start.cshtml?form=1'>Additional Information</a> | 
+							@{
+								if ( @aiStat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=2'>Direct Deposit</a> | </text>
+								} if ( @ddStat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=3'>Student Verification</a> | </text>
+								} if ( @shStat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=4'>Employee Handbook</a> | </text>
+								} if ( @ehStat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=5'>Safe Harbor</a> | </text>
+								} if ( @shStat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=6'>Technology Agreement</a> | </text>
+								} if ( @taStat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=7'>W-4 Tax Form</a> | </text>
+								} if ( @w4Stat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=8'>I-9 Eligibility form</a> | </text>
+								} if ( @i9Stat == 1 ) {
+									progress++;
+									<text><a href='start.cshtml?form=9'>Iowa State Tax Form</a> | </text>
+								} if ( @iaTaxStat == 1) {
+									progress++;
+									<text><a href='start.cshtml?form=10'>Review and Submit</a> </text>
+								}
+                            }
+							<!-- Output that status bar -->		
+							<br> <meter id='progressBar' value='@progress' min='0' max='9' style='height: 15px; width: 84%;'></meter> <br />
 						</div>
 					</div>
 				</div>
@@ -229,11 +209,11 @@
                                      break;
                                      
                                      case 8:
-
+                                        @RenderPage("forms/form8.cshtml");
                                      break;
                                      
                                      case 9:
-
+                                        @RenderPage("forms/form9.cshtml");
                                      break;
                                      
                                      case 10:

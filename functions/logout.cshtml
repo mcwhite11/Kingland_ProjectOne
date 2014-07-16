@@ -1,15 +1,11 @@
 ﻿@{
-    
+    Session.Remove("user");
+    Session.Remove("isAdmin");
+    Session.Remove("isHR");
+    Session.Remove("isIT");
+    Session.Remove("isPR");
+    Session.Remove("isHM");
+    Session.Abandon();
+    Response.Redirect("../Default.cshtml");
 }
 
-<!DOCTYPE html>
-
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title></title>
-    </head>
-    <body>
-        
-    </body>
-</html>

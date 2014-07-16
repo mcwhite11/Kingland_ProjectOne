@@ -1,0 +1,28 @@
+﻿@{
+    
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+    <h4 style="margin-left:50px">Employee Eligibility</h4>
+    <div width="635px">
+	<center><b>For the I-9 form specifically, feel free to fill all parts of page 7 that apply to you. DO NOT sign or date this document. You are required to print out page 7 and 8 to bring in on your first day.
+			   You will sign and date the I-9 form on your first day to meet federal requlations.</b></center>
+
+	<object style="height:950px" width="100%  name="I9" src="documents/I9.pdf" type="application/pdf">
+
+	</object>
+	
+	<form method="post" action="handlers/i9handler.php" id="i9Form" style="margin-left:80px;width:625px"> 
+	<a style="margin-left:50px;font-size:14px;" href="start.php?form=7"> Back </a>
+	<a style="margin-left:600px;font-size:14px;cursor: pointer; cursor: hand;" onClick="document.getElementById('i9Form').submit();" > Next </a>
+	</form>
+</div>
+    </body>
+</html>
