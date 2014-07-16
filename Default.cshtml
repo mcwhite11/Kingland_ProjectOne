@@ -1,9 +1,9 @@
 ﻿@{
     if (Session["user"] != null) {
         if (Session["isAdmin"].Equals(1)) {
-             @Response.Redirect("~/cpanel.cshtml");
+             Response.Redirect("~/start.cshtml");
         } else {
-             @Response.Redirect("~/start.cshtml");
+             Response.Redirect("~/cpanel.cshtml");
         }
     }    
 
