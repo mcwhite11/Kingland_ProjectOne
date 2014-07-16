@@ -1,0 +1,103 @@
+﻿@{
+    
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        
+    </body>
+</html>
+
+<?php
+	session_start();
+	include('functions/connect.php');
+	
+		$addInfo = mysqli_query($con,"SELECT * FROM addInfo WHERE user = '" . $_SESSION['user'] . "'");
+		while ($addInfoRow = mysqli_fetch_array($addInfo)) {
+			$aiStat = $addInfoRow['isDone'];
+		}
+		
+		//grabs a variable from the database to check if the direct deposit form is done
+		$authAgree = mysqli_query($con,"SELECT * FROM authAgree WHERE user = '" . $_SESSION['user'] . "'");
+		while ($authAgreeRow = mysqli_fetch_array($authAgree)) {
+			$ddStat = $authAgreeRow['isDone'];
+		}
+		
+		//grab a variable from the database to check if the safe harbor form is complete
+		$safeHarbor = mysqli_query($con,"SELECT * FROM safeHarbor WHERE user = '" . $_SESSION['user'] . "'");
+		while ($safeHarborRow = mysqli_fetch_array($safeHarbor)) {
+			$shStat = $safeHarborRow['isDone'];
+		}
+		
+		//grab a variable from the database to check if the student consent form is complete
+		$studentConsent = mysqli_query($con,"SELECT * FROM studentConsent WHERE user = '" . $_SESSION['user'] . "'");
+		while ($studentConsentRow = mysqli_fetch_array($studentConsent)) {
+			$svStat = $studentConsentRow['isDone'];
+		}
+		
+		//grab a variable from the database to check if the tech agree form is complete
+		$techAgree = mysqli_query($con,"SELECT * FROM techAgree WHERE user = '" . $_SESSION['user'] . "'");
+		while ($techAgreeRow = mysqli_fetch_array($techAgree)) {
+			$taStat = $techAgreeRow['isDone'];
+		}
+		
+		//grab a variable from the database to check if the employee handbook form is complete
+		$handbookReceipt = mysqli_query($con,"SELECT * FROM handbookReceipt WHERE user = '" . $_SESSION['user'] . "'");
+		while ($handbookReceiptRow = mysqli_fetch_array($handbookReceipt)) {
+			$ehStat = $handbookReceiptRow['isDone'];
+		}
+		
+		//grab a variable from the database to check if the tax forms form is complete
+		$list = mysqli_query($con,"SELECT * FROM users WHERE user = '" . $_SESSION['user'] . "'");
+		while ($row = mysqli_fetch_array($list)) {
+			$w4Stat = $row['w4Done'];
+			$i9Stat = $row['i9Done']; 
+			$iaTaxStat = $row['iaTaxDone'];
+		}
+		
+		if($aiStat && $ddStat && $shStat && $svStat && $taStat && $ehStat && $w4Stat && $i9Stat && $iaTaxStat){
+			echo "<h4 style='margin-left:50px'>Review & Submit</h4>
+				  <form method='post' action='handlers/reviewhandler.php' id='form11' style='margin-left:80px;width:625px'>
+				  <p>
+					<center>
+						Please review the information entered in the previous forms to ensure accuracy. 
+						If everything looks acceptable, click finish below and you will receive further instruction from your hiring manager soon!
+					</center>
+				  </p>
+					<a style='font-size:14px;' href='start.php?form=9'> Back </a>
+					<a style='margin-left:520px;font-size:14px;cursor: pointer; cursor: hand;' onClick='submitFrontForm(11)' > Finish </a>
+				  </form> ";
+		} else {
+			echo'
+				<p>
+						You have not completed all your required forms yet. Please go back and review the following forms: <br>';
+						if(!$aiStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=1">Additional Information Form </a><br>';
+						} if(!$ddStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=2">Direct Deposit Form </a><br> ';
+						} if(!$svStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=3">Student Varification Form </a><br> ';
+						} if(!$ehStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=4">Employee Handbook Form </a><br>';
+						} if(!$shStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=5">Safe Harbor Form </a><br> ';
+						} if(!$taStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=6">Technology Agreement Form </a><br> ';
+						} if(!$w4Stat){
+							echo ' <a style="margin: 20px;" href="start.php?form=7">W-4 Tax Form </a><br> ';
+						} if(!$i9Stat){
+							echo ' <a style="margin: 20px;" href="start.php?form=8">I-9 Employee Eligibility Form </a><br> ';
+						} if(!$iaTaxStat){
+							echo ' <a style="margin: 20px;" href="start.php?form=9">Iowa State Tax Form </a><br> ';
+						} 
+					echo '
+				  </p>
+				';
+		}
+?>
