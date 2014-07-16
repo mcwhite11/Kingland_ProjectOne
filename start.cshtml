@@ -4,15 +4,15 @@
         //@Response.Redirect("Default.cshtml");
     }
 
+    int form = Request.QueryString["form"].AsInt(); //Set equal to get data or whatever?
+
     /**
-    	$form = $_GET['form'];
-	
 
     require_once('functions/validatePermissions.php');
     */
 
-    if (Session["FrontPageForm"] == null) {
-        Session["FrontPageForm"] = 1;
+    if ( form.Equals(null) ) {
+        form = 1;
     }
 }
 
@@ -195,61 +195,65 @@
 										</div>
 									</div>
 									
-									@switch ( Session["FrontPageForm"] ) {
-                                     case ( 1 ) :
-
+                                 @{
+									switch ( @form ) {
+                                     case 1:
+                                        <text>
+                                            Form 1
+                                        </text>
                                      break;
 
-                                     case ( 2 ) :
+                                     case 2:
 
                                      break;
                                                                                 
-                                     case ( 3 ) :
+                                     case 3:
 
                                      break;
                                      
-                                     case ( 4 ) :
+                                     case 4:
 
                                      break;
                                      
-                                     case ( 5 ) :
+                                     case 5:
 
                                      break;
                                      
-                                     case ( 6 ) :
+                                     case 6:
 
                                      break;
                                      
-                                     case ( 7 ) :
+                                     case 7:
 
                                      break;
                                      
-                                     case ( 8 ) :
+                                     case 8:
 
                                      break;
                                      
-                                     case ( 9 ) :
+                                     case 9:
 
                                      break;
                                      
-                                     case ( 10 ) :
+                                     case 10:
 
                                      break;                                                                                                                                                                                                                                                                                                        
                                      
-                                     case ( 99 ) :
-                                     <text>
-                                         <center>
+                                     case 99:
+                                        <text>
+                                          <div style="text-align:center">
 										    <h4>Forms Completed</h4>
-											    That's it! You are finished with the pre-hiring process.</br>
+											    That's it! You are finished with the pre-hiring process.<br />
 											    A notification has been sent to your hiring manager and the rest will be taken care of by them. 
-											    Look forward to hearing back from them soon, or we will see you on your start date!</br>
-											    </br>
-											    Please remember to bring your filled out tax paperwork to work on your first day as well!</br></br>
-											    <a href='functions/logout.php'>Log Out</a>
-									      </center>
-                                     </text>
+											    Look forward to hearing back from them soon, or we will see you on your start date!<br />
+											    <br />
+											    Please remember to bring your filled out tax paperwork to work on your first day as well!<br /><br />
+											    <a href="functions/logout.php">Log Out</a>
+                                           </div>
+                                        </text>
                                      break; 
                                     }
+                                  }
 
 								</div>
 						</div>
