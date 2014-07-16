@@ -4,14 +4,17 @@
         //@Response.Redirect("Default.cshtml");
     }
 
+    int form = Request.QueryString["form"].AsInt();
+    
+
     /**
-    	$form = $_GET['form']; 
-	
-	if ( !isSet($_GET['form']) ) {
-		$form = 1;
-	}
+
     require_once('functions/validatePermissions.php');
     */
+
+    if ( form == 0 ) {
+        form = 1;
+    }
 }
 
 <!DOCTYPE html>
@@ -88,12 +91,14 @@
 									// this all relates to the progress bar on the new hire side of the site
 									
 									//grabs a variable from the database to check if the additional info form is done
-									include('functions/connect.php');
-									$addInfo = mysqli_query($con,"SELECT * FROM addInfo WHERE user = '" . $_SESSION['user'] . "'");
-									while ($addInfoRow = mysqli_fetch_array($addInfo)) {
-										$aiStat = $addInfoRow['isDone'];
-									}
-									
+
+@{
+        //Connnect to database and query to check credentials
+        //var db = Database.Open("temp");
+        //var addInfo = db.QuerySingle("SELECT * FROM users WHERE user =  @0 and pass = @1", user, pass);
+        //var aiStat = @addInfo.isDone;
+
+        }
 									//grabs a variable from the database to check if the direct deposit form is done
 									$authAgree = mysqli_query($con,"SELECT * FROM authAgree WHERE user = '" . $_SESSION['user'] . "'");
 									while ($authAgreeRow = mysqli_fetch_array($authAgree)) {
@@ -193,41 +198,64 @@
 										</div>
 									</div>
 									
-									<?php
-										if ( $form == 1 ) {
-											include('forms/form1.php');
-										} else if ( $form == 2 ) {
-											include('forms/form2.php');
-										} else if ( $form == 3 ) {
-											include('forms/form3.php');
-										} else if ( $form == 4 ) {
-											include('forms/form4.php');
-										} else if ( $form == 5 ) {
-											include('forms/form5.php');
-										} else if ( $form == 6 ) {
-											include('forms/form6.php');
-										} else if ( $form == 7 ) {
-											include('forms/form7.php');
-										} else if ( $form == 8 ) {
-											include('forms/form8.php');
-										} else if ( $form == 9 ) {
-											include('forms/form9.php');
-										} else if ( $form == 10 ) {
-											include('forms/review.php');
-										} else if ( $form == 99 ) {
-											echo "
-												<center>
-													<h4>Forms Completed</h4>
-														That's it! You are finished with the pre-hiring process.</br>
-														A notification has been sent to your hiring manager and the rest will be taken care of by them. 
-														Look forward to hearing back from them soon, or we will see you on your start date!</br>
-														</br>
-														Please remember to bring your filled out tax paperwork to work on your first day as well!</br></br>
-														<a href='functions/logout.php'>Log Out</a>
-												</center>
-											";
-										}
-									?>
+                                 @{
+									switch ( @form ) {
+                                     case 1:
+                                        @RenderPage("forms/form1.cshtml");
+                                     break;
+
+                                     case 2:
+
+                                     break;
+                                                                                
+                                     case 3:
+
+                                     break;
+                                     
+                                     case 4:
+
+                                     break;
+                                     
+                                     case 5:
+
+                                     break;
+                                     
+                                     case 6:
+
+                                     break;
+                                     
+                                     case 7:
+
+                                     break;
+                                     
+                                     case 8:
+
+                                     break;
+                                     
+                                     case 9:
+
+                                     break;
+                                     
+                                     case 10:
+
+                                     break;                                                                                                                                                                                                                                                                                                        
+                                     
+                                     case 99:
+                                        <text>
+                                          <div style="text-align:center">
+										    <h4>Forms Completed</h4>
+											    That's it! You are finished with the pre-hiring process.<br />
+											    A notification has been sent to your hiring manager and the rest will be taken care of by them. 
+											    Look forward to hearing back from them soon, or we will see you on your start date!<br />
+											    <br />
+											    Please remember to bring your filled out tax paperwork to work on your first day as well!<br /><br />
+											    <a href="functions/logout.php">Log Out</a>
+                                           </div>
+                                        </text>
+                                     break; 
+                                    }
+                                  }
+
 								</div>
 						</div>
 					<!--/Page content-->
