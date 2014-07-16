@@ -1,0 +1,191 @@
+﻿@{
+    if (Session["user"] != null) {
+        if (Session["isAdmin"].Equals(1)) {
+             @Response.Redirect("~/cpanel.cshtml");
+        } else {
+             @Response.Redirect("~/start.cshtml");
+        }
+    }    
+
+
+    //Simple form validation with message
+    Validation.RequireField("user", "Username is required.");
+    Validation.RequireField("password", "Password is required.");
+    string errorMessage = "";
+
+    //If we're getting post data
+    if (IsPost && Validation.IsValid()) {
+        //Grab post data
+        string user = Request.Form["user"];
+        string pass = Request.Form["password"];
+
+        //Connnect to database and query to check credentials
+        var db = Database.Open("temp");
+        var credentials = db.QuerySingle("SELECT * FROM users WHERE user =  @0 and pass = @1", user, pass);
+
+        //If it returned a result, set our session variables
+        if ( credentials != null) {
+            Session["user"] = user;
+            Session["isAdmin"] = @credentials.isAdmin;
+            Session["isHR"] = @credentials.isHR;
+            Session["isHM"] = @credentials.isHM;
+            Session["isPR"] = @credentials.isPR;
+            Session["isIT"] = @credentials.isIT;
+            @Response.Redirect("start.cshtml");
+        } else {
+            //Failed. Should display error message.
+            errorMessage = "Username or password was incorrect!";
+        }
+    }
+   
+}
+
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#">
+	<head>
+		<title>New Hire Portal</title>
+
+        <meta charset="utf-8" />
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+		<link rel='stylesheet' id='stylesheet-css'  href='http://careers.kingland.com/wp-content/themes/builder/style.css?ver=1' type='text/css' media='all' />
+		<link rel='stylesheet' id='cyclone-template-style-dark-css'  href='http://careers.kingland.com/wp-content/plugins/cyclone-slider-pro/templates/dark/style.css?ver=2.7.6' type='text/css' media='all' />
+		<link rel='stylesheet' id='cyclone-template-style-default-css'  href='http://careers.kingland.com/wp-content/plugins/cyclone-slider-pro/templates/default/style.css?ver=2.7.6' type='text/css' media='all' />
+		<link rel='stylesheet' id='cyclone-template-style-galleria-css'  href='http://careers.kingland.com/wp-content/plugins/cyclone-slider-pro/templates/galleria/style.css?ver=2.7.6' type='text/css' media='all' />
+		<link rel='stylesheet' id='cyclone-template-style-standard-css'  href='http://careers.kingland.com/wp-content/plugins/cyclone-slider-pro/templates/standard/style.css?ver=2.7.6' type='text/css' media='all' />
+		<link rel='stylesheet' id='cyclone-template-style-text-css'  href='http://careers.kingland.com/wp-content/plugins/cyclone-slider-pro/templates/text/style.css?ver=2.7.6' type='text/css' media='all' />
+		<link rel='stylesheet' id='cyclone-template-style-thumbnails-css'  href='http://careers.kingland.com/wp-content/plugins/cyclone-slider-pro/templates/thumbnails/style.css?ver=2.7.6' type='text/css' media='all' />
+		<link rel='stylesheet' id='cvg-styles-css'  href='http://careers.kingland.com/wp-content/plugins/cool-video-gallery/css/cvg-styles.css?ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='bodyfont-css'  href='http://fonts.googleapis.com/css?family=open+sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='onefont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='twofont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='threefont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='fourfont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='fivefont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='sixfont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<script src="ajax.js"></script>
+	</head>
+
+	<body onLoad="updateForm(1)" style="cursor:default">
+		<div class="wide_cont">
+		
+		<!--TOP-->
+		<div class="top_line">
+			<div class="container">
+				<div class="row">
+					<div class="span6">
+						<p class="feed"></p>
+					</div>
+					<div class="span6 soc_icons">
+																																													</div>
+				</div>
+			</div>
+		</div>
+		<!--/TOP-->
+		
+		<!--PAGE HEAD-->
+		<div class="page_head" >
+			<div class="container" style="display:block;">
+				<div class="row">
+					<div class="span3">
+						<div class="logo">
+							<a href="index.php"> <img src="http://www.kingland.com/wp-content/uploads/2013/02/ksclogo-4221.png" alt="Careers" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/PAGE HEAD-->
+		
+			<!--WELCOME AREA-->
+		<div class="tag_line">
+			<div class="container">
+				<div class="row">
+					<div class="span12">
+						<div class="welcome">
+							<h3> 
+								<span class="colored">Getting Started with Kingland Systems</span>
+							</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+		<!-- Main Content Area -->							
+		<div class="main_content_area blog_item_page">
+			<div class="container" style="width:300px;margin-bottom:25px">
+						
+					<!--Page content-->
+						<div class="row class="post-1613 post type-post status-publish format-standard hentry category-news"" id="post-1613">
+							
+							
+								<div class="blog_post_item_description"  style="   margin-top:-5px; " >
+									<div class="blog_head blog_inner">
+										<div class="meta">
+											<span   class="last_item"> 
+												<h4><center><b>Login to Continue</b></center></h4></br>
+												
+												<form method="post" action="Default.cshtml">
+
+													<p>
+                                                        @Html.ValidationMessage("user")</br>
+														Username:</br>
+														<input type="text" style="width:250px" name="user" id="user" value="@Request.Form["user"]">
+													</p>
+
+													<p>
+                                                        @Html.ValidationMessage("password") </br>
+														Password:</br>
+														<input type="password" style="width:250px" name="password" id="password">
+                                                        </br> @if ( @errorMessage != "" ) {
+                                                                  <center><div style="color: red">@errorMessage</div></center>
+                                                              }
+                                                              
+													</p>
+
+														<input type="Submit" value="Login" style="margin-left:215px">
+												</form>
+											</span>    
+										</div>
+									</div>									
+								</div>
+						</div>
+					<!--/Page content-->
+			</div>
+		</div>
+		<!-- End Main Content Area -->
+
+		<!--FOOTER-->
+		<div class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="span3">			
+						<div class="textwidget">
+							<img src="http://careers.kingland.com/wp-content/uploads/2013/12/logo.png"/>
+						</div>
+					</div>
+					<div class="span3">
+						<div class="textwidget">
+						</div>
+					</div>
+					<div class="span3">			
+						<div class="textwidget">
+						</div>
+					</div>
+					<div class="span3">
+						<h6 style="text-transform: uppercase !important; font-weight:600; !important">Contact Us</h6><hr>
+						<div class="textwidget">
+							(641) 355-1000 <br> <a href="mailto:humanresource@kingland.com?Subject=Message%20From%20Newhire%20Portal">humanresource@kingland.com</a>
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+		
+		<div class="bottom_line" style="border-top:1px solid #444444;">
+			<span style="font-size:11px;margin-left:25px;">Copyright 2014 - Kingland Systems Corporation</span>
+			
+		</div>
+		<!--/FOOTER-->
+	</body>
+</html>
