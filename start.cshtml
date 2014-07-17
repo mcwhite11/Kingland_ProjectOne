@@ -20,7 +20,7 @@
     // this all relates to the progress bar on the new hire side of the site
 
     //Connnect to database and query to check if this form is done
-    var db = Database.Open("temp");
+    var db = Database.Open("kinglandia");
 
     //Check Add Info
     var formInfo = db.QuerySingle("SELECT * FROM addInfo WHERE user =  @0", user);

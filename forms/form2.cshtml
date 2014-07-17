@@ -3,7 +3,7 @@
     var user = Session["user"];
     
     //Connect to database
-    var db = Database.Open("temp");
+    var db = Database.Open("kinglandia");
 
     //Create formchecking stuff here.  
 }
@@ -18,7 +18,7 @@
     <body>
         @{
              //Query to grab all Additional Information 
-             bckFill = db.QuerySingle("SELECT * FROM authAgree WHERE user = @0", user);
+             var bckFill = db.QuerySingle("SELECT * FROM authAgree WHERE user = @0", user);
         }
             <h4 style="margin-left:50px">Authorization Agreement for Direct Deposit</h4>
 
@@ -27,23 +27,23 @@
                     <b>Company Name:</b> Kingland Systems Corporation &emsp;<b>Company ID:</b> 42-1396894
 			        <br /><br />
 					
-			        <label></label> I (we) hereby authorize Kingland Systems Corporation, hereinafter, called COMPANY, to initiate Credit entries (deposits) and to initiate, if necessary, debit entries and
-			        adjustments for any credit entries made in error to my account as indicated below and for the bank/financial institution, hereinafter called DEPOSITORY, to credit and/or debit the same to such account.</lable><br /><br />;
+			        <label> I (we) hereby authorize Kingland Systems Corporation, hereinafter, called COMPANY, to initiate Credit entries (deposits) and to initiate, if necessary, debit entries and
+			        adjustments for any credit entries made in error to my account as indicated below and for the bank/financial institution, hereinafter called DEPOSITORY, to credit and/or debit the same to such account.</label><br />
 			        
-				    <input type="radio" id="newAuthorization" name="authType" value="New" @if(@bckFill.authType == "New") {<text>checked</text>>New Authorization 
-				    <input type="radio" id="changeAuthorization" name="authType" value="Change" @(bckFill.authType == "Change") {<text>checked</text>>Change Authorization <br /><br />
+				    <input type="radio" id="newAuthorization" name="authType" value="New" @if(@bckFill.authType == "New") {<text>checked</text>}>New Authorization   &nbsp;
+				    <input type="radio" id="changeAuthorization" name="authType" value="Change" @if(bckFill.authType == "Change") {<text>checked</text>}>Change Authorization <br /><br />
 				
 				    *Effective Date: </br>
 				    <input type="text" name="effectDate" value = "@bckFill.effectDate" id="effectiveDate" ><br />
 
 			        <hr>
 
-			        <label><b>Account #1</b></label>&emsp;<label>Default Account - Net pay will be deposited into this account.</lable><br />
+			        <label><b>Account #1</b></label><label>Default Account - Net pay will be deposited into this account.</label><br/>
 
-				    <input type="radio" name="acc1type" id="checkingAccount1" value="Checking" @if(@bckFill.authType == "Checking") {<text>checked</text> }>Checking Account 
-				    <input type="radio" name="acc1type" id="savingsAccount1" value="Savings" @if(@bckFill.authType == "Savings") {<text>checked</text> }>Savings Account 
-				    <input type="radio" name="acc1type" id="paycard" value="Paycard/Debit" @if(@bckFill.authType == "Paycard/Debit") {<text>checked</text> }>Paycard/Debit <br />
-			        <lable>(note: Number on the face of the card is not the account number)</lable><br /><br />
+				    <input type="radio" name="acc1type" id="checkingAccount1" value="Checking" @if(@bckFill.acc1type == "Checking") {<text>checked</text> }>Checking Account &nbsp;
+				    <input type="radio" name="acc1type" id="savingsAccount1" value="Savings" @if(@bckFill.acc1type == "Savings") {<text>checked</text> }>Savings Account &nbsp;
+				    <input type="radio" name="acc1type" id="paycard" value="Paycard/Debit" @if(@bckFill.acc1type == "Paycard/Debit") {<text>checked</text> }>Paycard/Debit <br />
+			        <label style="font-size: 10px">(note: Number on the face of the card is not the account number)</label><br />
 				
 			       
 				    *Depositary Name: <br />
@@ -57,9 +57,9 @@
 				
 			        <hr>
 
-			        <label><b>Account #2</b></label><br />
-				    <input type="radio" name="acc2type" id="checkingAccount2" value="Checking" @if(@bckFill.acc2Type == "Checking") {<text>checked</text> }>Checking Account  &nbsp
-				    <input type="radio" name="acc2type" id="savingsAccount2" value="Savings" @if(@bckFill.acc2Type == "Savings") {<text>checked</text> }>Savings Account  &nbsp <br /><br />
+			        <label><b>Account #2</b></label>
+				    <input type="radio" name="acc2type" id="checkingAccount2" value="Checking" @if(@bckFill.acc2Type == "Checking") {<text>checked</text> }>Checking Account  &nbsp;
+				    <input type="radio" name="acc2type" id="savingsAccount2" value="Savings" @if(@bckFill.acc2Type == "Savings") {<text>checked</text> }>Savings Account  <br /><br />
 			        
 				    Amount to be desposited each pay period: </br>
 				    <input type="text" name="acc2amt" id="account2Amount" value = "@bckFill.acc2amt" >
@@ -75,18 +75,18 @@
 
 			        <hr>
 				
-			        <label>Are these electronic funds (full amount of payroll) being forwarded to a foreign bank?</label><br />>
-				    <input type="radio" name="foreignBank" id="foreignYes" value="yes" @if(@bckFill.foregignBank == "yes") {<text>checked</text> }>Yes  &nbsp
-				    <input type="radio" name="foreignBank" id="foreignNo" value="no" @if(@bckFill.foregignBank == "no") {<text>checked</text> }>No  &nbsp <br /><br />
+			        <label>Are these electronic funds (full amount of payroll) being forwarded to a foreign bank?</label><br />
+				    <input type="radio" name="foreignBank" id="foreignYes" value="yes" @if(@bckFill.foreignBank == "yes") {<text>checked</text> }>Yes  &nbsp
+				    <input type="radio" name="foreignBank" id="foreignNo" value="no" @if(@bckFill.foreignBank == "no") {<text>checked</text> }>No  &nbsp <br /><br />
 			       
 				
-			        <label>This authorization is to remain in full force and effect until COMPANY has received written notification from me (or either of us) of its termination in such time and
+			        <label style="font-size: 10px">This authorization is to remain in full force and effect until COMPANY has received written notification from me (or either of us) of its termination in such time and
 			        in such manner as to afford COMPANY and DEPOSITORY a reasonable opportunity to act on it.</label> <br /><br />
 
-			        *Social Security Number: <label style="color:blue; text-decoration:underline;" size="1" onClick="alert(\'We will only steal your identity and ruin your entire life!\');">
-			        Why do we need this?</label><input type="text" name="soc" id="SSN" value = "@bckFill.soc" ><br />
+			        *Social Security Number: <a style="color:blue; clear: none; text-decoration:underline;font-size: 10px;cursor: pointer; cursor: hand;" onClick='displaySocInfo()'>
+			        Why do we need this?</a><input type="text" name="soc" id="SSN" value = "@bckFill.soc" ><br />
 
-				    <input type="checkbox" id="directDepositAgree" name="agree" value="agree" @if(@bckFill.agree == "no") {<text>checked</text> }>I have fully read, understand, and agree to these terms.
+				    <input type="checkbox" id="directDepositAgree" name="agree" value="agree" @if(@bckFill.agree == "no") {<text>checked</text> }>I have fully read, understand, and agree to these terms. <br />
 				    
 				    *Signature: :<br />
 				    <input type="text" name="signature" id="directDepositSignature"  value="@bckFill.signature" >
