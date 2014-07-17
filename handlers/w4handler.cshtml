@@ -2,7 +2,7 @@
     //Set username
     var user = Session["user"];
 
-	var db = Database.Open["kinglandia"];
+	var db = Database.Open["kinglandDatabase"];
     
     //Update the table.
     db.singleQuery("UPDATE users SET w4Done = '1' WHERE user = '@0'", user);

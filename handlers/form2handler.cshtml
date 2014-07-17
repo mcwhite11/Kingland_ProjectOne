@@ -7,6 +7,7 @@
     var authType = Request.Form["first"];
     var effectDate = Request.Form["effectDate"];
     var acc1depoName = Request.Form["acc1depoName"];
+    var acc1Type = Request.Form["acc1Type"];
     var acc1routNum = Request.Form["acc1routNum"];
     var acc1accNum = Request.Form["acc1accNum"];
     var acc2Type = Request.Form["acc2Type"];
@@ -23,12 +24,12 @@
 	
 
     //Connnect to database
-    var db = Database.Open("kinglandia");
+    var db = Database.Open("kinglandDatabase");
 
     //Update users table
     db.QuerySingle("UPDATE authAgree SET authType = '@0', effectDate = '@1', acc1Type = '@2', acc1depoName = '@3', acc1routNum = '@4', acc1accNum = '@5', acc2Type = '@6', acc2amt = '@7', acc2depoName = '@8', acc2routNum = '@9', acc2accNum = '@10', soc = '@11', signature = '@12', foreignBank = '@13', agree = '@14', isDone = '1', voluntaryAuth = '@15', voluntaryAuthSignature = '@16' WHERE user = '@17'", authType, effectDate, acc1Type, acc1depoName, acc1routNum, acc1accNum, acc2Type, acc2amt, acc2depoName, acc2routNum, acc2accNum, soc, signature, foreignBank, agree, voluntaryAgree, voluntaryAuthSignature, user);
 
 	//Move on to the next form
-	Response.Redirect("../start.php?form=3");
+	Response.Redirect("../start.cshtml?form=3");
 
 }
