@@ -5,7 +5,6 @@
     //Connect to database
     var db = Database.Open("temp");
 
-    //Create formchecking stuff here.
 }
 
 <!DOCTYPE html>
@@ -23,9 +22,11 @@
 }
 
         <h4 style="margin-left:50px">Additional Information</h4>
-		<form method="post" id="form1" action="handlers/form1handler.php" style="margin-left:80px;width:625px">
-		    *First Name: <input type="text" id="firstNameText" name="first" value = "@bckFill.first" ><br />
-		    *Last Name: <input type="text" id="lastNameText" name="last" value = "@bckFill.last" >
+		<form method="post" id="form1" action="handlers/form1handler.cshtml" style="margin-left:80px;width:625px">
+            @Html.ValidationMessage("first")<br />
+		    *First Name: <input type="text" id="firstNameText" name="first" value = "@bckFill.first" >
+		    @Html.ValidationMessage("last")<br />
+            *Last Name: <input type="text" id="lastNameText" name="last" value = "@bckFill.last" >
 
 @{
      //Query to grab all Additional Information 
@@ -33,11 +34,11 @@
 }
             <!-- Output form and backfill information from the DB -->
             *Home Phone: <input type="text" id="homePhoneText" name="hPhone" value = "@bckFill.hPhone" >
-	        *Cell Phone: <input type="text" id="cellPhoneText" name="cPhone" value = "@bckFill.cPhone" >
-	        *Emergency Contact Name: <input type="text" id="emergencyContactNameText" name="ICEName" value = "@bckFill.ICEName" >
-	        *Emergency Contact Home Phone Number: <input type="text" id="emergencyHomePhoneNumberText" name="ICEHPhone" value = "@bckFill.ICEHPhone" >
-	        *Emergency Contact Work Phone Number: <input type="text" id="emergencyWorkPhoneNumberText" name="ICECPhone" value = "@bckFill.ICECPhone" >
-	        *Relationship to Employee: <input type="text" id="relationshipText" name="ICERel" value = "@bckFill.ICERel" >
+            *Cell Phone: <input type="text" id="cellPhoneText" name="cPhone" value = "@bckFill.cPhone" >
+            *Emergency Contact Name: <input type="text" id="emergencyContactNameText" name="ICEName" value = "@bckFill.ICEName" >
+            *Emergency Contact Home Phone Number: <input type="text" id="emergencyHomePhoneNumberText" name="ICEHPhone" value = "@bckFill.ICEHPhone" >
+            *Emergency Contact Work Phone Number: <input type="text" id="emergencyWorkPhoneNumberText" name="ICECPhone" value = "@bckFill.ICECPhone" >
+            *Relationship to Employee: <input type="text" id="relationshipText" name="ICERel" value = "@bckFill.ICERel" >
 
 
 		    <label style="font-size:11px"><b>Responding to the following questions is voluntary. This information will be used for tracking purposes only.</b></label><br /><br />
@@ -83,7 +84,7 @@
                 <input type="checkbox" name="disVet" value="I am a disabled Veteran" @if(@bckFill.disAcom == "I am a disabled Veteran") {<text>checked</text> }>I am a disabled Veteran<br />
                 <input type="checkbox" name="vet" value="None of the above" @if(@bckFill.disAcom == "None of the above") {<text>checked</text> }>None of the above<br />
 		    </div>
-			    <a style="margin-left:520px;font-size:14px;cursor: pointer; cursor: hand;" onClick="validateAdditionalInfo()" > Next </a> 
+			  <a style="margin-left:520px;font-size:14px;cursor: pointer; cursor: hand;" onClick="this.submit()" > Next </a>
 	    </form>
     </body>
 </html>
