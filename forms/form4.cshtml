@@ -1,0 +1,53 @@
+﻿@{
+    //Establish this user
+    var user = Session["user"];
+    
+    //Connect to database
+    var db = Database.Open("temp");
+
+    //Query to grab all Additional Information 
+    var bckFill = db.QuerySingle("SELECT * FROM handbookReceipt WHERE user = @0", user);    
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <h4 style='margin-left:50px'><a href='#' onClick='showHandbook()'>View Employee Handbook</a></h4>
+			<form method='post' action='handlers/form4handler.cshtml' id='form4' style='margin-left:80px;width:625px'>
+				<h4> Receipt for Employee Handbook</h4>
+
+				<p>I acknowledge that I have receieved a copy of the Kingland Systems Corporation Employee Handbook (Revision Date 9/1/2011). 
+				I agree that I have read it thoroughly and understand it, including the statements in the forward describing the purpose of the Handbook. 
+				I agree if there are any policies or provisions in the Handbook that I do not understand or have concerns about, I will see clarification from the Human Resources Department. 
+				</br>I also understand:</p>
+				
+				<p>Neither this handbook, nor any other KSC document, confers any contractual right, either expressed or implied, to remain in the Company's employ.
+				Nor does it guarentee any fixed terms and conditions of employment.
+				Employment is not for any specific time and may be terminated at will, with or withour cause, and without prior notice, by KSC or I may resign for any reason, at any time.
+				No manager or other representative of that Company (except the President) hsa the authority to enter any agreement for employement for any specified period of time, or to make any agreement contrary to the above.</p>
+				
+				<p>Secondly, I understand the procedures, practices, policies, and benefits described here many be modified or discontinued from time to time. 
+				KSC reserves the right to apply or not apply particular policy, procedure, or work rules at their discretion.</p>
+				
+				<p>Thirdly, some subjects described here are covered in detail in official policy documents which should be referred to for specific information, 
+				since this handbook only briefly summarizes those benefits, guidlines, and procedures.</p>
+				
+				<p>I also understand that the policies and procedures of KSC are continually evaluated and may be amended, modified, or terminated at any time.</p>
+				
+				<p>Please sign this receipt and check the box to confirm your acceptance.</p>
+				
+				
+				<p><input type='checkbox' name='agree' id='EHagree' value='agree' @if (@bckFill.agree =="agree" ) {<text>checked</text>}>I have read and agree with the receipt. &nbsp;&nbsp;</p>
+
+				<p>*Signature</br><input type='text' name='signature' id='EHsigned' value = '@bckFill.signature'></p>
+
+					<a style='font-size:14px;' href='start.php?form=3'> Back </a>
+					<a style='margin-left:520px;font-size:14px;cursor: pointer; cursor: hand;' onClick='validateEmployeeHandbook()' > Next </a>
+			</form>
+    </body>
+</html>
