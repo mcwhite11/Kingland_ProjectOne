@@ -80,7 +80,7 @@
 						</div>
 					</div>
 					<div style="margin-left:1100px;clear:none;">
-						<font size="3">Hello, <i> @Session["user"] </i></font></br>
+						<font size="3">Hello, <i> @Session["user"] </i></font><br/>
 						<a href="functions/logout.cshtml" style="margin-left:35px">Log Out</a>
 					</div>
 				</div>
@@ -144,29 +144,28 @@
 									<div class="meta">
 										<span   class="last_item">							
                                        
-											//"Add New Employee"
-											@if ( page == "add" && Session["isHR"] ) {
-                                                <text>
+  											//"Add New Employee"
+											@if (page == "add" && Session["isHR"] ) {
 												    <h4><b>Add Employee</b></h4></span></div></div>
-												    <form method="post" action="functions/add.php" style="margin-left:20px;width:625px;" id="addUser">
+												    <form method="post" action="functions/add.cshtml" style="margin-left:20px;width:625px;" id="addUser">
 												
-													    <p>*First Name:</br>
-													    <input type="text" name="first" id="newFirstName" ></p>
+													    <p>*First Name:<br/>
+													    <input type="text" name="first" id="newFirstName"></p>
 													
-													    <p>*Last Name:</br>
+													    <p>*Last Name:<br/>
 													    <input type="text" name="last" id="newLastName" onBlur="updateArea(\'userID\',0,\'manualID\')"></p>
 													
-													    <p>Preferred Name (If applicable):</br>
+													    <p>Preferred Name (If applicable):<br/>
 													    <input type="text" name="preferred"></p>													
 												
-													    <p>*E-Mail:</br>
+													    <p>*E-Mail:<br/>
 													    <input type="text" name="email" id="newEmail"></p>
 													
-													    <p>*Actual Start Date (mm/dd/yyyy):</br>
+													    <p>*Actual Start Date (mm/dd/yyyy):<br/>
 													    <input type="text" name="actSD" id="newActualStartDate"></p>
 													
 													    <p style="float:right;clear:none;">
-														    *Department:</br>
+														    *Department:<br/>
 														    <select name="dept" id="prDepartment">
 															    <option>Select...</option>
 															    <option selected="selected">None</option>
@@ -174,7 +173,7 @@
 													    </p>
 													
 													    <p style="clear:none;">
-														    *Position</br>
+														    *Position<br/>
 														    <select name="position" id="prPosition">
 															    <option>Select...</option>
 															    <option selected="selected">None</option>
@@ -182,7 +181,7 @@
 													    </p>
 													
 													    <p style="float:right;clear:none">
-														    *Supervisor: </br>
+														    *Supervisor: <br/>
 														    <select name="supervisor" id="prSupervisor" alt="GRABS FROM GP - LISTS First, Last -- Links to Email">
 															    <option>Select...</option>
 															    <option selected="selected">None</option>
@@ -191,7 +190,7 @@
 													
 													    <p style="clear:none;">
 
-														    *Employee Type:</br>
+														    *Employee Type:<br/>
 														    <select name="empType" id="prEmployeeType">
 															    <option>Select...</option>
 															    <option>Intern</option>
@@ -206,20 +205,18 @@
 													    </p>
 													
 													    <p style="clear:none;">
-														    Location:</br>
+														    Location:<br/>
 														    <select name="location" id="prLocation">
-														    <option> Select... </option>';
+														    <option> Select... </option>
 														
-                                                        @{
-                                                            var locations = db.Query("SELECT * FROM location");
-                                                            
-                                                            foreach (var loc in locations) {
-                                                                <text>
-                                                                    <option>locations.location</option>
-                                                                </text>
-
-                                                            }
-                                                          }
+                                                  @{
+                                                        var locations = db.Query("SELECT * FROM location");
+                                               
+                                                                        
+                                                        @foreach (var loc in locations) {
+                                                                <option>locations.location</option>
+                                                        }
+                                                    }
 														
 												    </select>
 													    </p>
@@ -228,182 +225,155 @@
 												    <hr>
 												
 												    <p>
-												    Manually enter user ID:</br>
+												    Manually enter user ID:<br/>
 												    <input type="text" name="manualID" id="manualID" >
 												    </p>
 												
 												    <p>
-												    Manually Enter Password:</br>
+												    Manually Enter Password:<br/>
 												    <input type="text" name="manualPassword">
 												    </p>
 													
 													    <a href="#" onClick="validateAddEmployee()" style="margin-left:540px">Add Employee</a>
 												    </form>
-                                                </text>
+											} 
+                                            
+                                            //"View Existing New Hire"
+                                            else if (page == "view" && Session["isHR"]) {
+												   <h4><b>View New Hires</b></h4></span></div></div>
 												
 												
-											//"View Existing New Hire"
-											} else if ($page == "view" && Session["isHR"]) {
-												<h4><b>View New Hires</b></h4></span></div></div>
+                                                    var users = db.Query("SELECT * FROM users"); 
+                                                       
+                                                    <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
+												        <select id="myList" onChange="updateUser(0)">
+											 	            <option>Choose Employee</option>
+
+                                                            @foreach (var person in users) {
+                                                                    <option value="@person.user">@person.user</option>
+                                                            }
+
+												        </select>
+                                                    </div>
 												
-												$list = mysqli_query($con,"SELECT * FROM users");
-                                               @{
-                                                  var users = db.Query("SELECT * FROM users"); 
-                                                  <text>
-                                                    <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>
+												    <!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												    <div id="showStatus" style="margin-top:15px"></div>
+												
+												    <!--This shows the form selected above to display -- Replaced with ajax from updateForm.php-->
+												    <div id="displayForm"></div>
+                                             }
+                                             
+                                             //"Send Welcome Email"
+                                             else if (@page == "welcome" && Session["isHR"]) {
+												<h4><b>Send Welcome Email</b></h4></span></div></div>
+												
+                                                var users = db.Query("SELECT * FROM users");
 
-												    <select id="myList" onChange="updateUser(0)">
-											 	    <option>Choose Employee</option>
-                                                  </text>
+												<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
 
-                                                   foreach (var person in users) {
-                                                       <text>
-
-        </text>
-                                                   }
-
-                                               }
+												<select id="myList" onChange="showForm(5)">
+											 	<option>Choose Employee</option>
  
-												while ($row = mysqli_fetch_array($list)) {
-													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
-												}
+												
+                                                @foreach (var person in users ){
+                                                    <option value="@person.user">@person.user</option>
+                                                }
 
 												</select></div>
 												
-												//This shows the forms to display -- Replaced with ajax from updateUser.php
+												<div id="displayForm"></div>
+											}
+
+                                            //"View Pending HM Forms"
+                                            else if (@page =="viewPendingHM" && Session["isHM"] ) {
+												<h4><b>Hiring Manager Set Up Form</b></h4></span></div></div>
+												
+                                                var users = db.Query("SELECT * FROM users"); 
+                                                       
+                                                <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
+												    <select id="myList" onChange="showForm(2)">
+											 	        <option>Choose Employee</option>
+
+                                                        @foreach (var person in users) {
+                                                                <option value="@person.user">@person.user</option>
+                                                        }
+
+												    </select>
+                                                </div>
+												
+												<!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
 												<div id="showStatus" style="margin-top:15px"></div>
 												
-												//This shows the form selected above to display -- Replaced with ajax from updateForm.php
+												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.php-->
 												<div id="displayForm"></div>
 												
+											
+											} 
+                                            
+                                            //"View Pending IT forms"
+                                            else if (@page =="viewPendingIT" && Session["isIT"] ) {
+												<h4><b>IT Set Up Form</b></h4></span></div></div>
 												
-											//"Send Welcome Email"
-											}  else if ($page == "welcome" && Session["isHR"]) {
-												echo '<h4><b>Send Welcome Email</b></h4></span></div></div>';
-												//Let's connect to our database in question
-												include('functions/connect.php');
-												
-												$list = mysqli_query($con,"SELECT * FROM users");
+                                                var users = db.Query("SELECT * FROM users"); 
+                                                       
+                                                <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
+												    <select id="myList" onChange="showForm(3)">
+											 	        <option>Choose Employee</option>
 
-												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
+                                                        @foreach (var person in users) {
+                                                                <option value="@person.user">@person.user</option>
+                                                        }
 
-												echo '<select id="myList" onChange="showForm(5)">';
-											 	echo '<option>Choose Employee</option>';
- 
-												while ($row = mysqli_fetch_array($list)) {
-													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
-												}
+												    </select>
+                                                </div>
+												
+												<!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												<div id="showStatus" style="margin-top:15px"></div>
 
-												echo '</select></div>';
-												
-												echo '<div id="displayForm"></div>';
-												
-												
-											//"View Pending HM Forms"
-											} else if ($page =="viewPendingHM" && Session["isHM"] ) {
-												echo '<h4><b>Hiring Manager Set Up Form</b></h4></span></div></div>';
+											
+											}  
+                                            
+                                            //"View pending PR forms"
+                                            else if (@page =="viewPendingPR" && Session["isPR"] ) {
+												<h4><b>Payroll Set Up Form</b></h4></span></div></div>
 
-												//Let's connect to our database in question
-												include('functions/connect.php');
-												
-												//For username/hiring manager name
-												$list = mysqli_query($con,"SELECT * FROM users");
+                                                var users = db.Query("SELECT * FROM users"); 
+                                                       
+                                                <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
+												    <select id="myList" onChange="showForm(4)">
+											 	        <option>Choose Employee</option>
 
-												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
+                                                        @foreach (var person in users) {
+                                                                <option value="@person.user">@person.user</option>
+                                                        }
 
-												echo '<select id="myList" onChange="showForm(2)">';
-												echo '<option value="">Choose Employee</option>';
+												    </select>
+                                                </div>
 												
-												//Shows each employee that 1) the user is the hiring manager of and 2) has not been completed
-												while ($row = mysqli_fetch_array($list)) {
-													if ( $row['hmName'] == $_SESSION['user'] ) {
-														echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
-													}
-												}
-
-												echo '</select></div>';
-												
-												//This is the portion replaced by AJAX with the form for each employee - updateUser.php
-												echo '<div style="margin-top:20px" id="showStatus"><b> </b></div>';
-												
-												//Replaced from updateForm.php
-												echo '<div id="displayForm">&nbsp;</div>';
+												<!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												<div id="showStatus" style="margin-top:15px"></div>
 												
 												
-												
-											//"View Pending IT forms"
-											} else if ($page =="viewPendingIT" && Session["isIT"] ) {
-												echo '<h4><b>IT Set Up Form</b></h4></span></div></div>';
-
-												//Let's connect to our database in question
-												include('functions/connect.php');
-												
-												//For username/hiring manager name
-												$list = mysqli_query($con,"SELECT * FROM users");
-
-												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
-
-												echo '<select id="myList" onChange="showForm(3)">';
-												echo '<option value="">Choose Employee</option>';
-												
-												//Shows each employee that 1) the user is the hiring manager of and 2) has not been completed
-												while ($row = mysqli_fetch_array($list)) {
-													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
-												}
-
-												echo '</select></div>';
-												
-												//This is the portion replaced by AJAX with the form for each employee - updateForm.php
-												echo '<div style="margin-top:20px" id="displayForm"></div>';
-												
-												
-											//"View pending PR forms"
-											}  else if ($page =="viewPendingPR" && Session["isPR"] ) {
-												echo '<h4><b>Payroll Set Up Form</b></h4></span></div></div>';
-
-												//Let's connect to our database in question
-												include('functions/connect.php');
-												
-												//For username/hiring manager name
-												$list = mysqli_query($con,"SELECT * FROM users");
-
-												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
-
-												echo '<select id="myList" onChange="showForm(4)">';
-												echo '<option value="">Choose Employee</option>';
-												
-												//Shows each employee that 1) the user is the hiring manager of and 2) has not been completed
-												while ($row = mysqli_fetch_array($list)) {
-													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
-												}
-
-												echo '</select></div>';
-												
-												//This is the portion replaced by AJAX with the form for each employee - updateForm.php
-												echo '<div style="margin-top:20px" id="displayForm"></div>';
-												
-												
-											//"User added succesfully"
-											} else if ($page == "addSuccess" ) {
-												echo "
-													<h4><b><center>Employee created successfully!</b></center></h4></span></div></div>
-													<center>	
-														<p>
-															The new employee's account was created succesfully.</br>
-															The hiring manager has been sent an email to begin filling out the appropriate paper work.
-															The can expect to recieve this email within 24 hours.
-														</p>
+											
+											} 
+                                            
+                                            //"User added succesfully"
+                                            else if (@page == "addSuccess" ) {
+												<center><h4><b>Employee created successfully!</b></h4></center></span></div></div>
+													<p>
+														The new employee's account was created succesfully.<br />
+														The hiring manager has been sent an email to begin filling out the appropriate paper work.
+														The can expect to recieve this email within 24 hours.
+													</p>
 														
-														<p>
-															<a href='cpanel.php'>Click here to return to home</a>
-														</p>
-													</center>
-													";
-													
-													
-											//"User email sent"
-											} else if ($page == "emailSent" ) {
-												echo "
+													<p>
+														<a href='cpanel.cshtml'>Click here to return to home</a>
+													</p>		
+											
+											} 
+                                            
+                                            //"User email sent"
+                                            else if (@page == "emailSent" ) {
 													<h4><b><center>Email sent successfully!</b></center></h4></span></div></div>
 													<center>	
 														<p>
@@ -412,39 +382,36 @@
 														</p>
 														
 														<p>
-															<a href='cpanel.php'>Click here to return to home</a>
+															<a href='cpanel.cshtml'>Click here to return to home</a>
 														</p>
 													</center>
-													";
-													
+	
 												
 											// "Update Company Information"
-											} else if ($page == "update"  && Session["isHR"]) {
-												echo '
+											} else if (@page == "update"  && Session["isHR"]) {
 													<h4>Edit Form Information</h4></span></div></div>
 													
 													<p><center>We understand that, over time, information may change or become obsolete. So we have tried to
-													combat that issue!</br>
-													Choose an item from one of the drop down lists to modify information related to it.</br></br>
-													For any drop down list, you may select the bottom "Add New" to create a new entry for that.</br>
+													combat that issue!<br/>
+													Choose an item from one of the drop down lists to modify information related to it.<br/><br/>
+													For any drop down list, you may select the bottom "Add New" to create a new entry for that.<br/>
 													You may also
-													delete that entry by selecting it and checking the "Delete" box!</center></p></br></br>';
+													delete that entry by selecting it and checking the "Delete" box!</center></p><br/><br/>
 													
-												echo '<form method="post" action="handlers/updateInformation.php" id="updateInfo">';
+												<form method="post" action="handlers/updateInformation.php" id="updateInfo">
 													include('forms/updateInformation.php');
-												echo '</form>';
+												</form>
 												 
-											echo '<a href="#" onClick="document.getElementById(\'updateInfo\').submit();" style="margin-left:625px">Submit</a>';
+											<a href="#" onClick="document.getElementById(\'updateInfo\').submit();" style="margin-left:625px">Submit</a>
 																							
 													
 											//"Form Submitted Succesfully"
-											} else if ($page == "formSuccess" ) {
-												echo "
+											} else if (@page == "formSuccess" ) {
 													<h4><b><center>Form submitted successfully!</b></center></h4></span></div></div>
 													<center>	
 														<p>
-															The form was submitted succesfully.</br>
-															To confirm the information was processed and entered correctly, you can navigate back to where it was filled out and confirm the values.</br></br>
+															The form was submitted succesfully.<br/>
+															To confirm the information was processed and entered correctly, you can navigate back to where it was filled out and confirm the values.<br/><br/>
 															Thank you!
 														</p>
 														
@@ -456,43 +423,52 @@
 											
 											
 										//"homepage" to display for each person.
-										} else {
-										
-										
+                                        else {
+
 											//You are in human resources and the hiring manager!
 											if ( Session["isHM"] && Session["isHR"] ) {
-												echo '<h4 style="margin-left:50"><b>Hiring Manager & Human Resources</b></h4></span></div></div>';
-												echo 'Welcome to the Hiring Manager / Human Resources joint control panel.</br>
-												</br><b>Human Resources Portion:</b> You can click "Add New Employee" or "View Existing Employee" to create a new employee, or check the status of an existing employee.</br>
-												</br><b>Hiring Manager Portion:</b> You can click the "View Pending Forms" to view forms for employees listed under you that still require attention.';
-											}
-											
+												    <h4 style="margin-left:50px"><b>Hiring Manager & Human Resources</b></h4></span></div></div>
+												    Welcome to the Hiring Manager / Human Resources joint control panel.<br/>
+												    <br/><b>Human Resources Portion:</b> You can click "Add New Employee" or "View Existing Employee" to create a new employee, or check the status of an existing employee.<br/>
+												    <br/><b>Hiring Manager Portion:</b> You can click the "View Pending Forms" to view forms for employees listed under you that still require attention.
+                                            }
+
+
 											
 											//If you are only in Human Resources
 											else if ( Session["isHR"] ) {
-												echo '<h4 style="margin-left:50"><b>Human Resources View</b></h4></span></div></div>';
-												echo 'Welcome to the Human Resources Control Panel. You can click "Add New Employee" or "View Existing Employee" to create a new employee, or check the status of an existing employee.';
+												<h4 style="margin-left:50"><b>Human Resources View</b></h4></span></div></div>
+												Welcome to the Human Resources Control Panel. You can click "Add New Employee" or "View Existing Employee" to create a new employee, or check the status of an existing employee.
 												
 												
-											//If you are only a hiring manager.
-											} else if ( Session["isHM"] ) {
-												echo '<h4 style="margin-left:50"><b>Hiring Manager View</b></h4></span></div></div>';
-												echo 'Welcome to the Hiring Manager control panel. You can click the "View Pending HM Forms" to view forms for employees listed under you that still require attention.';
+											
+											} 
+                                            
+                                            
+                                            //If you are only a hiring manager.
+                                            else if ( Session["isHM"] ) {
+												<h4 style="margin-left:50"><b>Hiring Manager View</b></h4></span></div></div>
+												Welcome to the Hiring Manager control panel. You can click the "View Pending HM Forms" to view forms for employees listed under you that still require attention.
 												
 												
-											//only IT
-											} else if ( Session["isIT"] ) {
-												echo '<h4 style="margin-left:50"><b>IT View</b></h4></span></div></div>';
-												echo 'Welcome to the Information Technology portion of our New Hire Portal. Please navigate to the "View Pending IT Forms" tab where you can enter/modify/approve information relative to new employees.';
+											
+											} 
+                                            
+                                            //only IT
+                                            else if ( Session["isIT"] ) {
+												<h4 style="margin-left:50"><b>IT View</b></h4></span></div></div>
+												Welcome to the Information Technology portion of our New Hire Portal. Please navigate to the "View Pending IT Forms" tab where you can enter/modify/approve information relative to new employees.
 												
 												
-											//only Payroll
-											} else if ( Session["isPR"] ) {
-												echo '<h4 style="margin-left:50"><b>Payroll View</b></h4></span></div></div>';
-												echo 'Welcome to the Payroll portion of our New Hire Portal. Please navigate to the "View Pending PR Forms" tab where you can enter/modify/approve information relative to new employees.';
+											
+											} 
+                                            
+                                            //only Payroll
+                                            else if ( Session["isPR"] ) {
+												<h4 style="margin-left:50"><b>Payroll View</b></h4></span></div></div>
+												Welcome to the Payroll portion of our New Hire Portal. Please navigate to the "View Pending PR Forms" tab where you can enter/modify/approve information relative to new employees.
 											}
 										}
-									}					
 								</div>
 						</div>
 					<!--/Page content-->
