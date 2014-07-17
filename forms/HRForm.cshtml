@@ -8,31 +8,31 @@
   var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", user);
   
   <form method="post" id="hrForm" action="handlers/modifyHR.php" style="margin-left:80px;width:625px">
-		<p>*First Name:</br>
+		<p>*First Name:<br />
 		<input type="text" name="first" id="hrFirstName" value = "@bckFill.first" ></p>
 		
-		<p>*Last Name:</br>
+		<p>*Last Name:<br />
 		<input type="text" name="last" id="hrLastName" value = "@bckFill.last" ></p>
 		
-		<p>Preferred Name (If applicable):</br>
+		<p>Preferred Name (If applicable):<br />
 		<input type="text" name="preferred" value = "@bckFill.prefName" ></p>													
 
-		<p>*E-Mail:</br>
+		<p>*E-Mail:<br />
 		<input type="text" name="email" id="hrEmail" value = "@bckFill.email" ></p>
 		
-		<p>*Position:</br>
+		<p>*Position:<br />
 		<input type="text" name="position" value = "@bckFill.position" id="hrPosition" ></p>
 		
-		<p>*Department:</br>
+		<p>*Department:<br />
 		<input type="text" name="dept" value = "@bckFill.dept" id="hrDepartment" ></p>
 		
-		<p>*Actual Start Date (mm/dd/yyyy):</br>
+		<p>*Actual Start Date (mm/dd/yyyy):<br />
 		<input type="text" name="actSD" value = "@bckFill.startDate" id="hrActualStartDate" ></p>
 		
-		<p>*Hiring Manager (kingland ID):</br>
+		<p>*Hiring Manager (kingland ID):<br />
 		<input type="text" name="hm" value = "@bckFill.hmName" id="hrHiringManager" ></p>
 		
-		<p>*Hiring Manager E-Mail:</br>
+		<p>*Hiring Manager E-Mail:<br />
 		<input type="text" name="hmemail"  value = "@bckFill.hmemail" id="hrHiringManagerEmail" ></p>
 		
 		<input type="hidden" name="user" value = "user">
