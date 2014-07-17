@@ -1,0 +1,16 @@
+﻿@{
+    //Set username
+    var user = Session["user"];
+
+    //Grab data from form
+    var signature = Request.Form["signature"];
+    var agree = Request.Form["agree"];
+
+	var db = Database.Open["kingland"];
+    
+    //Update the table.
+    db.singleQuery("UPDATE studentConsent SET signature = '@0', agree = '@1', isDone = '1' WHERE user = '@2'", signature, agree, user);
+	
+	//Move on to the next form
+	Response.Redirect("../start.cshtml?form=4");
+}

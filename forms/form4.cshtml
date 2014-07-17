@@ -3,7 +3,7 @@
     var user = Session["user"];
     
     //Connect to database
-    var db = Database.Open("temp");
+    var db = Database.Open("kingland");
 
     //Query to grab all Additional Information 
     var bckFill = db.QuerySingle("SELECT * FROM handbookReceipt WHERE user = @0", user);    
