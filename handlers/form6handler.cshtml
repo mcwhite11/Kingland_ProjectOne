@@ -6,11 +6,11 @@
     var signature = Request.Form["signature"];
     var agree = Request.Form["agree"];
 
-	var db = Database.Open["kinglandDatabase"];
+	var db = Database.Open("kinglandDatabase");
     
     //Update the table.
-    db.singleQuery("UPDATE techAgree SET signature = '@0', agree = '@1', isDone = '1' WHERE user = '@2'", signature, agree, user);
+    db.QuerySingle("UPDATE techAgree SET signature = @0, agree = @1, isDone = '1' WHERE user = @2", signature, agree, user);
 	
 	//Move on to the next form
-	Response.Redirect("../start.cshtml?form=4");
+	Response.Redirect("../start.cshtml?form=7");
 }

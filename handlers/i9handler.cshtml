@@ -2,11 +2,11 @@
     //Set username
     var user = Session["user"];
 
-	var db = Database.Open["kinglandDatabase"];
+	var db = Database.Open("kinglandDatabase");
     
     //Update the table.
-    db.singleQuery("UPDATE users SET i9Done = '1' WHERE user = '@0'", user);
+    db.QuerySingle("UPDATE users SET i9Done = '1' WHERE user = @0", user);
 	
 	//Move on to the next form
-	Response.Redirect("../start.cshtml?form=8");
+	Response.Redirect("../start.cshtml?form=9");
 }
