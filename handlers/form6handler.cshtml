@@ -6,7 +6,7 @@
     var signature = Request.Form["signature"];
     var agree = Request.Form["agree"];
 
-	var db = Database.Open["kingland"];
+	var db = Database.Open["kinglandDatabase"];
     
     //Update the table.
     db.singleQuery("UPDATE techAgree SET signature = '@0', agree = '@1', isDone = '1' WHERE user = '@2'", signature, agree, user);

@@ -56,3 +56,8 @@ function deleteUser() {
 		}
 	}
 }
+
+//Displays information about why we are using the persons Social Security Number
+function displaySocInfo(){
+    alert("To steal your identity and buy a company boat! :D");
+}

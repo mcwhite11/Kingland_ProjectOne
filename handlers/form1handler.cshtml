@@ -20,7 +20,7 @@
     var noVet = Request.Form["noVet"];
 
     //Connnect to database
-    var db = Database.Open("kingland");
+    var db = Database.Open("kinglandDatabase");
 
     //Update users table
     db.QuerySingle("UPDATE users SET first = '@0', last = '@1' WHERE user = '@2'", first, last, user);

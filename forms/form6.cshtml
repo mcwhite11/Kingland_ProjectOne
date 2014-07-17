@@ -3,7 +3,7 @@
     var user = Session["user"];
     
     //Connect to database
-    var db = Database.Open("kingland");
+    var db = Database.Open("kinglandDatabase");
 
     //Query to grab all Additional Information 
     var bckFill = db.QuerySingle("SELECT * FROM techAgree WHERE user = @0", user);      
