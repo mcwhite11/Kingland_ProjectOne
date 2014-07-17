@@ -1,0 +1,37 @@
+@{
+    //Grab our username
+    var user = Session["user"];
+    
+    var first = Request.Form["first"];
+    var last = Request.Form["last"];
+    var email = Request.Form["email"];
+    
+}
+
+<?php
+session_start();
+
+include("../functions/connect.php");
+
+//Grab all information
+$first = $_POST['first'];
+$last = $_POST['last'];
+$email = $_POST['email'];
+$hmemail = $_POST['hmemail'];
+$prefName = $_POST['preferred'];
+$position = $_POST['position'];
+$dept = $_POST['dept'];
+$sd = $_POST['actSD'];
+$hm = $_POST['hm'];
+$username = $_POST['user'];
+
+$user = $_SESSION['user'];
+
+//Update hmForm with finished information
+mysqli_query($con, "UPDATE users SET first = '" . $first . "', last = '" . $last . "', email =  '" . $email . "', hmemail = '" . $hmemail . "', prefName = '" . $prefName . "', position = '" . $position . "', dept = '" . $dept . "', startDate = '" . $sd . "', hmName = '" . $hm . "' WHERE user = '" . $username . "'");
+
+header('Location: ../cpanel.php?page=formSuccess');
+
+mysqli_close($con);
+
+?>
