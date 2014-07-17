@@ -1,8 +1,8 @@
 @{
     
+    var user = Session["user"];
 
-
-//Connnect to database and query to check if this form is done
+    //Connnect to database and query to check if this form is done
     var db = Database.Open("kinglandDatabase");
 
     //Check Add Info
@@ -42,10 +42,9 @@
     </head>
     <body>
 
-        @{
-            if ( @aiStat == 1 &&  @ddStat == 1 && @shStat == 1 && @ehStat == 1 && @shStat == 1 && @taStat == 1 && @w4Stat == 1 && @i9Stat == 1 && @iaTaxStat == 1 ) {
+            @if ( @aiStat == 1 &&  @ddStat == 1 && @shStat == 1 && @ehStat == 1 && @shStat == 1 && @taStat == 1 && @w4Stat == 1 && @i9Stat == 1 && @iaTaxStat == 1 ) {
                 <h4 style='margin-left:50px'>Review & Submit</h4>
-				  <form method='post' action='handlers/reviewhandler.php' id='form11' style='margin-left:80px;width:625px'>
+				  <form method='post' action='handlers/reviewhandler.cshtml' id='form11' style='margin-left:80px;width:625px'>
 				  <p>
 					<center>
 						Please review the information entered in the previous forms to ensure accuracy. 

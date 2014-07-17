@@ -1,11 +1,11 @@
 @{
     if (Session["user"] != null) {
         if (Session["isAdmin"].Equals(1)) {
-           //Response.Redirect("cpanel.cshtml");
+           Response.Redirect("cpanel.cshtml");
         } else {
            Response.Redirect("start.cshtml");
         }
-    }    
+    }   
 
 
     //Simple form validation with message

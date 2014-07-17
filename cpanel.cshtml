@@ -1,0 +1,554 @@
+﻿@{
+    if (Session["user"] != null) {
+        if ( !Session["isAdmin"].Equals(1)) {
+           Response.Redirect("start.cshtml");
+        } 
+    } else {
+        Response.Redirect("Default.cshtml");
+    }
+
+    //require("functions/validatePermissions.php");
+    
+    //Grab the form from get?form=x to load that form
+    int page = Request.QueryString["page"].AsInt();
+    
+    //If no form specified, set it to the first.
+    if ( page == 0 ) {
+        page = 1;
+    }    
+
+    //Connnect to database
+    var db = Database.Open("kinglandDatabase");
+}
+
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#" >
+	<head >
+		<title>Human Resources Control Panel</title>
+
+		
+		<link rel='stylesheet' id='stylesheet-css'  href='http://careers.kingland.com/wp-content/themes/builder/style.css?ver=1' type='text/css' media='all' />
+		
+		<!-- All centralized fonts from google -->
+		<link rel='stylesheet' id='bodyfont-css'  href='http://fonts.googleapis.com/css?family=open+sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='onefont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='twofont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='threefont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='fourfont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='fivefont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<link rel='stylesheet' id='sixfont-css'  href='http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C400italic%2C700%2C700italic&#038;subset=latin%2Cgreek-ext%2Ccyrillic%2Clatin-ext%2Cgreek%2Ccyrillic-ext%2Cvietnamese&#038;ver=3.8.3' type='text/css' media='all' />
+		<!-- End Google Fonts -->
+		
+		<!-- Start Dem Scripts -->
+		<script src="scripts/ajaxFunctions.js" type="text/javascript"></script>
+		<script src="scripts/HREmployeeFunctions.js" type="text/javascript"></script>
+		<script src="scripts/formVerification.js" type="text/javascript"></script>		
+		<script src="scripts/random.js" type="text/javascript"></script>  
+		<script src="scripts/jQuery.js"></script>
+		<script src="scripts/jQueryFunctions.js"></script>
+		
+		<!-- End Scripts -->
+	</head>
+	<body style="overflow-y:scroll;background-color:black; cursor:default" >
+
+		<div class="wide_cont" style="background-image:url('');">
+		
+		<!--TOP-->
+		<div class="top_line">
+			<div class="container">
+				<div class="row">
+					<div class="span6">
+						<p class="feed"></p>
+					</div>
+					<div class="span6 soc_icons">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/TOP-->
+		 
+		<!--PAGE HEAD-->
+		<div class="page_head" >
+			<div class="container">
+				<div class="row">
+					<div class="span3">
+						<div class="logo">
+						
+                        <a href="cpanel.cshtml">
+							 <img style="float:left;clear:none;" src="http://www.kingland.com/wp-content/uploads/2013/02/ksclogo-4221.png" alt="Careers" />
+						</a>
+						</div>
+					</div>
+					<div style="margin-left:1100px;clear:none;">
+						<font size="3">Hello, <i> @Session["user"] </i></font></br>
+						<a href="functions/logout.cshtml" style="margin-left:35px">Log Out</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/PAGE HEAD-->
+		
+			<!--WELCOME AREA-->
+		<div class="tag_line">
+			<div class="container">
+				<div class="row">
+					<div class="span12">
+						<div class="welcome">
+							<h3> 
+								<span class="colored">Administration Panel</span>
+							</h3>
+							
+							| <a href="cpanel.php">Home</a> | 
+							
+								
+								@if ( Session["isHR"].Equals(1)) {
+									<text>
+                                        <a href="?page=add">Add New Employee</a> |
+									    <a href="?page=welcome">Send Welcome Email | </a>
+									    <a href="?page=view">View Existing New Hire | </a>
+									    <a href="?page=update">Update Company Information | </a>
+								    </text>
+                                }
+								
+								@if ( Session["isHM"].Equals(1)) {
+									<text>
+								        <a href="?page=viewPendingHM">View Pending HM Forms | </a>
+								    </text>
+                                }
+								
+								@if ( Session["isIT"].Equals(1)) {
+									<text>
+								    	<a href="?page=viewPendingIT">View Pending IT Forms | </a>
+								    </text>
+                                }
+								
+								@if ( Session["isPR"].Equals(1)) {
+									<text>
+									    <a href="?page=viewPendingPR">View Pending PR Forms | </a>
+								    </text>
+                                }
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+		<!-- Main Content Area -->							
+		<div class="main_content_area blog_item_page">
+			<div class="container" style="width:800px;margin-bottom:25px">
+						
+					<!--Page content-->
+						<div class="row class="post-1613 post type-post status-publish format-standard hentry category-news"" id="post-1613">
+							<div class="blog_post_item_description"  style="   margin-top:-5px; " >
+								<div class="blog_head blog_inner">
+									<div class="meta">
+										<span   class="last_item">							
+                                       
+											//"Add New Employee"
+											@if ( page == "add" && Session["isHR"] ) {
+                                                <text>
+												    <h4><b>Add Employee</b></h4></span></div></div>
+												    <form method="post" action="functions/add.php" style="margin-left:20px;width:625px;" id="addUser">
+												
+													    <p>*First Name:</br>
+													    <input type="text" name="first" id="newFirstName" ></p>
+													
+													    <p>*Last Name:</br>
+													    <input type="text" name="last" id="newLastName" onBlur="updateArea(\'userID\',0,\'manualID\')"></p>
+													
+													    <p>Preferred Name (If applicable):</br>
+													    <input type="text" name="preferred"></p>													
+												
+													    <p>*E-Mail:</br>
+													    <input type="text" name="email" id="newEmail"></p>
+													
+													    <p>*Actual Start Date (mm/dd/yyyy):</br>
+													    <input type="text" name="actSD" id="newActualStartDate"></p>
+													
+													    <p style="float:right;clear:none;">
+														    *Department:</br>
+														    <select name="dept" id="prDepartment">
+															    <option>Select...</option>
+															    <option selected="selected">None</option>
+														    </select>
+													    </p>
+													
+													    <p style="clear:none;">
+														    *Position</br>
+														    <select name="position" id="prPosition">
+															    <option>Select...</option>
+															    <option selected="selected">None</option>
+														    </select>
+													    </p>
+													
+													    <p style="float:right;clear:none">
+														    *Supervisor: </br>
+														    <select name="supervisor" id="prSupervisor" alt="GRABS FROM GP - LISTS First, Last -- Links to Email">
+															    <option>Select...</option>
+															    <option selected="selected">None</option>
+														    </select>
+													    </p>
+													
+													    <p style="clear:none;">
+
+														    *Employee Type:</br>
+														    <select name="empType" id="prEmployeeType">
+															    <option>Select...</option>
+															    <option>Intern</option>
+															    <option>Part time</option>
+															    <option>Full Time</option>
+														    </select>														
+													    </p>
+													
+													    <p style="float:right;clear:none">
+													    <input type="checkbox" name="userIsDRA" value="yes">
+													    Is this user a DRA?
+													    </p>
+													
+													    <p style="clear:none;">
+														    Location:</br>
+														    <select name="location" id="prLocation">
+														    <option> Select... </option>';
+														
+                                                        @{
+                                                            var locations = db.Query("SELECT * FROM location");
+                                                            
+                                                            foreach (var loc in locations) {
+                                                                <text>
+                                                                    <option>locations.location</option>
+                                                                </text>
+
+                                                            }
+                                                          }
+														
+												    </select>
+													    </p>
+										
+													
+												    <hr>
+												
+												    <p>
+												    Manually enter user ID:</br>
+												    <input type="text" name="manualID" id="manualID" >
+												    </p>
+												
+												    <p>
+												    Manually Enter Password:</br>
+												    <input type="text" name="manualPassword">
+												    </p>
+													
+													    <a href="#" onClick="validateAddEmployee()" style="margin-left:540px">Add Employee</a>
+												    </form>
+                                                </text>
+												
+												
+											//"View Existing New Hire"
+											} else if ($page == "view" && Session["isHR"]) {
+												<h4><b>View New Hires</b></h4></span></div></div>
+												
+												$list = mysqli_query($con,"SELECT * FROM users");
+                                               @{
+                                                  var users = db.Query("SELECT * FROM users"); 
+                                                  <text>
+                                                    <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>
+
+												    <select id="myList" onChange="updateUser(0)">
+											 	    <option>Choose Employee</option>
+                                                  </text>
+
+                                                   foreach (var person in users) {
+                                                       <text>
+
+        </text>
+                                                   }
+
+                                               }
+ 
+												while ($row = mysqli_fetch_array($list)) {
+													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
+												}
+
+												</select></div>
+												
+												//This shows the forms to display -- Replaced with ajax from updateUser.php
+												<div id="showStatus" style="margin-top:15px"></div>
+												
+												//This shows the form selected above to display -- Replaced with ajax from updateForm.php
+												<div id="displayForm"></div>
+												
+												
+											//"Send Welcome Email"
+											}  else if ($page == "welcome" && Session["isHR"]) {
+												echo '<h4><b>Send Welcome Email</b></h4></span></div></div>';
+												//Let's connect to our database in question
+												include('functions/connect.php');
+												
+												$list = mysqli_query($con,"SELECT * FROM users");
+
+												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
+
+												echo '<select id="myList" onChange="showForm(5)">';
+											 	echo '<option>Choose Employee</option>';
+ 
+												while ($row = mysqli_fetch_array($list)) {
+													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
+												}
+
+												echo '</select></div>';
+												
+												echo '<div id="displayForm"></div>';
+												
+												
+											//"View Pending HM Forms"
+											} else if ($page =="viewPendingHM" && Session["isHM"] ) {
+												echo '<h4><b>Hiring Manager Set Up Form</b></h4></span></div></div>';
+
+												//Let's connect to our database in question
+												include('functions/connect.php');
+												
+												//For username/hiring manager name
+												$list = mysqli_query($con,"SELECT * FROM users");
+
+												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
+
+												echo '<select id="myList" onChange="showForm(2)">';
+												echo '<option value="">Choose Employee</option>';
+												
+												//Shows each employee that 1) the user is the hiring manager of and 2) has not been completed
+												while ($row = mysqli_fetch_array($list)) {
+													if ( $row['hmName'] == $_SESSION['user'] ) {
+														echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
+													}
+												}
+
+												echo '</select></div>';
+												
+												//This is the portion replaced by AJAX with the form for each employee - updateUser.php
+												echo '<div style="margin-top:20px" id="showStatus"><b> </b></div>';
+												
+												//Replaced from updateForm.php
+												echo '<div id="displayForm">&nbsp;</div>';
+												
+												
+												
+											//"View Pending IT forms"
+											} else if ($page =="viewPendingIT" && Session["isIT"] ) {
+												echo '<h4><b>IT Set Up Form</b></h4></span></div></div>';
+
+												//Let's connect to our database in question
+												include('functions/connect.php');
+												
+												//For username/hiring manager name
+												$list = mysqli_query($con,"SELECT * FROM users");
+
+												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
+
+												echo '<select id="myList" onChange="showForm(3)">';
+												echo '<option value="">Choose Employee</option>';
+												
+												//Shows each employee that 1) the user is the hiring manager of and 2) has not been completed
+												while ($row = mysqli_fetch_array($list)) {
+													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
+												}
+
+												echo '</select></div>';
+												
+												//This is the portion replaced by AJAX with the form for each employee - updateForm.php
+												echo '<div style="margin-top:20px" id="displayForm"></div>';
+												
+												
+											//"View pending PR forms"
+											}  else if ($page =="viewPendingPR" && Session["isPR"] ) {
+												echo '<h4><b>Payroll Set Up Form</b></h4></span></div></div>';
+
+												//Let's connect to our database in question
+												include('functions/connect.php');
+												
+												//For username/hiring manager name
+												$list = mysqli_query($con,"SELECT * FROM users");
+
+												echo '<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:</br>';
+
+												echo '<select id="myList" onChange="showForm(4)">';
+												echo '<option value="">Choose Employee</option>';
+												
+												//Shows each employee that 1) the user is the hiring manager of and 2) has not been completed
+												while ($row = mysqli_fetch_array($list)) {
+													echo '<option value="' . $row['user'] . '">' . $row['user'] . '</option>';
+												}
+
+												echo '</select></div>';
+												
+												//This is the portion replaced by AJAX with the form for each employee - updateForm.php
+												echo '<div style="margin-top:20px" id="displayForm"></div>';
+												
+												
+											//"User added succesfully"
+											} else if ($page == "addSuccess" ) {
+												echo "
+													<h4><b><center>Employee created successfully!</b></center></h4></span></div></div>
+													<center>	
+														<p>
+															The new employee's account was created succesfully.</br>
+															The hiring manager has been sent an email to begin filling out the appropriate paper work.
+															The can expect to recieve this email within 24 hours.
+														</p>
+														
+														<p>
+															<a href='cpanel.php'>Click here to return to home</a>
+														</p>
+													</center>
+													";
+													
+													
+											//"User email sent"
+											} else if ($page == "emailSent" ) {
+												echo "
+													<h4><b><center>Email sent successfully!</b></center></h4></span></div></div>
+													<center>	
+														<p>
+															The new Employee has be sent an email containing all the information neccessary to fill out the paper work.
+															They should expect to recieve this email within 24 hours.
+														</p>
+														
+														<p>
+															<a href='cpanel.php'>Click here to return to home</a>
+														</p>
+													</center>
+													";
+													
+												
+											// "Update Company Information"
+											} else if ($page == "update"  && Session["isHR"]) {
+												echo '
+													<h4>Edit Form Information</h4></span></div></div>
+													
+													<p><center>We understand that, over time, information may change or become obsolete. So we have tried to
+													combat that issue!</br>
+													Choose an item from one of the drop down lists to modify information related to it.</br></br>
+													For any drop down list, you may select the bottom "Add New" to create a new entry for that.</br>
+													You may also
+													delete that entry by selecting it and checking the "Delete" box!</center></p></br></br>';
+													
+												echo '<form method="post" action="handlers/updateInformation.php" id="updateInfo">';
+													include('forms/updateInformation.php');
+												echo '</form>';
+												 
+											echo '<a href="#" onClick="document.getElementById(\'updateInfo\').submit();" style="margin-left:625px">Submit</a>';
+																							
+													
+											//"Form Submitted Succesfully"
+											} else if ($page == "formSuccess" ) {
+												echo "
+													<h4><b><center>Form submitted successfully!</b></center></h4></span></div></div>
+													<center>	
+														<p>
+															The form was submitted succesfully.</br>
+															To confirm the information was processed and entered correctly, you can navigate back to where it was filled out and confirm the values.</br></br>
+															Thank you!
+														</p>
+														
+														<p>
+															<a href='cpanel.php'>Click here to return to home</a>
+														</p>
+													</center>
+											}
+											
+											
+										//"homepage" to display for each person.
+										} else {
+										
+										
+											//You are in human resources and the hiring manager!
+											if ( Session["isHM"] && Session["isHR"] ) {
+												echo '<h4 style="margin-left:50"><b>Hiring Manager & Human Resources</b></h4></span></div></div>';
+												echo 'Welcome to the Hiring Manager / Human Resources joint control panel.</br>
+												</br><b>Human Resources Portion:</b> You can click "Add New Employee" or "View Existing Employee" to create a new employee, or check the status of an existing employee.</br>
+												</br><b>Hiring Manager Portion:</b> You can click the "View Pending Forms" to view forms for employees listed under you that still require attention.';
+											}
+											
+											
+											//If you are only in Human Resources
+											else if ( Session["isHR"] ) {
+												echo '<h4 style="margin-left:50"><b>Human Resources View</b></h4></span></div></div>';
+												echo 'Welcome to the Human Resources Control Panel. You can click "Add New Employee" or "View Existing Employee" to create a new employee, or check the status of an existing employee.';
+												
+												
+											//If you are only a hiring manager.
+											} else if ( Session["isHM"] ) {
+												echo '<h4 style="margin-left:50"><b>Hiring Manager View</b></h4></span></div></div>';
+												echo 'Welcome to the Hiring Manager control panel. You can click the "View Pending HM Forms" to view forms for employees listed under you that still require attention.';
+												
+												
+											//only IT
+											} else if ( Session["isIT"] ) {
+												echo '<h4 style="margin-left:50"><b>IT View</b></h4></span></div></div>';
+												echo 'Welcome to the Information Technology portion of our New Hire Portal. Please navigate to the "View Pending IT Forms" tab where you can enter/modify/approve information relative to new employees.';
+												
+												
+											//only Payroll
+											} else if ( Session["isPR"] ) {
+												echo '<h4 style="margin-left:50"><b>Payroll View</b></h4></span></div></div>';
+												echo 'Welcome to the Payroll portion of our New Hire Portal. Please navigate to the "View Pending PR Forms" tab where you can enter/modify/approve information relative to new employees.';
+											}
+										}
+									}					
+								</div>
+						</div>
+					<!--/Page content-->
+			</div>
+		</div>
+		<!-- End Main Content Area -->
+
+		<!--FOOTER-->
+		<div class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="span3">			
+						<div class="textwidget">
+							<img src="http://careers.kingland.com/wp-content/uploads/2013/12/logo.png"/>
+						</div>
+					</div>
+					<div class="span3">
+						<div class="textwidget">
+							<h6 style="text-transform: uppercase !important; font-weight:600; !important">Clear Lake Facility</h6><hr>
+							<div class="textwidget">
+							1401 6th Ave. South<br>
+							Clear Lake, IA 50428<br>
+							(641) 355-1000
+							</div>
+						</div>
+					</div>
+					<div class="span3">			
+						<div class="textwidget">
+							<h6 style="text-transform: uppercase !important; font-weight:600; !important">Ames Facility</h6><hr>
+							<div class="textwidget">
+								114 Wlech Ave.<br>
+								Ames, IA 50014<br>
+								(515) 268-7020
+							</div>
+						</div>
+					</div>
+					<div class="span3">
+						<h6 style="text-transform: uppercase !important; font-weight:600; !important">Dalian Facility</h6><hr>
+						<div class="textwidget">
+							Kingland Software Company Limited<br>
+							No. 36 East Software Park Road<br>
+							Dalian, China 116023
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+		
+		<div class="bottom_line" style="border-top:1px solid #444444;">
+			<span style="font-size:11px;margin-left:25px;">Copyright 2014 - Kingland Systems Corporation</span>
+			<?php if( $_SESSION['isAdmin'] ) { echo '<span style="font-size:11px;float:right;padding-right:10px;"><a href="cpanel.php">Admin</a></span>'; } ?>
+			<span style="font-size:11px;float:right; padding-right:10px;"><a href="mailto:humanresource@kingland.com?Subject=Message%20From%20Newhire%20Portal">E-mail Us</a></span>
+			<span style="font-size:11px;float:right; padding-right:10px;"><a href='#' onClick='showFAQ()'>Frequently Asked Questions  </a></span>
+			<span style="font-size:11px;float:right; padding-right:10px;"><a href='#' onClick='showSecurity()'>Our Security Measurements</a></span>
+			
+		</div>
+		<!--/FOOTER-->
+	</body>
+</html>

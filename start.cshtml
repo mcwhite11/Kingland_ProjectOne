@@ -1,4 +1,14 @@
 ﻿@{
+    //Access Restrictions
+    if (Session["user"] != null) {
+        if ( !Session["isAdmin"].Equals(1)) {
+           Response.Redirect("start.cshtml");
+        } 
+    } else {
+        Response.Redirect("Default.cshtml");
+    }
+
+
     var user = Session["user"];    
 
    //Forward users not logged in back to the homepage.
@@ -229,7 +239,7 @@
 											    Look forward to hearing back from them soon, or we will see you on your start date!<br />
 											    <br />
 											    Please remember to bring your filled out tax paperwork to work on your first day as well!<br /><br />
-											    <a href="functions/logout.php">Log Out</a>
+											    <a href="functions/logout.cshtml">Log Out</a>
                                            </div>
                                         </text>
                                      break; 
@@ -287,7 +297,7 @@
 		<div class="bottom_line" style="border-top:1px solid #444444;">
 			<span style="font-size:11px;margin-left:25px;">Copyright 2014 - Kingland Systems Corporation</span>
 
-			@if( Session["isAdmin"].Equals(1)) { <span style="font-size:11px;float:right;padding-right:10px;"><a href="cpanel.php">Admin</a></span> }
+			@if( Session["isAdmin"].Equals(1)) { <span style="font-size:11px;float:right;padding-right:10px;"><a href="cpanel.cshtml">Admin</a></span> }
 			<span style="font-size:11px;float:right; padding-right:10px;"><a href="mailto:humanresource@kingland.com?Subject=Message%20From%20Newhire%20Portal">E-mail Us</a></span>
 			<span style="font-size:11px;float:right; padding-right:10px;"><a href='#' onClick='showFAQ()'>Frequently Asked Questions  </a></span>
 			<span style="font-size:11px;float:right; padding-right:10px;"><a href='#' onClick='showSecurity()'>Our Security Measurements</a></span>

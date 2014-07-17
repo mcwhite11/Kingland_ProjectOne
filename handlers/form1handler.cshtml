@@ -23,10 +23,10 @@
     var db = Database.Open("kinglandDatabase");
 
     //Update users table
-    db.QuerySingle("UPDATE users SET first = '@0', last = '@1' WHERE user = '@2'", first, last, user);
+    db.QuerySingle("UPDATE users SET first = @0, last = @1 WHERE user = @2", first, last, user);
 
     //Update users table
-    db.QuerySingle("UPDATE addInfo SET hPhone = '@0', cPhone = '@1', ICEName = '@2', ICEHPhone = '@3', ICECPhone = '@4', ICERel = '@5', ethnicity = '@6', disabled = '@7', disAcom = '@8', acomExp = '@9', vet = '@10', disVet = '@11', noVet = '@12', isDone = '1' WHERE user = '@13'", hPhone, cPhone, ICEName, ICEPhone, ICERel, ethnicity, disabled, acomExp, vet, disVet, noVet, user);
+    db.QuerySingle("UPDATE addInfo SET hPhone = @0, cPhone = @1, ICEName = @2, ICEHPhone = @3, ICECPhone = @4, ICERel = @5, ethnicity = @6, disabled = @7, disAcom = @8, acomExp = @9, vet = @10, disVet = @11, noVet = @12, isDone = '1' WHERE user = @13", hPhone, cPhone, ICEName, ICEPhone, ICERel, ethnicity, disabled, acomExp, vet, disVet, noVet, user);
 	
 	//Head to the next form
 	Response.redirect("../start.cshtml?form=2"); 

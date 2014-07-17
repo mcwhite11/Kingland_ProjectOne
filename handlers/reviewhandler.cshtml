@@ -6,9 +6,8 @@
   var db = Database.Open("kinglandDatabase");
 
   //Update the table.
-  db.QuerySingle("UPDATE formInfo SET emComplete = '1');
+  db.QuerySingle("UPDATE formInfo SET emComplete = '1'");
   
-	//Head to the next form
-	Response.redirect("../start.cshtml?form=99");
-	
+  //Head to the next form
+  Response.Redirect("../start.cshtml?form=99");
 }
