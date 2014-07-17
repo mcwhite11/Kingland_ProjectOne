@@ -22,7 +22,7 @@
         }
             <h4 style="margin-left:50px">Authorization Agreement for Direct Deposit</h4>
 
-			    <form method="post" action="handlers/form2handler.php" id="form2" style="margin-left:80px;width:625px">
+			    <form method="post" action="handlers/form2handler.cshtml" id="form2" style="margin-left:80px;width:625px">
 
                     <b>Company Name:</b> Kingland Systems Corporation &emsp;<b>Company ID:</b> 42-1396894
 			        <br /><br />
@@ -75,7 +75,7 @@
 
 			        <hr>
 				
-			        <label>Are these electronic funds (full amount of payroll) being forwarded to a foreign bank?</label><br />
+			        <label>Are these electronic funds (full amount of payroll) being forwarded to a foreign bank?</label>
 				    <input type="radio" name="foreignBank" id="foreignYes" value="yes" @if(@bckFill.foreignBank == "yes") {<text>checked</text> }>Yes  &nbsp
 				    <input type="radio" name="foreignBank" id="foreignNo" value="no" @if(@bckFill.foreignBank == "no") {<text>checked</text> }>No  &nbsp <br /><br />
 			       
@@ -84,9 +84,9 @@
 			        in such manner as to afford COMPANY and DEPOSITORY a reasonable opportunity to act on it.</label> <br /><br />
 
 			        *Social Security Number: <a style="color:blue; clear: none; text-decoration:underline;font-size: 10px;cursor: pointer; cursor: hand;" onClick='displaySocInfo()'>
-			        Why do we need this?</a><input type="text" name="soc" id="SSN" value = "@bckFill.soc" ><br />
+			        Why do we need this?</a><input type="text" name="soc" id="SSN" value = "@bckFill.soc" ><br /><br />
 
-				    <input type="checkbox" id="directDepositAgree" name="agree" value="agree" @if(@bckFill.agree == "no") {<text>checked</text> }>I have fully read, understand, and agree to these terms. <br />
+				    <input type="checkbox" id="directDepositAgree" name="agree" value="agree" @if(@bckFill.agree == "no") {<text>checked</text> }>I have fully read, understand, and agree to these terms. <br /> <br />
 				    
 				    *Signature: :<br />
 				    <input type="text" name="signature" id="directDepositSignature"  value="@bckFill.signature" >
@@ -98,7 +98,7 @@
 				        *Please Bring a void check or a blank depositary reciept on your first day.
 			        </p>
 				
-			        <p>
+			        <p style="font-size: 10px">
 				        I voluntarily authorize Kingland Systems to forward my regular payrool checks by mail, or due to special cirumstances a paycheck is requested mailed. 
 				        I understand that without such written authorization, the employer may no longer forward my check by mail, 
 				        I further understand that this authorization may be revoked at any tme with written notice to the employer.<br /><br />

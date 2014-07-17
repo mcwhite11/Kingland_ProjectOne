@@ -416,7 +416,7 @@ function validateAddEmployee(){
 	}
 	
 	else {
-		//Call Generic AJAX function to use PHP to check if the ID in the field is not in use
+		//Call Generic AJAX function to use cshtml to check if the ID in the field is not in use
 		//This updateArea function is force to handle the result because Javascript is stupid and can't
 		//Handle things in sequential order.
 		updateArea("checkUserID", document.getElementById('manualID').value, 0);
