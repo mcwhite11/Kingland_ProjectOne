@@ -17,11 +17,13 @@ var usrID = mylist.options[mylist.selectedIndex].text;
 		}
 		  
 		//On webform state change
-		xmlhttp.onreadystatechange=function() {
-			//Form is processed and we can find the file to get from
-			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-				document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
-			}
+		xmlhttp.onreadystatechange = function () {
+		    //Form is processed and we can find the file to get from
+		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		        document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
+		    }
+
+		    alert(xmlhttp.status);
 		}
 
 		/* 
@@ -32,7 +34,8 @@ var usrID = mylist.options[mylist.selectedIndex].text;
 			Sorry!
 		*/
 
-		xmlhttp.open("GET","forms/updateForm.php?q="+usrID+"&form="+id,true);
+		
+		xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form="+id,true);
 
 		formsShown = true; 
 		xmlhttp.send();
@@ -82,10 +85,10 @@ function updateUser(id){
 		}
 
 		if ( id == 0 ) {
-			xmlhttp.open("GET","forms/updateUser.php?q="+usrID,true);
+			xmlhttp.open("GET","forms/updateUser.cshtml?q="+usrID,true);
 			reloadUser("showStatus");
 		} else if ( id == 1 ) { 
-			xmlhttp.open("GET","forms/updateForm.php?q="+usrID+"&form=2",true);
+			xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form=2",true);
 		}
 		xmlhttp.send();
 	}
@@ -133,17 +136,17 @@ function updateArea(caller, val, name){
 			}
 			
 			if ( caller == "updateInformation" ) {
-				xmlhttp.open("GET","forms/updateInformationAJAX.php?name="+name+"&val="+val,true);
+				xmlhttp.open("GET","forms/updateInformationAJAX.cshtml?name="+name+"&val="+val,true);
 			}
 			
 			if ( caller == "userID" ) {
 				var first = document.getElementById('newFirstName').value;
 				var last = document.getElementById('newLastName').value;
-				xmlhttp.open("GET","handlers/generateID.php?first="+first+"&last="+last, true);
+				xmlhttp.open("GET","handlers/generateID.cshtml?first="+first+"&last="+last, true);
 			}
 			
 			if ( caller == "checkUserID" ) {
-				xmlhttp.open("GET","functions/checkID.php?id="+val, true);
+				xmlhttp.open("GET","functions/checkID.cshtml?id="+val, true);
 			}
 			
 			xmlhttp.send();

@@ -1,11 +1,9 @@
 @{
-  //Establish this user
-  var user = Session["user"];
   
   //Connect to database
   var db = Database.Open("kinglandDatabase");
 
-  var bckFill = db.QuerySingle("SELECT * FROM hmForm WHERE user = @0", user);
+  var bckFill = db.QuerySingle("SELECT * FROM hmForm WHERE user = @0", myUser);
 }
 
 <!DOCTYPE html>
