@@ -1,0 +1,46 @@
+@{
+    //Grab our username
+    var user = Session["user"];
+    
+    var specialInstall = Request.Form["specialInstall"];
+    var pcRequirement = Request.Form["pcRequirement"];
+    var deskLocation = Request.Form["deskLocation"];
+    var assignedNetworkPort = Request.Form["assignedNetworkPort"];
+    var userPermission = Request.Form["userPermission"];
+    var mks = Request.Form["mks"];
+    
+    
+    //Update hm info table FINISH THIS PART
+    db.QuerySingle("UPDATE users SET first = '@0', last = '@1', email = '@2', hmemail= '@3', prefName = '@4', position = '@5', dept = '@6' WHERE user = '@7'", first, last, email, hmemail, prefName, position, dept, actSD, hm, user);
+    
+    //Head to message
+	Response.redirect("../cpanel.php?page=formSuccess"); 
+}
+
+
+<?php
+session_start();
+
+include("../functions/connect.php");
+
+//Grab all information
+$specInstall = $_POST['specialInstall'];
+$pcReq = $_POST['pcRequirement'];
+$deskLoc = $_POST['deskLocation'];
+$netPort = $_POST['assignedNetworkPort'];
+$permission = $_POST['userPermission'];
+$mks = $_POST['mks'];
+$username = $_POST['user'];
+	
+//Update hmForm with finished information
+mysqli_query($con, "UPDATE hmForm SET specInstall = '" . $specInstall . "', pcReq = '" . $pcReq . "', deskLoc =  '" . $deskLoc . "', netPort = '" . $netPort . "', permission = '" . $permission . "', mks = '" . $mks . "' WHERE user = '" . $username . "'");
+
+//After some checks -- if the information is all there and valid
+mysqli_query($con, "UPDATE formInfo SET hmComplete = '1' WHERE user = '" . $username . "'");
+
+
+header('Location: ../cpanel.php?page=formSuccess');
+	
+mysqli_close($con);
+
+?>
