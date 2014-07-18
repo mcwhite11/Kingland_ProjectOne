@@ -5,33 +5,17 @@
     var first = Request.Form["first"];
     var last = Request.Form["last"];
     var email = Request.Form["email"];
+    var hmemail = Request.Form["hmemail"];
+    var prefName = Request.Form["prefName"];
+    var position = Request.Form["position"];
+    var dept = Request.Form["dept"];
+    var actSD = Request.Form["actSD"];
+    var hm = Request.Form["hm"];
     
+     //Update users table
+    db.QuerySingle("UPDATE users SET first = '@0', last = '@1', email = '@2', hmemail= '@3', prefName = '@4', position = '@5', dept = '@6', startDate = '@7', hmName = '@8' WHERE user = '@9'", first, last, email, hmemail, prefName, position, dept, actSD, hm, user);
+    
+    //Head to message
+	Response.redirect("../cpanel.php?page=formSuccess"); 
 }
 
-<?php
-session_start();
-
-include("../functions/connect.php");
-
-//Grab all information
-$first = $_POST['first'];
-$last = $_POST['last'];
-$email = $_POST['email'];
-$hmemail = $_POST['hmemail'];
-$prefName = $_POST['preferred'];
-$position = $_POST['position'];
-$dept = $_POST['dept'];
-$sd = $_POST['actSD'];
-$hm = $_POST['hm'];
-$username = $_POST['user'];
-
-$user = $_SESSION['user'];
-
-//Update hmForm with finished information
-mysqli_query($con, "UPDATE users SET first = '" . $first . "', last = '" . $last . "', email =  '" . $email . "', hmemail = '" . $hmemail . "', prefName = '" . $prefName . "', position = '" . $position . "', dept = '" . $dept . "', startDate = '" . $sd . "', hmName = '" . $hm . "' WHERE user = '" . $username . "'");
-
-header('Location: ../cpanel.php?page=formSuccess');
-
-mysqli_close($con);
-
-?>
