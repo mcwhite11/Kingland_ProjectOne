@@ -739,8 +739,6 @@ function generateEmailBody(){
 	//pulling both text and hidden variables from that page
 	var name = capitaliseFirstLetter(document.getElementById('name').value.trim());
 	var startDate = document.getElementById('startDate').value.trim();
-	var user = document.getElementById('user').value.trim();
-	var pass = document.getElementById('pass').value.trim();
 	var checkInName = document.getElementById('checkInName').value.trim();
 	var preferredEmail = document.getElementById('preferredEmail').value.trim();
 	var preferredPhone = document.getElementById('preferredPhone').value.trim();
