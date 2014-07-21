@@ -2,11 +2,15 @@
     //Connect to database
     var db = Database.Open("kinglandDatabase");
 
+    //Grab our username
+    var myUser = Request.Params["myUser"];
+
+    //Bckfill information
     var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
 }
 
 <form method="post" onmouseover="generateEmailBody();" action="handlers/newHireEmail.cshtml" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody();">
-	<p> Email: <input type="text"  name="email" value = "' . $row['email'] . '" id="newHireEmail"></input></p>
+	<p> Email: <input type="text"  name="email" value = "@bckFill.email" id="newHireEmail"></input></p>
 	<p> Location:<br />
 	<select id="location">
 	
@@ -15,7 +19,7 @@
 	var loc = db.Query("SELECT * FROM location");
     
     foreach ( var location in loc ) {
-         @:<option value = "@loc.location">@loc.location</option>   
+         <option value = "@location.address">@location.location</option>   
     }
 }
 					
@@ -28,7 +32,6 @@
 	<!-- These are hidden fields so that the javascript fucntion can pull them into variables -->
 	<p><input type="hidden"  name="name" value = "@bckFill.first" id="name">
 	<input type="hidden"  name="startDate" value = "@bckFill.startDate" id="startDate"></input>
-	<input type="hidden"  name="location" value = "@bckFill.location" id="location"></input>
     </p>
 			
 	<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br />
@@ -39,5 +42,3 @@
 					
 	<a href="#" onClick="submitEmail();" style="margin-left:625px">Send</a>
 </form>
-
-@db.close();

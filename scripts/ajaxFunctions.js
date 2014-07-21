@@ -1,45 +1,5 @@
 var formShown = false;
 
-//Updates the form shown in "View Existing New Hires"
-function showForm(id) {
-var xmlhttp;
-var mylist = document.getElementById("myList");
-var usrID = mylist.options[mylist.selectedIndex].text;
-
-	if ( usrID == "Choose Employee" ) {
-		document.getElementById("displayForm").innerHTML = " ";
-	} else {
-		//Make a new XML HTTP Request
-		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp = new XMLHttpRequest();
-		} else { // code for IE6, IE5
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		  
-		//On webform state change
-		xmlhttp.onreadystatechange = function () {
-		    //Form is processed and we can find the file to get from
-		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		        document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
-		    }
-		}
-
-		/* 
-			Okay so this may be a bit confusing, but the ID being passed in is either 0, 1, 2, 3, or 4.
-			0 = all, 1 = HR, 2 = HM, 3 = IT, 4 = PR
-			(This is just going in order from left to right.)
-			
-			Sorry!
-		*/
-
-		
-		xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form="+id,true);
-
-		formsShown = true; 
-		xmlhttp.send();
-	}
-}	
-
 function shouldShowForms(id, holderID) {
 	if ( formShown ) {
 		slideHolderUp("displayForm", id);
@@ -93,12 +53,17 @@ function updateUser(id){
 }
 
 //Generic Ajax function
+    //Caller - The page/forms calling the function
+    //val - The value to pass for updating
+    //The name to update
 function updateArea(caller, val, name){
 	var xmlhttp;
 
-    //Caller - The page callling the function
-    //val - The value to update
-    //The name to update
+    //Pull the userID selected if relevant
+	if ( caller == "showForm" ) {
+	    var mylist = document.getElementById("myList");
+	    var usrID = mylist.options[mylist.selectedIndex].text;
+	}
 
     //Make a new XML HTTP Request
     if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -107,41 +72,57 @@ function updateArea(caller, val, name){
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-
-	//Remove fields and skip rest of function for updateInformation
+	//updateInformation: Remove fields and skip rest of function
     if (val == "Select..." && caller == "updateInformation") {
         document.getElementById(name + "Update").innerHTML = " ";
-    } else {
+    
+    //showForm: Blank form and skip rest of function
+    } else if ( usrID == "Choose Employee" && caller == "showForm") {
+		document.getElementById("displayForm").innerHTML = " ";
+
+    //Execute legitimate Ajax Call
+	} else {
 
         //On webform state change
-        xmlhttp.onreadystatechange = function () {
-            //Form is processed and we can find the file to get from
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	xmlhttp.onreadystatechange = function () {
+	    //Form is processed and we can find the file to get from
+	    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
-                if (caller == "updateInformation") {
-                    document.getElementById(name + "Update").innerHTML = xmlhttp.responseText;
-                }
+	        //Update Information Form
+	        if (caller == "updateInformation") {
+	            document.getElementById(name + "Update").innerHTML = xmlhttp.responseText;
+	        }
 
-                //Updating the value of the manualUser ID Box
-                if (caller == "userID") {
-                    document.getElementById(name).value = xmlhttp.responseText;
-                }
+	        //Update Information Form
+	        if (caller == "showForm") {
+	            document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
+	        }
 
-                if (caller == "checkUserID") {
-                    if (xmlhttp.responseText.indexOf("1") != -1) {
-                        document.getElementById('addUser').submit();
-                    } else {
-                        alert('That user ID already exists or is not of correct length!');
-                        getFocus('manualID');
-                    }
-                }
-            }
-        }
+	        //Updating the value of the manualUser ID Box
+	        if (caller == "userID") {
+	            document.getElementById(name).value = xmlhttp.responseText;
+	        }
+
+	        if (caller == "checkUserID") {
+	            if (xmlhttp.responseText.indexOf("1") != -1) {
+	                document.getElementById('addUser').submit();
+	            } else {
+	                alert('That user ID already exists or is not of correct length!');
+	                getFocus('manualID');
+	            }
+	        }
+	    }
+	}
             
-			
+		//Pass the Field and the value of that field	
 		if ( caller == "updateInformation" ) {
 			xmlhttp.open("GET","forms/updateInformation-AJAX.cshtml?name="+name+"&val="+val,true);
 		}
+
+        //If we're showing one of the front page forms
+        if ( caller == "showForm" ) {
+            xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form="+val,true);
+        }
 			
 		if ( caller == "userID" ) {
 			var first = document.getElementById('newFirstName').value;
