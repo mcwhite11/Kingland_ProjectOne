@@ -8,16 +8,16 @@
     //Grab the name of said field
     var value = Request.Params["val"];
 
-    var fieldDelete = @field + "delete";
-    var fieldName = @field + "name";
-    var fieldAdd = @field + "add";
+    var fieldDelete = field + "delete";
+    var fieldName = field + "name";
+    var fieldAdd = field + "add";
 }
 
 
 		<p style="float:right;position:relative;left:50px;text-align:center;">
 			Delete:</br> <input type="checkbox" name="@fieldDelete" value="delete">
 		</p>
-		
+
 		<div style="clear:none;float:left;width:100px;margin-right:15px;">
 			<p> Name: </br>
             @{
@@ -35,14 +35,12 @@
 		//Note this will only print out with an existing address. So we'll add an if block to catch our "add new"
 		//which doesn't have an existing address!
 		if ( field == "location" ) {
-			var listAddress = db.Query("SELECT * FROM location WHERE location = @0", value);
-			foreach ( var address in listAddress ) {
+			var address = db.QuerySingle("SELECT * FROM location WHERE location = @0", value);
 				<div style="clear:none;float:right;width:175px;">
 					<p> Address: <br />
-						<input name="address" type="text" value="@address.address">
+						<input name="address" type="text" value="@address">
 					</p>
 				</div>
-			}
 			
 			if ( value == "Add New..." ) {
 				<div style="clear:none;float:right;width:175px;">

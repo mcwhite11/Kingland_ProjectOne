@@ -1,0 +1,37 @@
+﻿@{    
+	//Declare the variables -- Grab from form
+    var thisUser = Request.Form["myUser"];
+	var position = Request.Form["position"];
+	var division = Request.Form["division"];
+	var dept = Request.Form["dept"];
+	var incentiveType = Request.Form["incentiveType"];
+	var incentive = Request.Form["incentive"];
+	var empRef = Request.Form["referral"];
+	var sick = Request.Form["sick"];
+	var empType = Request.Form["empType"];
+	var empStatus = Request.Form["empStatus"];
+	var funcArea = Request.Form["funcArea"];
+	var pay = Request.Form["pay"];
+	var empTypeDetail = Request.Form["empTypeDetail"];
+	var payType = Request.Form["payType"];
+	var vacation = Request.Form["vacation"];
+	var comments  = Request.Form["comments"];
+	var supervisor = Request.Form["supervisor"];
+	var hrSubmission = Request.Form["hrSubmission"];
+	var hrReview = Request.Form["hrReview"];
+	var hrApproval = Request.Form["hrApproval"];
+
+    //Open and connect to DB
+    var db = Database.Open("kinglandDatabase");
+
+	//Update user with finished information
+	db.QuerySingle("UPDATE payrollForm SET supervisor = @0, position = @1, division = @2, dept = @3, incentiveType = @4, incentive = @5, empRef = @6, sick = @7, hrSubmission = @8, hrReview = @9, empType = @10, empStatus = @11, funcArea = @12, pay = @13, empTypeDetail = @14, payType = @15, vacation = @16, comments = @17, hrApproval = @18  WHERE user = @19", supervisor, position, division, dept, incentiveType, incentive, empRef, sick, hrSubmission, hrReview, empType, empStatus, funcArea, pay, empTypeDetail, payType, vacation, comments, hrApproval, thisUser);
+	
+	//Check to see if all three hr signatures have been signed before setting the form to complete
+	if ( hrSubmission != "" && hrReview != "" && hrApproval != "" ) {
+		db.QuerySingle("UPDATE formInfo SET prComplete = '1' WHERE user = @0", thisUser);
+	}
+	
+	Response.Redirect("../cpanel.cshtml?page=formSuccess");
+
+}

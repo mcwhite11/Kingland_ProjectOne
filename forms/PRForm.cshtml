@@ -11,7 +11,7 @@
 }
 
 
-<form method="post" action="handlers/PRForm.php" id="PRForm" style="margin-left:80px;width:625px">
+<form method="post" action="handlers/PRFormHandler.cshtml" id="PRForm" style="margin-left:80px;width:625px">
 
 	<div>
 		<div style="clear:none;float:left;width:300px">
@@ -250,7 +250,7 @@
 		</div>
 	</div>
 
-	<input type="hidden" name="user" value = "@bckFillPR.user">
+	<input type="hidden" name="myUser" value = "@bckFillPR.user">
 			
 	<a href="#" id="submitButton" onClick="validatePRForm()" style="margin-left:625px"></a>
 			

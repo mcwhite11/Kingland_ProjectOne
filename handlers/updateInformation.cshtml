@@ -1,0 +1,40 @@
+﻿@{
+    //Connect and open DB
+    var db = Database.Open("kinglandDatabase");
+
+    if ( Request.Form["location"] == "set" ) {
+	    var name = Request.Form["locationname"];
+	    var address = Request.Form["address"];
+	    if ( Request.Form["locationdelete"] == "delete" ) {
+		    db.QuerySingle("DELETE FROM location WHERE location = @0", name);
+	    } else if ( Request.Form["locationadd"] == "add" ) {
+		    db.QuerySingle("INSERT INTO location (location, address) VALUES (@0, @1)", name, address);
+	    } else {
+		    db.QuerySingle("UPDATE location SET address = @0 WHERE location = @1", address, name);
+            <text>Happened</text>
+	    }
+    }
+
+    if ( Request.Form["division"] == "set" ) {
+	    var name = Request.Form["divisionname"];
+	    if (  Request.Form["divisiondelete"] == "delete" ) {
+		    db.QuerySingle("DELETE FROM division WHERE division = @0", name);
+	    } else if ( Request.Form["divisionadd"] == "add" ) {
+		    db.QuerySingle("INSERT INTO division (division) VALUES (@0)", name);
+	    }
+    }
+
+    if ( Request.Form["funcArea"] == "set" ) {
+	    var name = Request.Form["funcAreaname"];
+	    var address = Request.Form["address"];
+	    if (  Request.Form["funcAreadelete"] == "delete" ) {
+		    db.QuerySingle("DELETE FROM funcArea WHERE funcArea = @0", name);
+	    } else if ( Request.Form["funcAreaadd"] == "add" ) {
+		    db.QuerySingle("INSERT INTO funcArea (funcArea) VALUES (@0)", name);
+	    } else {
+		    db.QuerySingle("UPDATE location SET address = @0 WHERE location = @1", address, name);
+	    }
+    }
+
+   // Response.Redirect("../cpanel.cshtml?page=update");
+}
