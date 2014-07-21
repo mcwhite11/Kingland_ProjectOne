@@ -10,8 +10,7 @@
 
 @{
     //displays all of the forms that the employee has filed out.
-    if ( form == "view" ) {
-	    <hr>
+    if ( form == "emp" ) {
 	    <b>Additional Information Form: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form1holder')">Show ></a></b>
 	    <div id="form1holder" style="display:none">
 			    <iframe src="forms/form1pdf.cshtml?user=@myUser" width="100%" style="min-height:500px;">

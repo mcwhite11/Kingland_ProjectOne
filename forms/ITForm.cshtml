@@ -18,7 +18,7 @@
         <title></title>
     </head>
     <body>
-        <form method="post" action="handlers/itForm.php" id = "itForm" style="margin-left:80px;width:625px">
+        <form method="post" action="handlers/itFormHandler.cshtml" id = "itForm" style="margin-left:80px;width:625px">
             <p>
                 *First Name:<br />
         		    <input type="text" name="first" id="hrFirstName" value = "@bckFill.first" >
@@ -96,7 +96,7 @@
           			<input type="radio" name="mks" value="no" id="mksNo" @if(@bckFillHM.mks == "no") {<text>checked</text> }> No<br />
         		</p>
       		
-        		<input type="hidden" name="user" value="user">
+        		<input type="hidden" name="myUser" value="@myUser">
         		<a href="#" onClick = "validateITForm()" style="margin-left:500px">Change / Confirm</a>
         	</form>
 		
