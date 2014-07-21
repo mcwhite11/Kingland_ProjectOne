@@ -246,7 +246,7 @@
                                                     var users = db.Query("SELECT * FROM users"); 
                                                        
                                                     <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												        <select id="myList" onChange="updateArea('showForm','view',0)">
+												        <select id="myList" onChange="updateArea('showStatus',0,0)">
 											 	            <option>Choose Employee</option>
 
                                                             @foreach (var person in users) {

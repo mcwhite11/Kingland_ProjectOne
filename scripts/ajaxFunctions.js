@@ -60,7 +60,7 @@ function updateArea(caller, val, name){
 	var xmlhttp;
 
     //Pull the userID selected if relevant
-	if ( caller == "showForm" ) {
+	if ( caller == "showForm" || caller == "showStatus" ) {
 	    var mylist = document.getElementById("myList");
 	    var usrID = mylist.options[mylist.selectedIndex].text;
 	}
@@ -77,7 +77,7 @@ function updateArea(caller, val, name){
         document.getElementById(name + "Update").innerHTML = " ";
     
     //showForm: Blank form and skip rest of function
-    } else if ( usrID == "Choose Employee" && caller == "showForm") {
+    } else if ( usrID == "Choose Employee" && ( caller == "showForm" || caller == "showStatus" ) ) {
 		document.getElementById("displayForm").innerHTML = " ";
 
     //Execute legitimate Ajax Call
@@ -96,6 +96,11 @@ function updateArea(caller, val, name){
 	        //Update Information Form
 	        if (caller == "showForm") {
 	            document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
+	        }
+
+	        //Update Information Form
+	        if ( caller == "showStatus" ) {
+	            document.getElementById("showStatus").innerHTML = xmlhttp.responseText;
 	        }
 
 	        //Updating the value of the manualUser ID Box
@@ -122,6 +127,11 @@ function updateArea(caller, val, name){
         //If we're showing one of the front page forms
         if ( caller == "showForm" ) {
             xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form="+val,true);
+        }
+
+        //If we're showing one of the front page forms
+        if ( caller == "showStatus" ) {
+            xmlhttp.open("GET","forms/updateUser.cshtml?q="+usrID,true);
         }
 			
 		if ( caller == "userID" ) {

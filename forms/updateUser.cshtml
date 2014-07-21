@@ -1,15 +1,15 @@
 ﻿@{
-    var myUser = Request.Form["q"];
+    var myUser = Request.Params["q"];
 
     //Connect to database
     var db = Database.Open("kinglandDatabase");
 
     var formInfo = db.QuerySingle("SELECT * FROM formInfo WHERE user = @0", myUser);
 
-    int meterVal;
+    int meterVal = 0;
 }
 
-<table border="0px" width="725px" style="margin-left:30px;">
+<table border="0" width="725px" style="margin-left:30px;">
 		<tr>
 			<th>Active</th>
 			<th>All Forms</th>
@@ -21,22 +21,22 @@
 		</tr>
 
 	<tr>
-		<td>
+		<td style="text-align: center">
         @{
 			//Display if the user is active or not. 
 			var isActive = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
-				if ( isActive.active.equals(0) ) {
+				if ( isActive.active.Equals(0) ) {
 					<p style="color:red;padding-top:15px;"><b>No</b></p>
 				} else {
 					<p style="color:green;padding-top:15px;"><b>Yes</b></p>
 				}
-			}
-         }
+		}
+
 	</td>
-		<td style="padding:5px">
+		<td style="padding:5px;text-align: center">
             @{
-			    if ( formInfo.emComplete.equals(1) ) {
-				    @meterVal+= 1;
+			    if ( formInfo.emComplete.Equals(1) ) {
+				    meterVal++;
 				    <b><a id="showAll" style="color:green;" href="#" onClick="shouldShowForms(0, this.id)">v Show v</a></b>
 			    } else {
 				    <b><a id="showAll" style="color:red;" href="#" onClick="shouldShowForms(0, this.id)">v Show v</a></b>
@@ -45,10 +45,10 @@
 	</td>
 			
 	
-		<td style="padding:5px">
+		<td style="padding:5px;text-align: center">
             @{
-			    if ( formInfo.hrComplete.equals(1) ) {
-				    @meterVal+= 1;
+			    if ( formInfo.hrComplete.Equals(1) ) {
+				    meterVal++;
 				    <b><a id="hrStatus" style="color:green;" href="#" onClick="shouldShowForms(1, this.id)">v Show v</a></b>
 			    } else {
 				    <b><a id="hrStatus" style="color:red;" href="#" onClick="shouldShowForms(1, this.id)">v Show v</a></b>
@@ -56,57 +56,55 @@
             }
 			
 		</td>
-		<td style="padding:5px">
-	    @{
-			if ( formInfo.hmComplete.equals(1) ) {
-				@meterVal += 1;
-				<b><a id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms(2, this.id)">v Show v</a></b>
-			} else {
-				<b><a id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms(2, this.id)">v Show v</a></b>
-			}
-         }
+		<td style="padding:5px;text-align: center">
+	        @{
+			    if ( formInfo.hmComplete.Equals(1) ) {
+				    meterVal++;
+				    <b><a id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms(2, this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms(2, this.id)">v Show v</a></b>
+			    }
+             }
 
 		</td>
-		<td style="padding:5px">
-	    @{
-			if ( formInfo.itComplete.equals(1) ) {
-                @meterVal += 1;
-				<b><a id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms(3, this.id)">v Show v</a></b>
-			} else {
-				<b><a id="itStatus" style="color:red;" href="#" onClick="shouldShowForms(3, this.id)">v Show v</a></b>
-			}
-         }
+		<td style="padding:5px;text-align: center">
+	        @{
+			    if ( formInfo.itComplete.Equals(1) ) {
+                    meterVal++;
+				    <b><a id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms(3, this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="itStatus" style="color:red;" href="#" onClick="shouldShowForms(3, this.id)">v Show v</a></b>
+			    }
+             }
 
 		</td>
-		<td style="padding:5px">
-	    @{
-			if ( formInfo.prComplete.equals(1) ) {
-				@meterVal += 1;
-				<b><a id="prStatus" style="color:green;" href="#" onClick="shouldShowForms(4, this.id)">v Show v</a></b>
-			} else {
-				<b><a id="prStatus" style="color:red;" href="#" onClick="shouldShowForms(4, this.id)">v Show v</a></b>
-			}
-         }
+		<td style="padding:5px;text-align: center">
+	        @{
+			    if ( formInfo.prComplete.Equals(1) ) {
+				    meterVal++;
+				    <b><a id="prStatus" style="color:green;" href="#" onClick="shouldShowForms(4, this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="prStatus" style="color:red;" href="#" onClick="shouldShowForms(4, this.id)">v Show v</a></b>
+			    }
+             }
 
 		</td>
 		<td>
-			<form method="post" action="functions/deleteUser.php" id="deleteUserViewForm">
-				<input style="margin-left:18px" type="checkbox" value = "' . $myUser . '" name="deleteUserCheckbox" id="deleteUserCheckbox" onChange="deleteUser()">
+			<form method="post" action="functions/deleteUser.cshtml" id="deleteUserViewForm">
+				<input style="margin-left:18px" type="checkbox" value = "@myUser" name="deleteUserCheckbox" id="deleteUserCheckbox" onChange="deleteUser()">
 			</form>
 		</td>
 			
 	</tr>
 	
 @{ 
-    if ( formInfo.finished.equals(1) ) {
-	    <tr><td colspan="5"><p style="color:green">This user has been submitted and is currently live.</p></td></tr>
-    } else if ( formInfo.emComplete.equals(1) && formInfo.hrComplete.equals(1) && formInfo.hmComplete.equals(1) && formInfo.itComplete.equals(1) && formInfo.prComplete.equals(1) ) {
-	    <tr><td colspan="5"><a href="functions/processFinal.php?user=' . $myUser . '">Finalize Submission</a><br><hr></td></tr>
+    if ( formInfo.finished.Equals(1) ) {
+	    <tr><td colspan="5" style="text-align: center"><p style="color:green">This user has been submitted and is currently live.</p></td></tr>
+    } else if ( formInfo.emComplete.Equals(1) && formInfo.hrComplete.Equals(1) && formInfo.hmComplete.Equals(1) && formInfo.itComplete.Equals(1) && formInfo.prComplete.Equals(1) ) {
+	    <tr><td colspan="5" style="text-align: center"><a href="functions/processFinal.cshtml?user=@myUser">Finalize Submission</a><br><hr></td></tr>
     } else {
-	     <tr><td>&nbsp;</td><td colspan="5"><meter id="progressBar" value="' . $meterVal . '" min="0" max="5" style="height: 15px; width: 100%;"></meter><br><hr></td></tr> 
+	     <tr><td>&nbsp;</td><td colspan="5"><meter id="progressBar" value="@meterVal" min="0" max="5" style="height: 15px; width: 100%;"></meter><br><hr></td></tr> 
     }
 }
 
 </table>
-
-@db.close();
