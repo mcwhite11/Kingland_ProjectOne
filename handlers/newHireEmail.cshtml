@@ -1,20 +1,26 @@
-<?php
+@{
+    //Set username
+    var user = Session["user"];
+    
+    
+    
+    
+    var myUser = Request.Form["user"];
+    var email = Request.Form["email"];
+    var subject = Request.Form["emailSubject"];
+    var message = Request.Form["messageBody"];
 
+    // Initialize WebMail helper
+    WebMail.SmtpServer = "your-SMTP-host";
+    WebMail.SmtpPort = 25;
+    WebMail.UserName = "your-user-name-here";
+    WebMail.Password = "your-account-password";
+    WebMail.From = "humanresources@kingland.com";
 
-session_start();
+    // Send email
+    WebMail.Send( to: email, subject: subject,  body: message );
 
-include("../functions/connect.php");
+    db.QuerySingle("UPDATE users SET active = '1' WHERE user = @0", user);
 
-$myUser = $_POST['user'];
-$email = $_POST['email'];
-$subject = $_POST['emailSubject'];
-$message = $_POST['messageBody'];
-$headers = 'From: humanresources@kingland.com';
-
-mail($email, $subject, $message, $headers);
-
-mysqli_query($con,"UPDATE users SET active = '1' WHERE user = '" . $myUser . "'");
-
-header('Location: ../cpanel.php?page=emailSent');
-
-?>
+    Response.Redirect("../cpanel.php?page=emailSent");
+} 
