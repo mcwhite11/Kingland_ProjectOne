@@ -92,62 +92,68 @@ function updateUser(id){
 	}
 }
 
-//More Generic Ajax function that is currently used with displaying information relative to the "Update Company Informatio" page
+//Generic Ajax function
 function updateArea(caller, val, name){
 	var xmlhttp;
 
-		//Make sure to remove the fields if we don't have anything selected: For UpdateCompanyInformation
-		if ( val == "Select..." && caller == "updateInformation" ) {
-			document.getElementById(name+"Update").innerHTML = " ";
-		} else {
-		
-			//Make a new XML HTTP Request
-			if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp = new XMLHttpRequest();
-			} else { // code for IE6, IE5
-				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			  
-			//On webform state change
-			xmlhttp.onreadystatechange=function() {
-				//Form is processed and we can find the file to get from
-				if (xmlhttp.readyState==4 && xmlhttp.status== 200) {
-				
-					if ( caller == "updateInformation" ) {
-						document.getElementById(name+"Update").innerHTML = xmlhttp.responseText;
-					}
-					
-					//Updating the value of the manualUser ID Box
-					if ( caller == "userID" ) {
-						document.getElementById(name).value = xmlhttp.responseText;
-					}
-					
-					if ( caller == "checkUserID" ) {
-						if ( xmlhttp.responseText.indexOf("1") != -1 ) {
-							document.getElementById('addUser').submit();
-						} else {
-							alert('That user ID already exists or is not of correct length!');
-							getFocus('manualID');
-						}
-					}
-				}
-			}
+    //Caller - The page callling the function
+    //val - The value to update
+    //The name to update
+
+    //Make a new XML HTTP Request
+    if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    } else { // code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+
+	//Remove fields and skip rest of function for updateInformation
+    if (val == "Select..." && caller == "updateInformation") {
+        document.getElementById(name + "Update").innerHTML = " ";
+    } else {
+
+        //On webform state change
+        xmlhttp.onreadystatechange = function () {
+            //Form is processed and we can find the file to get from
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                if (caller == "updateInformation") {
+                    document.getElementById(name + "Update").innerHTML = xmlhttp.responseText;
+                }
+
+                //Updating the value of the manualUser ID Box
+                if (caller == "userID") {
+                    document.getElementById(name).value = xmlhttp.responseText;
+                }
+
+                if (caller == "checkUserID") {
+                    if (xmlhttp.responseText.indexOf("1") != -1) {
+                        document.getElementById('addUser').submit();
+                    } else {
+                        alert('That user ID already exists or is not of correct length!');
+                        getFocus('manualID');
+                    }
+                }
+            }
+        }
+            
 			
-			if ( caller == "updateInformation" ) {
-				xmlhttp.open("GET","forms/updateInformationAJAX.cshtml?name="+name+"&val="+val,true);
-			}
+		if ( caller == "updateInformation" ) {
+			xmlhttp.open("GET","forms/updateInformation-AJAX.cshtml?name="+name+"&val="+val,true);
+		}
 			
-			if ( caller == "userID" ) {
-				var first = document.getElementById('newFirstName').value;
-				var last = document.getElementById('newLastName').value;
-				xmlhttp.open("GET","handlers/generateID.cshtml?first="+first+"&last="+last, true);
-			}
+		if ( caller == "userID" ) {
+			var first = document.getElementById('newFirstName').value;
+			var last = document.getElementById('newLastName').value;
+			xmlhttp.open("GET","handlers/generateID.cshtml?first="+first+"&last="+last, true);
+		}
 			
-			if ( caller == "checkUserID" ) {
-				xmlhttp.open("GET","functions/checkID.cshtml?id="+val, true);
-			}
+		if ( caller == "checkUserID" ) {
+			xmlhttp.open("GET","functions/checkID.cshtml?id="+val, true);
+		}
 			
-			xmlhttp.send();
+		xmlhttp.send();
 	}
 }
 

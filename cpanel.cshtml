@@ -399,11 +399,11 @@
 													You may also
 													delete that entry by selecting it and checking the "Delete" box!</center></p><br/><br/>
 													
-												<form method="post" action="handlers/updateInformation.php" id="updateInfo">
-													include('forms/updateInformation.php');
+												<form method="post" action="handlers/updateInformation.cshtml" id="updateInfo">
+                                                    @RenderPage("forms/updateInformation.cshtml");
 												</form>
 												 
-											<a href="#" onClick="document.getElementById(\'updateInfo\').submit();" style="margin-left:625px">Submit</a>
+											<a href="#" onClick="document.getElementById('updateInfo').submit();" style="margin-left:625px">Submit</a>
 																							
 													
 											//"Form Submitted Succesfully"

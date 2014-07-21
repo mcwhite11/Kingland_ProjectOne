@@ -100,7 +100,7 @@
             if ( bckFillPR.hrSubmission == null || bckFillPR.hrSubmission == "" ){
 				<p>
 					Human Resources Submission:<br />
-					<input type="text" name="hrSubmission" value="@bckFillPR.hrSubmission" id="hrSubmission" onchange="setButton(\'submitButton\', \'Submit\')">
+					<input type="text" name="hrSubmission" value="@bckFillPR.hrSubmission" id="hrSubmission" onchange="setButton('submitButton', 'Submit')">
 				</p>
 			} else if ( bckFillPR.hrReview == null || bckFillPR.hrReview == "" ){
 				<p>
@@ -110,7 +110,7 @@
 					
 				<p>
 					Human Resources Review:<br />
-					<input type="text" name="hrReview" value="@bckFillPR.hrReview" id="hrReview" onchange="setButton(\'submitButton\', \'Review\')">
+					<input type="text" name="hrReview" value="@bckFillPR.hrReview" id="hrReview" onchange="setButton('submitButton', 'Review')">
 				</p>
 			} else if ( bckFillPR.hrApproval == null || bckFillPR.hrApproval == "") { 
 				<p>
@@ -125,7 +125,7 @@
 						
 				<p>
 					Human Resources Final Approval:<br />
-					<input type="text" name="hrApproval" value="@bckFillPR.hrApproval" id="hrApproval" onchange="setButton(\'submitButton\', \'Approve\')">
+					<input type="text" name="hrApproval" value="@bckFillPR.hrApproval" id="hrApproval" onchange="setButton('submitButton', 'Approve')">
 				</p>
 			} else {
 				<p>
@@ -145,7 +145,7 @@
 				<hr>
 				<p>
 					Update Approval:<br />
-					<input type="text" name="hrApproval" value="HR Approval Signature Required" id="hrApproval" onchange="setButton(\'submitButton\', \'Update\')">
+					<input type="text" name="hrApproval" value="HR Approval Signature Required" id="hrApproval" onchange="setButton('submitButton', 'Update')">
 				</p>
 			}
          }
