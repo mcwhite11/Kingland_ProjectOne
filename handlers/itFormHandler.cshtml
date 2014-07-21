@@ -2,6 +2,7 @@
     //Grab our username
     var user = Session["user"];
     
+    
     var first = Request.Form["first"];
     var last = Request.Form["last"];
     var email = Request.Form["email"];
@@ -12,10 +13,20 @@
     var actSD = Request.Form["actSD"];
     var hm = Request.Form["hm"];
     
-     //Update users table
+    var specialInstall = Request.Form["specialInstall"];
+    var pcRequirement = Request.Form["pcRequirement"];
+    var deskLocation = Request.Form["deskLocation"];
+    var assignedNetworkPort = Request.Form["assignedNetworkPort"];
+    var userPermission = Request.Form["userPermission"];
+    var mks = Request.Form["mks"];
+    
+    
+    //Update hr info table 
     db.QuerySingle("UPDATE users SET first = '@0', last = '@1', email = '@2', hmemail= '@3', prefName = '@4', position = '@5', dept = '@6', startDate = '@7', hmName = '@8' WHERE user = '@9'", first, last, email, hmemail, prefName, position, dept, actSD, hm, user);
+
+//Update hm info table
+db.QuerySingle("UPDATE users SET specialInstall = '@0', pcReq = '@1', deskLoc= '@2', netPort= '@3', permission = '@4', mks = '@5' WHERE user = '@6'", specialInstall , pcRequirement , deskLocation , assignedNetworkPort , userPermission , mks , user );
     
     //Head to message
 	Response.redirect("../cpanel.php?page=formSuccess"); 
-} 
-
+}
