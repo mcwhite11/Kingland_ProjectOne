@@ -1,0 +1,20 @@
+<?php
+
+
+session_start();
+
+include("../functions/connect.php");
+
+$myUser = $_POST['user'];
+$email = $_POST['email'];
+$subject = $_POST['emailSubject'];
+$message = $_POST['messageBody'];
+$headers = 'From: humanresources@kingland.com';
+
+mail($email, $subject, $message, $headers);
+
+mysqli_query($con,"UPDATE users SET active = '1' WHERE user = '" . $myUser . "'");
+
+header('Location: ../cpanel.php?page=emailSent');
+
+?>
