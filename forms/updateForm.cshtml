@@ -1,28 +1,25 @@
 ﻿@{
   //Grab the data from the form
-  var myUser = Request.Form["q"];
-  var form = Request.Form["form"];
+  var myUser = Request.Params["q"];
+  String form = Request.Params["form"].ToString();
 
   //Connect to database
   var db = Database.Open("kinglandDatabase");
 
-
 }
 
-
-@{ 
+@{
     //displays all of the forms that the employee has filed out.
-    if ( form.Equals(0) ) {
-	    <hr>
-	    <b>Additional Information Form: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form1holder\')">Show ></a></b>
+    if ( form == "emp" ) {
+	    <b>Additional Information Form: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form1holder')">Show ></a></b>
 	    <div id="form1holder" style="display:none">
 			    <iframe src="forms/form1pdf.cshtml?user=@myUser" width="100%" style="min-height:500px;">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
 			    </iframe>
-		 </div>
+		    </div>
 	    
 	    <hr>
-	    <b>Authorization for Direct Deposit: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form2holder\')">Show ></a></b>
+	    <b>Authorization for Direct Deposit: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form2holder')">Show ></a></b>
 		    <div id="form2holder" style="display:none">
 			    <iframe src="forms/form2pdf.cshtml?user=@myUser" width="100%" style="min-height:500px">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
@@ -30,7 +27,7 @@
 		    </div>
 	    
 	    <hr>
-	    <b>Student Verification: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form3holder\')">Show ></a></b>
+	    <b>Student Verification: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form3holder')">Show ></a></b>
 		    <div id="form3holder" style="display:none">
 			    <iframe src="forms/form3pdf.cshtml?user=@myUser" width="100%" style="min-height:500px">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
@@ -38,7 +35,7 @@
 		    </div>
 	    
 	    <hr>
-	    <b>Receipt for Employee Handbook: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form4holder\')">Show ></a></b>
+	    <b>Receipt for Employee Handbook: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form4holder')">Show ></a></b>
 		    <div id="form4holder" style="display:none">
 			    <iframe src="forms/form4pdf.cshtml?user=@myUser" width="100%" style="min-height:500px">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
@@ -46,7 +43,7 @@
 		    </div>
 	    
 	    <hr>
-	    <b>Safe Harbor: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form5holder\')">Show ></a></b>
+	    <b>Safe Harbor: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form5holder')">Show ></a></b>
 		    <div id="form5holder" style="display:none">
 			    <iframe src="forms/form5pdf.cshtml?user=@myUser" width="100%" style="min-height:500px">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
@@ -54,7 +51,7 @@
 		    </div>
 	    
 	    <hr>
-	    <b>Technology Agreement: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form6holder\')">Show ></a></b>
+	    <b>Technology Agreement: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder('form6holder')">Show ></a></b>
 		    <div id="form6holder" style="display:none">
 			    <iframe src="forms/form6pdf.cshtml?user=@myUser" width="100%" style="min-height:500px">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
@@ -64,21 +61,21 @@
 	    <hr>
 	
     //Displays the form that the Human Resources employee completed upon account creation.
-    } else if ( form.Equals(1) ) {
-        RenderPage("HRForm.cshtml");
+    } else if ( form == "HR" ) {
+        @RenderPage("HRForm.cshtml", myUser);
     //Displays the Hiring Manager's portion of the form
-    } else if ( form.Equals(2) ) {
-	    RenderPage("HMForm.cshtml");
+    } else if ( form == "HM" ) {
+	    @RenderPage("HMForm.cshtml", myUser);
     //Display the form for the IT personnel to approve
-    } else if ( form.Equals(3) ) {
-	    RenderPage("ITForm.cshtml");
+    } else if ( form == "IT" ) {
+	    @RenderPage("ITForm.cshtml", myUser);
     //Display information for PR Form
-    }  else if ( form.Equals(4) ) {
-	    RenderPage("PRForm.cshtml");
+    }  else if ( form == "PR" ) {
+	    @RenderPage("PRForm.cshtml", myUser);
     //This is our welcome email page!
-    }  else if ( form.Equals(5) ) {
-	   RenderPage("welcomeEmail.cshtml");
-    }
+    }  else if ( form == "welcome" ) {
+	    @RenderPage("welcomeEmail.cshtml", myUser);
+    } 
 
     db.Close();
 }

@@ -1,12 +1,11 @@
+@using System.DirectoryServices.AccountManagement;
+
 @{
-    if (Session["user"] != null) {
+    if ( Session["user"] != null) {
         if (Session["isAdmin"].Equals(1)) {
            Response.Redirect("cpanel.cshtml");
-        } else {
-           Response.Redirect("start.cshtml");
         }
-    }   
-
+    } 
 
     //Simple form validation with message
     Validation.RequireField("user", "Username is required.");
@@ -19,25 +18,40 @@
         string user = Request.Form["user"];
         string pass = Request.Form["password"];
 
-        //Connnect to database and query to check credentials
-        var db = Database.Open("kinglandDatabase");
-        var credentials = db.QuerySingle("SELECT * FROM users WHERE user =  @0 and pass = @1", user, pass);
+        //Connnect to database and query to check credentials -- USES MYSQL
+        //var db = Database.Open("kinglandDatabase");
+        //var credentials = db.QuerySingle("SELECT * FROM users WHERE user =  @0 and pass = @1", user, pass);
 
         //If it returned a result, set our session variables
-        if ( credentials != null) {
-            Session["user"] = user;
-            Session["isAdmin"] = @credentials.isAdmin;
-            Session["isHR"] = @credentials.isHR;
-            Session["isHM"] = @credentials.isHM;
-            Session["isPR"] = @credentials.isPR;
-            Session["isIT"] = @credentials.isIT;
-            Response.Redirect("start.cshtml");
-        } else {
-            //Failed. Should display error message.
-            errorMessage = "Username or password was incorrect!";
+        //if ( credentials != null) {
+            //Session["user"] = user;
+            //Session["isAdmin"] = @credentials.isAdmin;
+            //Session["isHR"] = @credentials.isHR;
+            //Session["isHM"] = @credentials.isHM;
+            //Session["isPR"] = @credentials.isPR;
+            //Session["isIT"] = @credentials.isIT;
+            //Response.Redirect("cpanel.cshtml");
+                      
+        // create a "principal context" - e.g. your domain (could be machine, too)
+        using(PrincipalContext pc = new PrincipalContext(ContextType.Domain, "10.1.40.50"))
+        {
+            // validate the credentials
+            bool isValid = pc.ValidateCredentials(@user, @pass);
+
+            if ( isValid ) {
+                Session["user"] = user;
+                Session["isAdmin"] = 1;
+                Session["isHR"] = 1;
+                Session["isHM"] = 1;
+                Session["isPR"] = 1;
+                Session["isIT"] = 1;
+                //Response.Redirect("cpanel.cshtml");
+            } else {
+                //Failed. Should display error message.
+                errorMessage = "Username or password was incorrect!";
+            }
         }
     }
-   
 }
 
 <!DOCTYPE html>
@@ -128,17 +142,17 @@
 												<form method="post" action="Default.cshtml">
 
 													<p>
-                                                        @Html.ValidationMessage("user")<br />
+                                                        @Html.ValidationMessage("user")<br>
 														Username:<br />
 														<input type="text" style="width:250px" name="user" id="user" value="@Request.Form["user"]">
 													</p>
 
 													<p>
-                                                        @Html.ValidationMessage("password") <br />
+                                                        @Html.ValidationMessage("password") <br>
 														Password:<br />
 														<input type="password" style="width:250px" name="password" id="password">
                                                         <br /> @if ( @errorMessage != "" ) {
-                                                                  <center><div style="color: red">@errorMessage</div></center>
+                                                                  <div style="color: red;text-align: center">@errorMessage</div>
                                                               }
                                                               
 													</p>

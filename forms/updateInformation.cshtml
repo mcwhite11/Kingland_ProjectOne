@@ -1,0 +1,78 @@
+﻿@{
+    //Connect to the database
+    var db = Database.Open("kinglandDatabase");
+}
+
+	<div style="width:700px;min-height:80px;">
+		<div style="clear:none;float:left;margin-left:50px;">
+				<p>
+					Location:</br>
+					<select name="location" id="prLocation" onChange="updateArea('updateInformation', this.value, this.name)">
+					<option>Select...</option>
+				@{
+					var locations = db.Query("SELECT * FROM location");
+					foreach (var location in locations) {
+						<option>@location.location</option>
+					}
+                }
+					
+					<option>Add New...</option>
+					</select>
+				</p>
+
+		</div>
+	
+		<div id="locationUpdate" style="clear:none;float:right;width:375px;">
+			
+		</div>
+	</div>
+	
+	
+	<div style="width:700px;min-height:80px;">
+		<div style="clear:none;float:left;margin-left:50px;">
+				<p>
+					Division:</br>
+					<select name="division" id="division" onChange="updateArea('updateInformation', this.value, this.name)">
+					<option>Select...</option>
+					
+                @{
+					var divisions = db.Query("SELECT * FROM division");
+					foreach (var division in divisions ) {
+						<option>@division.division</option>
+					}
+                }	
+
+					<option>Add New...</option>
+					</select>
+				</p>
+
+		</div>
+	
+		<div id="divisionUpdate" style="clear:none;float:right;width:375px;">
+			
+		</div>
+	</div>
+	
+	
+	<div style="width:700px">
+		<div style="clear:none;float:left;margin-left:50px;">
+				<p>
+					Functional Area:</br>
+					<select name="funcArea" id="prFunctionalArea" onChange="updateArea('updateInformation', this.value, this.name)">
+					<option>Select...</option>
+							
+				@{	
+					var funcAreas = db.Query("SELECT * FROM funcArea");
+					foreach (var funcArea in funcAreas ) {
+						<option>@funcArea.funcArea</option>
+					}
+                }
+					<option>Add New...</option>
+					</select>
+				</p>
+		</div>
+	
+		<div id="funcAreaUpdate" style="clear:none;float:right;width:375px;">
+		</div>
+
+	</div>

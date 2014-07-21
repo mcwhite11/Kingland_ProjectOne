@@ -2,12 +2,25 @@
     //Connect to database
     var db = Database.Open("kinglandDatabase");
 
+<<<<<<< HEAD
     var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
 }
 
 <form method="post" onmouseover="generateEmailBody();" action="handlers/newHireEmail.cshtml" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody();">
 	<p> Email: <input type="text"  name="email" value = "' . $row['email'] . '" id="newHireEmail"></input></p>
 	<p> Location:</br>
+=======
+    //Grab our username
+    var myUser = PageData[0];
+
+    //Bckfill information
+    var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
+}
+
+<form method="post" onmouseover="generateEmailBody()" action="handlers/newHireEmail.cshtml" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody()">
+	<p> Email: <input type="text"  name="email" value = "@bckFill.email" id="newHireEmail"></input></p>
+	<p> Location:<br />
+>>>>>>> c4d8caf250fa9451c61811deb4d1e40c76d8c325
 	<select id="location">
 	
 @{        				
@@ -15,7 +28,11 @@
 	var loc = db.Query("SELECT * FROM location");
     
     foreach ( var location in loc ) {
+<<<<<<< HEAD
          @:<option value = "@loc.location">@loc.location</option>   
+=======
+         <option value = "@location.address">@location.location</option>   
+>>>>>>> c4d8caf250fa9451c61811deb4d1e40c76d8c325
     }
 }
 					
@@ -28,16 +45,28 @@
 	<!-- These are hidden fields so that the javascript fucntion can pull them into variables -->
 	<p><input type="hidden"  name="name" value = "@bckFill.first" id="name">
 	<input type="hidden"  name="startDate" value = "@bckFill.startDate" id="startDate"></input>
+<<<<<<< HEAD
 	<input type="hidden"  name="location" value = "@bckFill.location" id="location"></input>
     </p>
 			
 	<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br>
 	<p> Body: <font size="1">(note: If you modify the text in the body the text fields above will no longer update the body data!)</font>
+=======
+    </p>
+			
+	<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br />
+	<p> Body: <font size="1">(note: If you modify the text within the body the text fields above will no longer update the body data!)</font>
+>>>>>>> c4d8caf250fa9451c61811deb4d1e40c76d8c325
 	<!--onfocus="here();" onblur="there();" -->
 	<textarea rows="10" cols="50" name="messageBody" id="messageBody" ></textarea></p>
 							
 					
+<<<<<<< HEAD
 	<a href="#" onClick="submitEmail();" style="margin-left:625px">Send</a>
 </form>
 
 @db.close();
+=======
+	<a href="#" onClick="submitEmail()" style="margin-left:625px">Send</a>
+</form>
+>>>>>>> c4d8caf250fa9451c61811deb4d1e40c76d8c325

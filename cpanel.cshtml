@@ -7,7 +7,7 @@
         Response.Redirect("Default.cshtml");
     }
 
-    //require("functions/validatePermissions.php");
+    //require("functions/validatePermissions.cshtml");
 
     string page;
 
@@ -152,7 +152,7 @@
 													    <input type="text" name="first" id="newFirstName"></p>
 													
 													    <p>*Last Name:<br/>
-													    <input type="text" name="last" id="newLastName" onBlur="updateArea(\'userID\',0,\'manualID\')"></p>
+													    <input type="text" name="last" id="newLastName" onBlur="updateArea('userID',0,'manualID')"></p>
 													
 													    <p>Preferred Name (If applicable):<br/>
 													    <input type="text" name="preferred"></p>													
@@ -246,7 +246,7 @@
                                                     var users = db.Query("SELECT * FROM users"); 
                                                        
                                                     <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												        <select id="myList" onChange="updateUser(0)">
+												        <select id="myList" onChange="updateArea('showStatus',0,0)">
 											 	            <option>Choose Employee</option>
 
                                                             @foreach (var person in users) {
@@ -256,10 +256,10 @@
 												        </select>
                                                     </div>
 												
-												    <!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												    <!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
 												    <div id="showStatus" style="margin-top:15px"></div>
 												
-												    <!--This shows the form selected above to display -- Replaced with ajax from updateForm.php-->
+												    <!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
 												    <div id="displayForm"></div>
                                              }
                                              
@@ -270,16 +270,16 @@
                                                 var users = db.Query("SELECT * FROM users");
 
 												<div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-
-												<select id="myList" onChange="showForm(5)">
-											 	<option>Choose Employee</option>
+												    <select id="myList" onChange="updateArea('showForm','welcome',0)">
+											 	    <option>Choose Employee</option>
  
 												
-                                                @foreach (var person in users ){
-                                                    <option value="@person.user">@person.user</option>
-                                                }
+                                                    @foreach (var person in users ){
+                                                        <option value="@person.user">@person.user</option>
+                                                    }
 
-												</select></div>
+												    </select>
+                                                </div>
 												
 												<div id="displayForm"></div>
 											}
@@ -291,7 +291,7 @@
                                                 var users = db.Query("SELECT * FROM users"); 
                                                        
                                                 <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												    <select id="myList" onChange="showForm(2)">
+												    <select id="myList" onChange="updateArea('showForm','HM',0)">
 											 	        <option>Choose Employee</option>
 
                                                         @foreach (var person in users) {
@@ -301,10 +301,10 @@
 												    </select>
                                                 </div>
 												
-												<!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												<!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
 												<div id="showStatus" style="margin-top:15px"></div>
 												
-												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.php-->
+												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
 												<div id="displayForm"></div>
 												
 											
@@ -317,7 +317,7 @@
                                                 var users = db.Query("SELECT * FROM users"); 
                                                        
                                                 <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												    <select id="myList" onChange="showForm(3)">
+												    <select id="myList" onChange="updateArea('showForm','IT',0)">
 											 	        <option>Choose Employee</option>
 
                                                         @foreach (var person in users) {
@@ -327,10 +327,11 @@
 												    </select>
                                                 </div>
 												
-												<!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												<!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
 												<div id="showStatus" style="margin-top:15px"></div>
 
-											
+												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
+												<div id="displayForm"></div>			
 											}  
                                             
                                             //"View pending PR forms"
@@ -340,7 +341,7 @@
                                                 var users = db.Query("SELECT * FROM users"); 
                                                        
                                                 <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												    <select id="myList" onChange="showForm(4)">
+												    <select id="myList" onChange="updateArea('showForm','PR',0)">
 											 	        <option>Choose Employee</option>
 
                                                         @foreach (var person in users) {
@@ -350,11 +351,11 @@
 												    </select>
                                                 </div>
 												
-												<!--This shows the forms to display -- Replaced with ajax from updateUser.php-->
+												<!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
 												<div id="showStatus" style="margin-top:15px"></div>
 												
-												
-											
+												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
+												<div id="displayForm"></div>	
 											} 
                                             
                                             //"User added succesfully"
@@ -398,11 +399,11 @@
 													You may also
 													delete that entry by selecting it and checking the "Delete" box!</center></p><br/><br/>
 													
-												<form method="post" action="handlers/updateInformation.php" id="updateInfo">
-													include('forms/updateInformation.php');
+												<form method="post" action="handlers/updateInformation.cshtml" id="updateInfo">
+                                                    @RenderPage("forms/updateInformation.cshtml");
 												</form>
 												 
-											<a href="#" onClick="document.getElementById(\'updateInfo\').submit();" style="margin-left:625px">Submit</a>
+											<a href="#" onClick="document.getElementById('updateInfo').submit();" style="margin-left:625px">Submit</a>
 																							
 													
 											//"Form Submitted Succesfully"
@@ -416,7 +417,7 @@
 														</p>
 														
 														<p>
-															<a href='cpanel.php'>Click here to return to home</a>
+															<a href='cpanel.cshtml'>Click here to return to home</a>
 														</p>
 													</center>
 											}

@@ -1,5 +1,7 @@
-@{
-  
+@{  
+  //Grab the username from the page data being passed
+  var myUser = PageData[0];
+
   //Connect to database
   var db = Database.Open("kinglandDatabase");
 
@@ -48,6 +50,8 @@
   			<input type="radio" name="mks" value="yes" id="mksYes" @if(@bckFill.mks == "yes") {<text>checked</text> }> Yes<br />
   			<input type="radio" name="mks" value="no" id="mksNo" @if(@bckFill.mks == "no") {<text>checked</text> }> No<br />
   		</p>
+
+          <input type="hidden" name="thisUser" value="@myUser">
   
   		<a href="#" onClick="validateHiringManager()" style="margin-left:625px">Submit</a>
   	</form>

@@ -1,0 +1,111 @@
+﻿@{
+    var myUser = Request.Params["q"];
+
+    //Connect to database
+    var db = Database.Open("kinglandDatabase");
+
+    var formInfo = db.QuerySingle("SELECT * FROM formInfo WHERE user = @0", myUser);
+
+    int meterVal = 0;
+}
+
+<table border="0" width="725px" style="margin-left:30px;">
+		<tr>
+			<th>Active</th>
+			<th>All Forms</th>
+			<th>Human Resources</th>
+			<th>Hiring Manager</th>
+			<th>Information Technology</th>
+			<th>Payroll</th>
+			<th>Delete</th>
+		</tr>
+
+	<tr>
+		<td style="text-align: center">
+        @{
+			//Display if the user is active or not. 
+			var isActive = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
+				if ( isActive.active.Equals(0) ) {
+					<p style="color:red;padding-top:15px;"><b>No</b></p>
+				} else {
+					<p style="color:green;padding-top:15px;"><b>Yes</b></p>
+				}
+		}
+
+	</td>
+		<td style="padding:5px;text-align: center">
+            @{
+			    if ( formInfo.emComplete.Equals(1) ) {
+				    meterVal++;
+				    <b><a id="showAll" style="color:green;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="showAll" style="color:red;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
+			    }
+            }
+	</td>
+			
+	
+		<td style="padding:5px;text-align: center">
+            @{
+			    if ( formInfo.hrComplete.Equals(1) ) {
+				    meterVal++;
+				    <b><a id="hrStatus" style="color:green;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="hrStatus" style="color:red;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
+			    }
+            }
+			
+		</td>
+		<td style="padding:5px;text-align: center">
+	        @{
+			    if ( formInfo.hmComplete.Equals(1) ) {
+				    meterVal++;
+				    <b><a id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
+			    }
+             }
+
+		</td>
+		<td style="padding:5px;text-align: center">
+	        @{
+			    if ( formInfo.itComplete.Equals(1) ) {
+                    meterVal++;
+				    <b><a id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="itStatus" style="color:red;" href="#" onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
+			    }
+             }
+
+		</td>
+		<td style="padding:5px;text-align: center">
+	        @{
+			    if ( formInfo.prComplete.Equals(1) ) {
+				    meterVal++;
+				    <b><a id="prStatus" style="color:green;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
+			    } else {
+				    <b><a id="prStatus" style="color:red;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
+			    }
+             }
+
+		</td>
+		<td>
+			<form method="post" action="functions/deleteUser.cshtml" id="deleteUserViewForm">
+				<input style="margin-left:18px" type="checkbox" value = "@myUser" name="deleteUserCheckbox" id="deleteUserCheckbox" onChange="deleteUser()">
+			</form>
+		</td>
+			
+	</tr>
+	
+@{ 
+    if ( formInfo.finished.Equals(1) ) {
+	    <tr><td colspan="7" style="text-align: center"><p style="color:green">This user has been submitted and is currently live.</p></td></tr>
+    } else if ( formInfo.emComplete.Equals(1) && formInfo.hrComplete.Equals(1) && formInfo.hmComplete.Equals(1) && formInfo.itComplete.Equals(1) && formInfo.prComplete.Equals(1) ) {
+	    <tr><td colspan="7" style="text-align: center"><a href="functions/processFinal.cshtml?user=@myUser">Finalize Submission</a><br></td></tr>
+    } else {
+	     <tr><td>&nbsp;</td><td colspan="5"><meter id="progressBar" value="@meterVal" min="0" max="5" style="height: 15px; width: 100%;"></meter><br></td></tr> 
+    }
+}
+
+</table>
+<hr>
