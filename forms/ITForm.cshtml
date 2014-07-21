@@ -1,7 +1,11 @@
 @{
+    //Grab the username from the page data being passed
+    var myUser = PageData[0];    
+
     //Connect to database
     var db = Database.Open("kinglandDatabase");
 
+    //Grab data to backfill
     var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
     var bckFillHM = db.QuerySingle("SELECT * FROM hmForm WHERE user = @0", myUser);
 }
@@ -61,39 +65,39 @@
     		    </p>
             <p>
       			    *Special Install (Any additional Software the Hiring Manager Requests):<br />
-      			    <input  type="text" name="specialInstall" value="@bckFill.specInstall" id="specialInstall">
+      			    <input  type="text" name="specialInstall" value="@bckFillHM.specInstall" id="specialInstall">
         		</p>
           
         		<p>
       			    *PC Requirement:<br />
-      			    <input type="text" name="pcRequirement" value="@bckFill.pcReq" id="pcRequirement">
+      			    <input type="text" name="pcRequirement" value="@bckFillHM.pcReq" id="pcRequirement">
         		</p>
           
         		<p>
     			      *Desk Location:<br />
-          			<input type="text" name="deskLocation" value="@bckFill.deskLoc" id="deskLocation">
+          			<input type="text" name="deskLocation" value="@bckFillHM.deskLoc" id="deskLocation">
         		</p>
           
         		<p>
           			*Assigned network Port:<br />
-          			<input type="text" name="assignedNetworkPort" value="@bckFill.netPort" id="assignedNetworkPort">
+          			<input type="text" name="assignedNetworkPort" value="@bckFillHM.netPort" id="assignedNetworkPort">
         		</p>
           
         		<p>
           			*User Permission:<br />
-          			<input type="text" name="userPermission" value="@bckFill.permission" id="userPermission">
+          			<input type="text" name="userPermission" value="@bckFillHM.permission" id="userPermission">
         		</p>
           	
       			<input type="hidden" name="user" value="user">
           
         		<p>
           			MKS Access:<br />
-          			<input type="radio" name="mks" value="yes" id="mksYes" @if(@bckFill.mks == "yes") {<text>checked</text> }> Yes<br />
-          			<input type="radio" name="mks" value="no" id="mksNo" @if(@bckFill.mks == "no") {<text>checked</text> }> No<br />
+          			<input type="radio" name="mks" value="yes" id="mksYes" @if(@bckFillHM.mks == "yes") {<text>checked</text> }> Yes<br />
+          			<input type="radio" name="mks" value="no" id="mksNo" @if(@bckFillHM.mks == "no") {<text>checked</text> }> No<br />
         		</p>
       		
         		<input type="hidden" name="user" value="user">
-        		<a href="#" onClick = "validateITForm()" style="margin-left:625px">Change / Confirm</a>
+        		<a href="#" onClick = "validateITForm()" style="margin-left:500px">Change / Confirm</a>
         	</form>
 		
     </body>

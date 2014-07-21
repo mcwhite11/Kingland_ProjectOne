@@ -1,0 +1,257 @@
+﻿@{
+    //Grab the username from the page data being passed
+    var myUser = PageData[0];    
+
+    //Connect to database
+    var db = Database.Open("kinglandDatabase");
+
+    //Grab data to backfill
+    var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
+    var bckFillPR = db.QuerySingle("SELECT * FROM payrollForm WHERE user = @0", myUser);
+}
+
+
+<form method="post" action="handlers/PRForm.php" id="PRForm" style="margin-left:80px;width:625px">
+
+	<div>
+		<div style="clear:none;float:left;width:300px">
+			<p>	
+                First Name:<br />
+			    <input type="text" name="first" value="@bckFill.first" id="prFirstName" readonly>
+			</p>
+			<p>
+				Last Name:<br />
+				<input type="text" name="first" value="@bckFill.last" id="prLastName" readonly>
+			</p>
+			<p>
+				Employee ID:<br />
+				<input type="text" name="id" value="@bckFill.user" id="prEmpId" readonly>
+			</p>
+			<p>
+				Position<br />
+				<select name="position" id="prPosition">
+					<option>Select...</option>
+					<option selected="selected">None</option>
+				</select>
+			</p>
+			<p>
+				Division:<br />
+				<select name="division" id="division">
+				    <option> Select... </option>
+			    @{	
+                    //Grab the divisions
+                    var divisions = db.Query("SELECT * FROM division");
+
+                    //Print out each division, selecting the one that was chosen previously (If there is one)
+                    foreach ( var div in divisions) {
+                        //Grab backfilled information in the DB and select that item in this drop down
+                        <option @if ( div.division == bckFillPR.division ) {<text>selected="selected"</text>} >@div.division</option>
+                    }
+                 }
+				</select>
+			</p>
+
+					
+			<p>
+				Department:<br />
+				<select name="dept" id="prDepartment">
+					<option>Select...</option>
+					<option selected="selected">None</option>
+				</select>
+			</p>
+					
+			<p>
+				Incentive Payment:<br />
+				<input type="text" name="incentive" value="@bckFillPR.incentive" id="prIncentivePayment">
+			</p>
+					
+			<p>
+				Incentive Type:<br />
+				<select name="incentiveType" id="prIncentiveType">
+					<option>Select...</option>';
+							
+                    <option @if  (bckFillPR.incentiveType == "Discretionary") { <text>selected = "selected"</text> }>Discretionary</option>
+
+                    <option @if  (bckFillPR.incentiveType == "Goal-Based") { <text>selected = "selected"</text> }>Goal-Based</option>
+		
+                    <option @if  (bckFillPR.incentiveType == "Contract Management") { <text>selected = "selected"</text> }>Contract Management</option>
+
+                    <option @if  (bckFillPR.incentiveType == "Rainmaking") { <text>selected = "selected"</text> }>Rainmaking</option>
+
+                    <option @if  (bckFillPR.incentiveType == "Relocation") { <text>selected = "selected"</text> }>Relocation</option>
+
+                    <option @if  (bckFillPR.incentiveType == "Sign-On") { <text>selected = "selected"</text> }>Sign-On</option>
+
+                    <option @if  (bckFillPR.incentiveType == "Other - Add Comment") { <text>selected = "selected"</text> }>Other - Add Comment</option>
+
+				</select>
+			</p>
+					
+			<p>
+				Comments:
+				<input type="text" name="comments" value="@bckFillPR.comments" id="prComments">
+			</p>
+					
+			<p>
+				Employee Referral Payment:<br />
+				<input type="text" name="referral" value="@bckFillPR.empRef" id="prReferralPayment"><hr>
+			</p>
+        @{
+            if ( bckFillPR.hrSubmission == null || bckFillPR.hrSubmission == "" ){
+				<p>
+					Human Resources Submission:<br />
+					<input type="text" name="hrSubmission" value="@bckFillPR.hrSubmission" id="hrSubmission" onchange="setButton(\'submitButton\', \'Submit\')">
+				</p>
+			} else if ( bckFillPR.hrReview == null || bckFillPR.hrReview == "" ){
+				<p>
+					Human Resources Submission:<br />
+					<input type="text" name="hrSubmission" value="@bckFillPR.hrSubmission" id="hrSubmission" readonly>
+				</p>  
+					
+				<p>
+					Human Resources Review:<br />
+					<input type="text" name="hrReview" value="@bckFillPR.hrReview" id="hrReview" onchange="setButton(\'submitButton\', \'Review\')">
+				</p>
+			} else if ( bckFillPR.hrApproval == null || bckFillPR.hrApproval == "") { 
+				<p>
+					Human Resources Submission:<br />
+					<input type="text" name="hrSubmission" value="@bckFillPR.hrSubmission" id="hrSubmission" readonly>
+				</p> 
+					
+				<p>
+					Human Resources Review:<br />
+					<input type="text" name="hrReview" value="@bckFillPR.hrReview" id="hrReview" readonly>
+				</p>
+						
+				<p>
+					Human Resources Final Approval:<br />
+					<input type="text" name="hrApproval" value="@bckFillPR.hrApproval" id="hrApproval" onchange="setButton(\'submitButton\', \'Approve\')">
+				</p>
+			} else {
+				<p>
+					Human Resources Submission:<br />
+					<input type="text" name="hrSubmission" value="@bckFillPR.hrSubmission" id="hrSubmission" readonly>
+				</p> 
+					
+				<p>
+					Human Resources Review:<br />
+					<input type="text" name="hrReview" value="@bckFillPR.hrReview" id="hrReview" readonly>
+				</p>
+						
+				<p>
+					Human Resources Final Approval:<br />
+					<input type="text" name="hrApproval" value="@bckFillPR.hrApproval" id="hrApproval" readonly>
+				</p>
+				<hr>
+				<p>
+					Update Approval:<br />
+					<input type="text" name="hrApproval" value="HR Approval Signature Required" id="hrApproval" onchange="setButton(\'submitButton\', \'Update\')">
+				</p>
+			}
+         }
+		</div>
+				
+		<div style="clear:none;float:right;width:300px">
+					
+			<p>
+				Supervisor:<br />
+				<select name="supervisor" id="prSupervisor">
+					<option>Select...</option>
+					<option selected="selected">None</option>
+				</select>
+			</p>
+								
+			<p>
+				Employee Type:<br />
+				<select name="empType" id="prEmployeeType">
+					<option>Select...</option>
+							
+                    <option @if  (bckFillPR.empType == "Intern") { <text>selected = "selected"</text> }>Intern</option>
+
+                    <option @if  (bckFillPR.empType == "Part Time") { <text>selected = "selected"</text> }>Part Time</option>
+							
+                    <option @if  (bckFillPR.empType == "Full Time") { <text>selected = "selected"</text> }>Full Time</option>
+				</select>
+			</p>
+					
+			<p>
+				Employee Status:<br />
+				<select name="empStatus" id="prEmployeeStatus">
+					<option>Select...</option>';
+						
+                        <option @if  (bckFillPR.empStatus == "Regular") { <text>selected = "selected"</text> }>Regular</option>
+						
+                        <option @if  (bckFillPR.empStatus == "Temporary") { <text>selected = "selected"</text> }>Temporary</option>
+						
+                        <option @if  (bckFillPR.empStatus == "Intern") { <text>selected = "selected"</text> }>Intern</option>
+						
+				</select>
+			</p>
+			<p>
+				Functional Area:<br />
+				<select name="funcArea" id="prFunctionalArea">
+				    <option>Select...</option>';
+								
+		        @{
+                    var funcArea = db.Query("SELECT * FROM funcArea");
+                
+                    //Print out the functional areas, backfilling if necessary
+                    foreach ( var area in funcArea ) {
+                        <option @if (area.funcArea == bckFillPR.funcArea ) {<text>selected = "selected"</text>}>@area.funcArea</option>
+                    }
+                    
+                 }
+				</select>
+			</p>
+					
+			<p>
+				Base Pay:<br />
+				<input type="text" name="pay" value ="@bckFillPR.pay" id="prBasePay">
+			</p>
+					
+			<p>
+				Employment Type:<br />
+				<select name="empTypeDetail" id="prEmploymentType">
+							
+					<option>Select...</option>
+                    <option @if (bckFillPR.empTypeDetail == "Full Time - Regular" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+							
+                    <option @if (bckFillPR.empTypeDetail == "Full Time - Temp" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+
+                    <option @if (bckFillPR.empTypeDetail == "Part Time - Regular" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+
+                    <option @if (bckFillPR.empTypeDetail == "Part Time - Temp" ) { <text>selected = "selected"</text>} >@bckFillPR.empTypeDetail</option>
+
+                    <option @if (bckFillPR.empTypeDetail == "Intern" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+
+                    <option @if (bckFillPR.empTypeDetail == "Other" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+				</select>
+			</p>
+					
+			<p>
+				Pay Type:<br />
+				<select name="payType" id="prPayType">
+					<option>Select...</option>';
+                    <option @if (bckFillPR.payType == "Salary (Exempt)" ) {<text>selected = "selected"</text>}>@bckFillPR.payType</option>
+
+                    <option @if (bckFillPR.payType == "Hourly (Not Exempt)" ) {<text>selected = "selected"</text>}>@bckFillPR.payType</option>	
+				</select>
+			</p>
+					
+			<p>
+				Sick Hours:<br />
+				<input type="text" name="sick" value="@bckFillPR.sick" id="prSickHours">
+			</p>
+					
+			<p>
+				Vacation Hours:<br />
+				<input type="text" name="vacation" value="@bckFillPR.vacation" id="prVacationHours"> 
+			</p> <br /><br /><br /><hr><br />
+		</div>
+	</div>
+
+	<input type="hidden" name="user" value = "@bckFillPR.user">
+			
+	<a href="#" id="submitButton" onClick="validatePRForm()" style="margin-left:625px"></a>
+			
+</form>

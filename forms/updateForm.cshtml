@@ -1,16 +1,15 @@
 ﻿@{
   //Grab the data from the form
-  var myUser = Request.Form["q"];
-  var form = Request.Form["form"];
+  var myUser = Request.Params["q"];
+  int form = Request.Params["form"].AsInt();
 
   //Connect to database
   var db = Database.Open("kinglandDatabase");
 
-
 }
 
 
-@{ 
+@{
     //displays all of the forms that the employee has filed out.
     if ( form.Equals(0) ) {
 	    <hr>
@@ -19,7 +18,7 @@
 			    <iframe src="forms/form1pdf.cshtml?user=@myUser" width="100%" style="min-height:500px;">
 				    <p>Your browser does not support I-Frames. Please upgrade to a browser made after 1995 or stop using internet explorer! :) </p>
 			    </iframe>
-		 </div>
+		    </div>
 	    
 	    <hr>
 	    <b>Authorization for Direct Deposit: <a style="cursor:pointer;cursor:hand;" onClick="slideHolder(\'form2holder\')">Show ></a></b>
@@ -65,20 +64,20 @@
 	
     //Displays the form that the Human Resources employee completed upon account creation.
     } else if ( form.Equals(1) ) {
-        RenderPage("HRForm.cshtml");
+        @RenderPage("HRForm.cshtml", myUser);
     //Displays the Hiring Manager's portion of the form
     } else if ( form.Equals(2) ) {
-	    RenderPage("HMForm.cshtml");
+	    @RenderPage("HMForm.cshtml", myUser);
     //Display the form for the IT personnel to approve
     } else if ( form.Equals(3) ) {
-	    RenderPage("ITForm.cshtml");
+	    @RenderPage("ITForm.cshtml", myUser);
     //Display information for PR Form
     }  else if ( form.Equals(4) ) {
-	    RenderPage("PRForm.cshtml");
+	    @RenderPage("PRForm.cshtml", myUser);
     //This is our welcome email page!
     }  else if ( form.Equals(5) ) {
-	   RenderPage("welcomeEmail.cshtml");
-    }
+	   @RenderPage("welcomeEmail.cshtml", myUser);
+    } 
 
     db.Close();
 }

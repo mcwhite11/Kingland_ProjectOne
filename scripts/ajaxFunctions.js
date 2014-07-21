@@ -22,8 +22,6 @@ var usrID = mylist.options[mylist.selectedIndex].text;
 		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		        document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
 		    }
-
-		    alert(xmlhttp.status);
 		}
 
 		/* 

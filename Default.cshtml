@@ -29,7 +29,7 @@
             Session["isHM"] = @credentials.isHM;
             Session["isPR"] = @credentials.isPR;
             Session["isIT"] = @credentials.isIT;
-            Response.Redirect("start.cshtml");
+            Response.Redirect("cpanel.cshtml");
         } else {
             //Failed. Should display error message.
             errorMessage = "Username or password was incorrect!";
@@ -126,17 +126,17 @@
 												<form method="post" action="Default.cshtml">
 
 													<p>
-                                                        @Html.ValidationMessage("user")<br />
+                                                        @Html.ValidationMessage("user")<br>
 														Username:<br />
 														<input type="text" style="width:250px" name="user" id="user" value="@Request.Form["user"]">
 													</p>
 
 													<p>
-                                                        @Html.ValidationMessage("password") <br />
+                                                        @Html.ValidationMessage("password") <br>
 														Password:<br />
 														<input type="password" style="width:250px" name="password" id="password">
                                                         <br /> @if ( @errorMessage != "" ) {
-                                                                  <center><div style="color: red">@errorMessage</div></center>
+                                                                  <div style="color: red;text-align: center">@errorMessage</div>
                                                               }
                                                               
 													</p>
