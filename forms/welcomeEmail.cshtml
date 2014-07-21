@@ -1,49 +1,43 @@
-@{
-  
-  //Connect to database
-  var db = Database.Open("kinglandDatabase");
+﻿@{    
+    //Connect to database
+    var db = Database.Open("kinglandDatabase");
 
-  var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
-  var locations = db.QuerySingle("SELECT * FROM location);
-  
-  
+    var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
 }
-<!DOCTYPE html>
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title></title>
-    </head>
-    <body>
-				<form method="post" onmouseover="generateEmailBody();" action="handlers/newHireEmail.cshtml" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody();">
-					<p> Email: <input type="text"  name="email" value = "@bckFill.email" id="newHireEmail"></input></p>
-					<p> Location:</br>
-					<select id="location">
+<form method="post" onmouseover="generateEmailBody();" action="handlers/newHireEmail.php" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody();">
+	<p> Email: <input type="text"  name="email" value = "' . $row['email'] . '" id="newHireEmail"></input></p>
+	<p> Location:</br>
+	<select id="location">
+	
+@{        				
+	//Grabs the locations from that database and associates the name to the address
+	var loc = db.Query("SELECT * FROM location");
+    
+    foreach ( var location in loc ) {
+         @:<option value = "@loc.location">@loc.location</option>   
+    }
+}
 					
-					@{
-              var locations = db.Query("SELECT * FROM location");
-              foreach (var loc in locations) {
-                  <option value=" locations.address " >locations.location</option>
-              }
-          }
+	</select>
+	</p>
+	<p> Check in With: <input type="text" name="checkin" value="Rachel Donaldson" id="checkInName"></input></p>
+	<p> Preferred Email Contact: <input type="text" name="emailContact" value="humanresource@kingland.com" id="preferredEmail"></input></p>
+	<p> Preferred Phone Contact: <input type="text" name="phoneContact" value="(641) 355-1000" id="preferredPhone"></input></p>
 					
-					<select>
-					</p>
-					<p> Check in With: <input type="text" name="checkin" value="Rachel Donaldson" id="checkInName"></input></p>
-					<p> Preferred Email Contact: <input type="text" name="emailContact" value="humanresource@kingland.com" id="preferredEmail"></input></p>
-					<p> Preferred Phone Contact: <input type="text" name="phoneContact" value="(641) 355-1000" id="preferredPhone"></input></p>
-					
-					<!-- These are hidden fields so that the javascript fucntion can pull them into variables -->
-					<p><input type="hidden"  name="name" value = "@bckFill.first" id="name">
-					<input type="hidden"  name="startDate" value = "@bckFill.startDate" id="startDate"></input>
+	<!-- These are hidden fields so that the javascript fucntion can pull them into variables -->
+	<p><input type="hidden"  name="name" value = "@bckFill.first" id="name">
+	<input type="hidden"  name="startDate" value = "@bckFill.startDate" id="startDate"></input>
+	<input type="hidden"  name="location" value = "@bckFill.location" id="location"></input>
+    </p>
 			
-					<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br>
-					<p> Body: <label>(note: If you modify the text in the body the text fields above will no longer update the body data!)</label>
-					<textarea rows="10" cols="50" name="messageBody" id="messageBody" ></textarea></p>
+	<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br>
+	<p> Body: <font size="1">(note: If you modify the text in the body the text fields above will no longer update the body data!)</font>
+	<!--onfocus="here();" onblur="there();" -->
+	<textarea rows="10" cols="50" name="messageBody" id="messageBody" ></textarea></p>
 							
 					
-					<a href="#" onClick="submitEmail();" style="margin-left:625px">Send</a>
-				</form>';
-  </body>
-</html>
+	<a href="#" onClick="submitEmail();" style="margin-left:625px">Send</a>
+</form>
+
+@db.close();
