@@ -1,0 +1,26 @@
+@{
+    //Set username
+    var user = Session["user"];
+    
+    
+    
+    
+    var myUser = Request.Form["user"];
+    var email = Request.Form["email"];
+    var subject = Request.Form["emailSubject"];
+    var message = Request.Form["messageBody"];
+
+    // Initialize WebMail helper
+    WebMail.SmtpServer = "your-SMTP-host";
+    WebMail.SmtpPort = 25;
+    WebMail.UserName = "your-user-name-here";
+    WebMail.Password = "your-account-password";
+    WebMail.From = "humanresources@kingland.com";
+
+    // Send email
+    WebMail.Send( to: email, subject: subject,  body: message );
+
+    db.QuerySingle("UPDATE users SET active = '1' WHERE user = @0", user);
+
+    Response.Redirect("../cpanel.php?page=emailSent");
+}
