@@ -1,4 +1,22 @@
 @{
+<<<<<<< HEAD
+    //Grab our username
+    var user = Session["user"];
+    
+    var specialInstall = Request.Form["specialInstall"];
+    var pcRequirement = Request.Form["pcRequirement"];
+    var deskLocation = Request.Form["deskLocation"];
+    var assignedNetworkPort = Request.Form["assignedNetworkPort"];
+    var userPermission = Request.Form["userPermission"];
+    var mks = Request.Form["mks"];
+    
+    
+    //Update hm info table 
+    db.QuerySingle("UPDATE users SET specialInstall = '@0', pcReq = '@1', deskLoc= '@2', netPort= '@3', permission = '@4', mks = '@5' WHERE user = '@6'", specialInstall , pcRequirement , deskLocation , assignedNetworkPort , userPermission , mks , user );
+    
+    //Head to message
+	Response.redirect("../cpanel.php?page=formSuccess"); 
+=======
     //Grab our fields form the form
     var user = Request.Form["thisUser"];  
     var specInstall = Request.Form["specialInstall"];
@@ -16,4 +34,5 @@
     
     //Head to thank you message
 	Response.Redirect("../cpanel.cshtml?page=formSuccess"); 
+>>>>>>> c4d8caf250fa9451c61811deb4d1e40c76d8c325
 }
