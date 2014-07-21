@@ -4,7 +4,7 @@ function slideHolder(holder){
 
 function slideHolderUp(holder, id) {
 	$("#"+holder).slideUp("slow",function(){
-		showForm(id);
+		updateArea('showForm', id, 0);
 	});
 }
 

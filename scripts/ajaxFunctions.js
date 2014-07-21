@@ -1,55 +1,16 @@
 var formShown = false;
 
 function shouldShowForms(id, holderID) {
+
 	if ( formShown ) {
-		slideHolderUp("displayForm", id);
 		document.getElementById(holderID).innerHTML = "v Show v";
+        //Display form should disappear with some pretty jQuery
+        document.getElementById("displayForm").innerHTML = "";
 	} else {
-		showForm(id);
-		slideHolder("displayForm");
 		document.getElementById(holderID).innerHTML = "^ Hide ^";
+        updateArea('showForm', id, 0);
 	}
 	formShown = !formShown;
-}
-
-//AJAX Function - updates The displayed user from drop-down menus
-function updateUser(id){
-	var xmlhttp;
-	var mylist = document.getElementById("myList");
-	var usrID = mylist.options[mylist.selectedIndex].text;
-	
-	//Display form should disappear with some pretty jQuery
-	$("#displayForm").slideUp("slow");
-	
-	if ( usrID == "Choose Employee" ) {
-		$("#showStatus").slideUp("slow");
-		document.getElementById('showStatus').innerHTML = " ";
-	} else {
-		
-		
-		//Make a new XML HTTP Request
-		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp = new XMLHttpRequest();
-		} else { // code for IE6, IE5
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		  
-		//On webform state change
-		xmlhttp.onreadystatechange=function() {
-			//Form is processed and we can find the file to get from
-			if (xmlhttp.readyState==4 && xmlhttp.status== 200) {
-				document.getElementById("showStatus").innerHTML = xmlhttp.responseText;
-			}
-		}
-
-		if ( id == 0 ) {
-			xmlhttp.open("GET","forms/updateUser.cshtml?q="+usrID,true);
-			reloadUser("showStatus");
-		} else if ( id == 1 ) { 
-			xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form=2",true);
-		}
-		xmlhttp.send();
-	}
 }
 
 //Generic Ajax function
@@ -64,6 +25,15 @@ function updateArea(caller, val, name){
 	    var mylist = document.getElementById("myList");
 	    var usrID = mylist.options[mylist.selectedIndex].text;
 	}
+
+    //For smooth transition with showing a different user's status
+    if ( caller == "showStatus" ) {
+
+        //If we deselected all employees
+        if ( usrID == "Choose Employee" ) {
+		    document.getElementById('showStatus').innerHTML = " ";
+	    }
+    }
 
     //Make a new XML HTTP Request
     if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -99,7 +69,7 @@ function updateArea(caller, val, name){
 	        }
 
 	        //Update Information Form
-	        if ( caller == "showStatus" ) {
+	        if (caller == "showStatus") {
 	            document.getElementById("showStatus").innerHTML = xmlhttp.responseText;
 	        }
 

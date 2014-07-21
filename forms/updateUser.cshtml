@@ -37,9 +37,9 @@
             @{
 			    if ( formInfo.emComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="showAll" style="color:green;" href="#" onClick="shouldShowForms(0, this.id)">v Show v</a></b>
+				    <b><a id="showAll" style="color:green;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="showAll" style="color:red;" href="#" onClick="shouldShowForms(0, this.id)">v Show v</a></b>
+				    <b><a id="showAll" style="color:red;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
 			    }
             }
 	</td>
@@ -49,9 +49,9 @@
             @{
 			    if ( formInfo.hrComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="hrStatus" style="color:green;" href="#" onClick="shouldShowForms(1, this.id)">v Show v</a></b>
+				    <b><a id="hrStatus" style="color:green;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="hrStatus" style="color:red;" href="#" onClick="shouldShowForms(1, this.id)">v Show v</a></b>
+				    <b><a id="hrStatus" style="color:red;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
 			    }
             }
 			
@@ -60,9 +60,9 @@
 	        @{
 			    if ( formInfo.hmComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms(2, this.id)">v Show v</a></b>
+				    <b><a id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms(2, this.id)">v Show v</a></b>
+				    <b><a id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
 			    }
              }
 
@@ -71,9 +71,9 @@
 	        @{
 			    if ( formInfo.itComplete.Equals(1) ) {
                     meterVal++;
-				    <b><a id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms(3, this.id)">v Show v</a></b>
+				    <b><a id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="itStatus" style="color:red;" href="#" onClick="shouldShowForms(3, this.id)">v Show v</a></b>
+				    <b><a id="itStatus" style="color:red;" href="#" onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
 			    }
              }
 
@@ -82,9 +82,9 @@
 	        @{
 			    if ( formInfo.prComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="prStatus" style="color:green;" href="#" onClick="shouldShowForms(4, this.id)">v Show v</a></b>
+				    <b><a id="prStatus" style="color:green;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="prStatus" style="color:red;" href="#" onClick="shouldShowForms(4, this.id)">v Show v</a></b>
+				    <b><a id="prStatus" style="color:red;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
 			    }
              }
 
@@ -99,12 +99,13 @@
 	
 @{ 
     if ( formInfo.finished.Equals(1) ) {
-	    <tr><td colspan="5" style="text-align: center"><p style="color:green">This user has been submitted and is currently live.</p></td></tr>
+	    <tr><td colspan="7" style="text-align: center"><p style="color:green">This user has been submitted and is currently live.</p></td></tr>
     } else if ( formInfo.emComplete.Equals(1) && formInfo.hrComplete.Equals(1) && formInfo.hmComplete.Equals(1) && formInfo.itComplete.Equals(1) && formInfo.prComplete.Equals(1) ) {
-	    <tr><td colspan="5" style="text-align: center"><a href="functions/processFinal.cshtml?user=@myUser">Finalize Submission</a><br><hr></td></tr>
+	    <tr><td colspan="7" style="text-align: center"><a href="functions/processFinal.cshtml?user=@myUser">Finalize Submission</a><br></td></tr>
     } else {
-	     <tr><td>&nbsp;</td><td colspan="5"><meter id="progressBar" value="@meterVal" min="0" max="5" style="height: 15px; width: 100%;"></meter><br><hr></td></tr> 
+	     <tr><td>&nbsp;</td><td colspan="5"><meter id="progressBar" value="@meterVal" min="0" max="5" style="height: 15px; width: 100%;"></meter><br></td></tr> 
     }
 }
 
 </table>
+<hr>
