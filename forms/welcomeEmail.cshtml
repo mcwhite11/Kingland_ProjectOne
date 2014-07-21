@@ -9,7 +9,7 @@
     var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
 }
 
-<form method="post" onmouseover="generateEmailBody();" action="handlers/newHireEmail.cshtml" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody();">
+<form method="post" onmouseover="generateEmailBody()" action="handlers/newHireEmail.cshtml" style="margin-left:80px;width:625px;" id="newEmployeeEmail" onchange="generateEmailBody()">
 	<p> Email: <input type="text"  name="email" value = "@bckFill.email" id="newHireEmail"></input></p>
 	<p> Location:<br />
 	<select id="location">
@@ -40,5 +40,5 @@
 	<textarea rows="10" cols="50" name="messageBody" id="messageBody" ></textarea></p>
 							
 					
-	<a href="#" onClick="submitEmail();" style="margin-left:625px">Send</a>
+	<a href="#" onClick="submitEmail()" style="margin-left:625px">Send</a>
 </form>
