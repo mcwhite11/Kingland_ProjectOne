@@ -112,7 +112,7 @@ function updateArea(caller, val, name){
 	        }
 
 	        //Update Information Form
-	        if (caller == "showForm" || caller == "welcome") {
+	        if ( caller == "showForm" ) {
 	            document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
 	        }
 
@@ -150,11 +150,6 @@ function updateArea(caller, val, name){
         //If we're showing the status bar for employees
         if ( caller == "showStatus" ) {
             xmlhttp.open("GET","forms/updateUser.cshtml?q="+usrID,true);
-        }
-
-        //If we're showing the email
-        if ( caller == "showStatus" ) {
-            xmlhttp.open("GET","forms/welcomeEmail.cshtml?myUser="+usrID,true);
         }
 			
 		if ( caller == "userID" ) {

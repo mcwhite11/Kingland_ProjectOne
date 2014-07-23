@@ -1,0 +1,39 @@
+﻿@{
+    //Grab username
+    var thisUser = Request.Form["deleteUserCheckbox"];
+
+    //Connect and open DB
+    var db = Database.Open("kinglandDatabase");
+
+	//Delete from users
+    db.QuerySingle("DELETE FROM users WHERE user = @0", thisUser);
+	
+	//Delete from forminfo
+    db.QuerySingle("DELETE FROM formInfo WHERE user = @0", thisUser);
+	
+	//Delete from hm Form
+    db.QuerySingle("DELETE FROM hmForm WHERE user = @0", thisUser);
+	
+	//Delete from addInfo
+    db.QuerySingle("DELETE FROM addInfo WHERE user = @0", thisUser);
+	
+	//Delete from authAgree
+    db.QuerySingle("DELETE FROM authAgree WHERE user = @0", thisUser);
+	
+	//Delete from handbookReceipt
+    db.QuerySingle("DELETE FROM handbookReceipt WHERE user = @0", thisUser);
+	
+	//Delete from safeHarbor
+    db.QuerySingle("DELETE FROM safeHarbor WHERE user = @0", thisUser);
+	
+	//Delete from studentConsent
+    db.QuerySingle("DELETE FROM studentConsent WHERE user = @0", thisUser);
+	
+	//Delete from payrollForm
+    db.QuerySingle("DELETE FROM payrollForm WHERE user = @0", thisUser);
+	
+	//Delete from techAgree
+    db.QuerySingle("DELETE FROM techAgree WHERE user = @0", thisUser);
+	
+	Response.Redirect("../cpanel.cshtml?page=view");
+}

@@ -1,134 +1,102 @@
-﻿@{
-    
-}
-
-
-include("connect.php");
-require_once("functions.php");
-
-//Library for php >= 5.3.7 to have pass hashing functions 
-require("password_compat-master/lib/password.php");
-
-//If the user entered all necessary information (if creating admin account, you don't need the hiring manager
-if ( isSet($_POST['first']) && isSet($_POST['last']) && isSet($_POST['email']) ) {
-
-
-	//Grab all information, and change first and last name to capital first letters 
-	$first = $_POST['first'];
-	$first = ucfirst($first);
-	$last = $_POST['last'];
-	$last = ucfirst($last);
-	$email = $_POST['email'];
-	$hmemail = $_POST['hmemail'];
-	$isHR = $_POST['isHR'];
-	$isIT = $_POST['isIT'];
-	$prefName = ucfirst($_POST['preferred']);
-	$position = $_POST['position'];
-	$location = $_POST['location'];
-	$manualPassword = $_POST['manualPassword'];
-	$manualID = $_POST['manualID'];
-	$dept = $_POST['dept'];
-	$sd = $_POST['actSD'];
-	$hm = $_POST['hm'];
-	$emailAddition = $_POST['newHireEmailAddition'];
-	$isDRA = $_POST['userIsDRA'];
-	$empType = $_POST['empType'];
-
-	if ( $isIT || $isHR ) {
-		$isAdmin = true;
-	} else {
-		$isAdmin = false;
-	}
+﻿@{    
+    //Grab all information, and change first and last name to capital first letters 
+    var first = Request.Form["first"];
+    //Uppercase First name
+    var first = char.ToUpper(first[0]) + first.Substring(1);
+    var last = Request.Form["last"];
+    //Uppercase Last Name
+    var last = char.ToUpper(last[0]) + last.Substring(1);
+    var email = Request.Form["email"];
+    var hmemail = Request.Form["hmemail"];
+    //Uppercase Preferred Name
+    var prefName = char.ToUpper(Request.Form["preferred"][0]) + Request.Form["preferred"].Substring(1);
+    var position = Request.Form["position"];
+    var location = Request.Form["location"];
+    var manualPassword = Request.Form["manualPassword"];
+    var manualID = Request.Form["manualID"];
+    var dept = Request.Form["dept"];
+    var sd = Request.Form["actSD"];
+    var hm = Request.Form["hm"];
+    var emailAddition = Request.Form["newHireEmailAddition"];
+    var isDRA = Request.Form["userIsDRA"];
+    var empType = Request.Form["empType"];
 
 	//Generate a Unique ID from First/Last name -- Unless one was specified
-	if ( $manualID == "" ) {
-		$user = generateUniqueID($first, $last);
+	if ( manualID == "" ) {
+		var user = ""; //generateUniqueID(@first, @last);
 	} else {
-		$user = $manualID;
+		 var user = manualID;
 	}
 	
 	//Auto Generate 20 digit random password if a manual one is not entered.
-	if ( $manualPassword != "") {
-		$pass = $_POST['manualPassword'];
+	if ( manualPassword != "") {
+		var pass = Request.Form["manualPassword"];
 	} else {
-		$pass = randomPassword(12);
+		var pass = ""; //Generate Random Password function;
 	}
+
 	//Store plain text version for a minute
-	$plainPass = $pass;
+	var plainPass = pass;
 	
-	$pass = password_hash($pass, PASSWORD_BCRYPT);
+	pass = ""; //password_hash($pass, PASSWORD_BCRYPT);
 	
 	//Add user to users table with user information
-	mysqli_query($con, "INSERT INTO users (user, pass, isAdmin, first, last, email, hmemail, isHR, isHM, isIT, isPR, prefName, position, dept, startDate, hmName, active) 
-	VALUES ('" . $user . "', '" . $pass . "', '" . $isAdmin . "', '" . $first . "', '" . $last . "','" . $email . "','" . $hmemail . "','" . $isHR . "','0','" . $isIT . "','0','" . $prefName . "','" . $position . "','" . $dept . "','" . $sd . "','" . $hm . "', '0')");
+	db.Querysingle("INSERT INTO users (user, pass, isAdmin, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9 , @10, @11, @12, '0')", user, pass, isAdmin, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active);
 	
 	//create entry to track overall progress in formInfo table
-	if ( $isDRA == "yes" ) {
-		mysqli_query($con, "INSERT INTO formInfo (user, hrComplete, hmComplete, itComplete) 
-	VALUES ('" . $user . "', '1', '1', '1')");
+	if ( isDRA == "yes" ) {
+		db.Querysingle("INSERT INTO formInfo (user, hrComplete, hmComplete, itComplete) VALUES (@0, '1', '1', '1')", user);
 	} else {
-		mysqli_query($con, "INSERT INTO formInfo (user, hrComplete) 
-	VALUES ('" . $user . "', '1')");
+		db.Querysingle("INSERT INTO formInfo (user, hrComplete) VALUES (@0, '1')", user);
 	}
 	
 	//create entry to track HM form progress in hmForm table
-	if ( $isDRA == "yes" ) {
-		mysqli_query($con, "INSERT INTO hmForm (specInstall, pcReq, deskLoc, netPort, permission, mks, user) 
-	VALUES ('none', 'none', 'none', 'none', 'none', 'no', '" . $user . "')");
+	if ( isDRA == "yes" ) {
+		db.Querysingle("INSERT INTO hmForm (specInstall, pcReq, deskLoc, netPort, permission, mks, user) VALUES ('none', 'none', 'none', 'none', 'none', 'no', @0)", user);
 	} else {
-		mysqli_query($con, "INSERT INTO hmForm (user) 
-	VALUES ('" . $user . "')");
+		db.Querysingle("INSERT INTO hmForm (user) VALUES (@0)", user);
 	}
 	
 	//create entry for Additional Info form progress in addInfo table
-	mysqli_query($con, "INSERT INTO addInfo (user) 
-	VALUES ('" . $user . "')");
+	db.Querysingle("INSERT INTO addInfo (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in authAgree table
-	mysqli_query($con, "INSERT INTO authAgree (user) 
-	VALUES ('" . $user . "')");
+	db.Querysingle("INSERT INTO authAgree (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in handbookReceipt table
-	mysqli_query($con, "INSERT INTO handbookReceipt (user) 
-	VALUES ('" . $user . "')");
+	db.Querysingle("INSERT INTO handbookReceipt (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in safeHarbor table
-	mysqli_query($con, "INSERT INTO safeHarbor (user) 
-	VALUES ('" . $user . "')");
+	db.Querysingle("INSERT INTO safeHarbor (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in studentConsent table
-	mysqli_query($con, "INSERT INTO studentConsent (user) 
-	VALUES ('" . $user . "')");
+	db.Querysingle("INSERT INTO studentConsent (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in payroll table
-	mysqli_query($con, "INSERT INTO payrollForm (user, empType, location) 
-	VALUES ('" . $user . "', '" . $empType ."', '" . $location ."')");
+	db.Querysingle("INSERT INTO payrollForm (user, empType, location) VALUES (@0, @1, @2)", user, empType, location);
 	
 	//create entry for Additional Info form progress in techAgree table
-	mysqli_query($con, "INSERT INTO techAgree (user) 
-	VALUES ('" . $user . "')");
+	db.Querysingle("INSERT INTO techAgree (user) VALUES (@0)", user);
 	
 	
 	//Don't send the email for DRA's
-	if ( $isDRA != "yes" ) {
+	if ( isDRA != "yes" ) {
 		//email hiring manager
-		$subject = 'New Employee Notification';
-		$message = 'Hi There!' . "\r\n" . "\r\n" . $first . ' ' . $last . ' ( ' . $user . ' ) has been added as a new employee to our records. Upon creation, you were listed as the hiring manager for this employee.' . "\r\n" . 
-					'As such, we will need you to login to http://newhire.kingland.com to fill out a quick form with information for the IT department to get the new employee an account.' . "\r\n" . "\r\n" . 
-					'If you have any questions, email an HR representative!';
-		$headers = 'From: newhire@kingland.com';
+		//$subject = 'New Employee Notification';
+		//$message = 'Hi There!' . "\r\n" . "\r\n" . $first . ' ' . $last . ' ( ' . $user . ' ) has been added as a new employee to our records. Upon creation, you were listed as the hiring manager for this employee.' . "\r\n" . 
+		//			'As such, we will need you to login to http://newhire.kingland.com to fill out a quick form with information for the IT department to get the new employee an account.' . "\r\n" . "\r\n" . 
+		//			'If you have any questions, email an HR representative!';
+		//$headers = 'From: newhire@kingland.com';
 		
-		mail($hmemail, $subject, $message, $headers);
+		//mail($hmemail, $subject, $message, $headers);
 	}
 	
 	//email user to give them password
-	$subject = 'Welcome to Kingland';
-	$message = 'You have had an account created for you on Kingland Systems New Hire Portal. You will receive another email in the future when your account has been activated. When it has, your username will be: ' . $user .' and your password will be: ' . $plainPass . ' The next email you receive will contain the URL to the New Hire Portal.';
-	$headers = 'From: newhire@kingland.com';
+	//$subject = 'Welcome to Kingland';
+	//$message = 'You have had an account created for you on Kingland Systems New Hire Portal. You will receive another email in the future when your account has been activated. When it has, your username will be: ' . $user .' and your password will be: ' . $plainPass . ' The next email you receive will contain the URL to the New Hire Portal.';
+	//$headers = 'From: newhire@kingland.com';
 	
-	mail($email, $subject, $message, $headers);
+	//mail($email, $subject, $message, $headers);
 	 
-	header('Location: ../cpanel.php?page=addSuccess');
+	Response.Redirect("../cpanel.php?page=addSuccess");
 }
-	
-mysqli_close($con);
