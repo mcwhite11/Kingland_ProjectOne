@@ -2,7 +2,7 @@
     //Connect and open DB
     var db = Database.Open("kinglandDatabase");
 
-    if ( Request.Form["location"] == "set" ) {
+    if ( Request.Form["location"] != "Select..." ) {
 	    var name = Request.Form["locationname"];
 	    var address = Request.Form["address"];
 	    if ( Request.Form["locationdelete"] == "delete" ) {
@@ -11,11 +11,10 @@
 		    db.QuerySingle("INSERT INTO location (location, address) VALUES (@0, @1)", name, address);
 	    } else {
 		    db.QuerySingle("UPDATE location SET address = @0 WHERE location = @1", address, name);
-            <text>Happened</text>
 	    }
     }
 
-    if ( Request.Form["division"] == "set" ) {
+    if ( Request.Form["division"] != "Select..." ) {
 	    var name = Request.Form["divisionname"];
 	    if (  Request.Form["divisiondelete"] == "delete" ) {
 		    db.QuerySingle("DELETE FROM division WHERE division = @0", name);
@@ -24,7 +23,7 @@
 	    }
     }
 
-    if ( Request.Form["funcArea"] == "set" ) {
+    if ( Request.Form["funcArea"] != "Select..." ) {
 	    var name = Request.Form["funcAreaname"];
 	    var address = Request.Form["address"];
 	    if (  Request.Form["funcAreadelete"] == "delete" ) {
@@ -36,5 +35,5 @@
 	    }
     }
 
-   // Response.Redirect("../cpanel.cshtml?page=update");
+   Response.Redirect("../cpanel.cshtml?page=update");
 }

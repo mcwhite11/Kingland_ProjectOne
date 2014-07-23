@@ -13,6 +13,54 @@ function shouldShowForms(id, holderID) {
 	formShown = !formShown;
 }
 
+//Make sure we are showing forms correctly
+function showForm(value) {
+    //If value is zero, we're selecting employee - and must grab the actual form value
+    if ( value == 0 ) {
+        otherList = document.getElementById('formList');
+        value = otherList.options[otherList.selectedIndex].value;
+    }
+
+    //Forms
+    var status = document.getElementById('showStatus');
+    var display = document.getElementById('displayForm');
+
+    //Employee Selected
+	var mylist = document.getElementById("myList");
+    var formlist = document.getElementById("formList");
+
+    //Form selected
+	var usrID = mylist.options[mylist.selectedIndex].text;
+    var myForm = formlist.options[formlist.selectedIndex].text;
+
+    //Some simple variables
+    var blankUsr = "Choose Employee";
+    var blankForm = "Select...";
+
+    //Must choose an employee to show forms for them! -- Add must choose form too?
+	if ( usrID != blankUsr && myForm != blankForm ) {
+	    //Showing the status bar
+        if ( value == "status" ) {
+            display.innerHTML = "";
+            updateArea('showStatus', value, 0);
+        }
+
+        //Showing the forms
+        if ( value != "status" ) {
+            status.innerHTML = "";
+            updateArea('showForm', value, 0);
+        }
+	} 
+    
+    if ( usrID == blankUsr ) {
+        status.innerHTML = "";                    
+	} 
+
+
+
+}
+
+
 //Generic Ajax function
     //Caller - The page/forms calling the function
     //val - The value to pass for updating
@@ -47,7 +95,7 @@ function updateArea(caller, val, name){
         document.getElementById(name + "Update").innerHTML = " ";
     
     //showForm: Blank form and skip rest of function
-    } else if ( usrID == "Choose Employee" && ( caller == "showForm" || caller == "showStatus" ) ) {
+    } else if ( usrID == "Choose Employee" ) {
 		document.getElementById("displayForm").innerHTML = " ";
 
     //Execute legitimate Ajax Call
@@ -64,12 +112,12 @@ function updateArea(caller, val, name){
 	        }
 
 	        //Update Information Form
-	        if (caller == "showForm") {
+	        if (caller == "showForm" || caller == "welcome") {
 	            document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
 	        }
 
 	        //Update Information Form
-	        if (caller == "showStatus") {
+	        if ( caller == "showStatus" ) {
 	            document.getElementById("showStatus").innerHTML = xmlhttp.responseText;
 	        }
 
@@ -99,9 +147,14 @@ function updateArea(caller, val, name){
             xmlhttp.open("GET","forms/updateForm.cshtml?q="+usrID+"&form="+val,true);
         }
 
-        //If we're showing one of the front page forms
+        //If we're showing the status bar for employees
         if ( caller == "showStatus" ) {
             xmlhttp.open("GET","forms/updateUser.cshtml?q="+usrID,true);
+        }
+
+        //If we're showing the email
+        if ( caller == "showStatus" ) {
+            xmlhttp.open("GET","forms/welcomeEmail.cshtml?myUser="+usrID,true);
         }
 			
 		if ( caller == "userID" ) {

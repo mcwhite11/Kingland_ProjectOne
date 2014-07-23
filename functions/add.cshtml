@@ -1,0 +1,134 @@
+﻿@{
+    
+}
+
+
+include("connect.php");
+require_once("functions.php");
+
+//Library for php >= 5.3.7 to have pass hashing functions 
+require("password_compat-master/lib/password.php");
+
+//If the user entered all necessary information (if creating admin account, you don't need the hiring manager
+if ( isSet($_POST['first']) && isSet($_POST['last']) && isSet($_POST['email']) ) {
+
+
+	//Grab all information, and change first and last name to capital first letters 
+	$first = $_POST['first'];
+	$first = ucfirst($first);
+	$last = $_POST['last'];
+	$last = ucfirst($last);
+	$email = $_POST['email'];
+	$hmemail = $_POST['hmemail'];
+	$isHR = $_POST['isHR'];
+	$isIT = $_POST['isIT'];
+	$prefName = ucfirst($_POST['preferred']);
+	$position = $_POST['position'];
+	$location = $_POST['location'];
+	$manualPassword = $_POST['manualPassword'];
+	$manualID = $_POST['manualID'];
+	$dept = $_POST['dept'];
+	$sd = $_POST['actSD'];
+	$hm = $_POST['hm'];
+	$emailAddition = $_POST['newHireEmailAddition'];
+	$isDRA = $_POST['userIsDRA'];
+	$empType = $_POST['empType'];
+
+	if ( $isIT || $isHR ) {
+		$isAdmin = true;
+	} else {
+		$isAdmin = false;
+	}
+
+	//Generate a Unique ID from First/Last name -- Unless one was specified
+	if ( $manualID == "" ) {
+		$user = generateUniqueID($first, $last);
+	} else {
+		$user = $manualID;
+	}
+	
+	//Auto Generate 20 digit random password if a manual one is not entered.
+	if ( $manualPassword != "") {
+		$pass = $_POST['manualPassword'];
+	} else {
+		$pass = randomPassword(12);
+	}
+	//Store plain text version for a minute
+	$plainPass = $pass;
+	
+	$pass = password_hash($pass, PASSWORD_BCRYPT);
+	
+	//Add user to users table with user information
+	mysqli_query($con, "INSERT INTO users (user, pass, isAdmin, first, last, email, hmemail, isHR, isHM, isIT, isPR, prefName, position, dept, startDate, hmName, active) 
+	VALUES ('" . $user . "', '" . $pass . "', '" . $isAdmin . "', '" . $first . "', '" . $last . "','" . $email . "','" . $hmemail . "','" . $isHR . "','0','" . $isIT . "','0','" . $prefName . "','" . $position . "','" . $dept . "','" . $sd . "','" . $hm . "', '0')");
+	
+	//create entry to track overall progress in formInfo table
+	if ( $isDRA == "yes" ) {
+		mysqli_query($con, "INSERT INTO formInfo (user, hrComplete, hmComplete, itComplete) 
+	VALUES ('" . $user . "', '1', '1', '1')");
+	} else {
+		mysqli_query($con, "INSERT INTO formInfo (user, hrComplete) 
+	VALUES ('" . $user . "', '1')");
+	}
+	
+	//create entry to track HM form progress in hmForm table
+	if ( $isDRA == "yes" ) {
+		mysqli_query($con, "INSERT INTO hmForm (specInstall, pcReq, deskLoc, netPort, permission, mks, user) 
+	VALUES ('none', 'none', 'none', 'none', 'none', 'no', '" . $user . "')");
+	} else {
+		mysqli_query($con, "INSERT INTO hmForm (user) 
+	VALUES ('" . $user . "')");
+	}
+	
+	//create entry for Additional Info form progress in addInfo table
+	mysqli_query($con, "INSERT INTO addInfo (user) 
+	VALUES ('" . $user . "')");
+	
+	//create entry for Additional Info form progress in authAgree table
+	mysqli_query($con, "INSERT INTO authAgree (user) 
+	VALUES ('" . $user . "')");
+	
+	//create entry for Additional Info form progress in handbookReceipt table
+	mysqli_query($con, "INSERT INTO handbookReceipt (user) 
+	VALUES ('" . $user . "')");
+	
+	//create entry for Additional Info form progress in safeHarbor table
+	mysqli_query($con, "INSERT INTO safeHarbor (user) 
+	VALUES ('" . $user . "')");
+	
+	//create entry for Additional Info form progress in studentConsent table
+	mysqli_query($con, "INSERT INTO studentConsent (user) 
+	VALUES ('" . $user . "')");
+	
+	//create entry for Additional Info form progress in payroll table
+	mysqli_query($con, "INSERT INTO payrollForm (user, empType, location) 
+	VALUES ('" . $user . "', '" . $empType ."', '" . $location ."')");
+	
+	//create entry for Additional Info form progress in techAgree table
+	mysqli_query($con, "INSERT INTO techAgree (user) 
+	VALUES ('" . $user . "')");
+	
+	
+	//Don't send the email for DRA's
+	if ( $isDRA != "yes" ) {
+		//email hiring manager
+		$subject = 'New Employee Notification';
+		$message = 'Hi There!' . "\r\n" . "\r\n" . $first . ' ' . $last . ' ( ' . $user . ' ) has been added as a new employee to our records. Upon creation, you were listed as the hiring manager for this employee.' . "\r\n" . 
+					'As such, we will need you to login to http://newhire.kingland.com to fill out a quick form with information for the IT department to get the new employee an account.' . "\r\n" . "\r\n" . 
+					'If you have any questions, email an HR representative!';
+		$headers = 'From: newhire@kingland.com';
+		
+		mail($hmemail, $subject, $message, $headers);
+	}
+	
+	//email user to give them password
+	$subject = 'Welcome to Kingland';
+	$message = 'You have had an account created for you on Kingland Systems New Hire Portal. You will receive another email in the future when your account has been activated. When it has, your username will be: ' . $user .' and your password will be: ' . $plainPass . ' The next email you receive will contain the URL to the New Hire Portal.';
+	$headers = 'From: newhire@kingland.com';
+	
+	mail($email, $subject, $message, $headers);
+	 
+	header('Location: ../cpanel.php?page=addSuccess');
+}
+	
+mysqli_close($con);

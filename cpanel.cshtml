@@ -99,35 +99,11 @@
 								<span class="colored">Administration Panel</span>
 							</h3>
 							
-							| <a href="cpanel.cshtml">Home</a> | 
-							
-								
-								@if ( Session["isHR"].Equals(1)) {
-									<text>
-                                        <a href="?page=add">Add New Employee</a> |
-									    <a href="?page=welcome">Send Welcome Email | </a>
-									    <a href="?page=view">View Existing New Hire | </a>
-									    <a href="?page=update">Update Company Information | </a>
-								    </text>
-                                }
-								
-								@if ( Session["isHM"].Equals(1)) {
-									<text>
-								        <a href="?page=viewPendingHM">View Pending HM Forms | </a>
-								    </text>
-                                }
-								
-								@if ( Session["isIT"].Equals(1)) {
-									<text>
-								    	<a href="?page=viewPendingIT">View Pending IT Forms | </a>
-								    </text>
-                                }
-								
-								@if ( Session["isPR"].Equals(1)) {
-									<text>
-									    <a href="?page=viewPendingPR">View Pending PR Forms | </a>
-								    </text>
-                                }
+							<a href="cpanel.cshtml">Home</a> | 
+                            <a href="?page=add">Add New Employee</a> |
+							<a href="?page=welcome">Send Welcome Email | </a>
+							<a href="?page=update">Update Company Information | </a>
+							<a href="?page=view">View Forms | </a>
 						</div>
 					</div>
 				</div>
@@ -236,32 +212,6 @@
 													    <a href="#" onClick="validateAddEmployee()" style="margin-left:540px">Add Employee</a>
 												    </form>
 											} 
-
-                                            
-                                            //"View Existing New Hire"
-                                            else if ( page.Equals("view") && Session["isHR"].Equals(1) ) {
-<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>View New Hires</b></h4></span></div></div>
-												
-												
-                                                    var users = db.Query("SELECT * FROM users"); 
-                                                       
-                                                    <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												        <select id="myList" onChange="updateArea('showStatus',0,0)">
-											 	            <option>Choose Employee</option>
-
-                                                            @foreach (var person in users) {
-                                                                    <option value="@person.user">@person.user</option>
-                                                            }
-
-												        </select>
-                                                    </div>
-												
-												    <!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
-												    <div id="showStatus" style="margin-top:15px"></div>
-												
-												    <!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
-												    <div id="displayForm"></div>
-                                             }
                                              
                                              //"Send Welcome Email"
                                              else if ( page.Equals("welcome") && Session["isHR"].Equals(1) ) {
@@ -282,81 +232,62 @@
                                                 </div>
 												
 												<div id="displayForm"></div>
-											}
 
-                                            //"View Pending HM Forms"
-                                            else if ( page.Equals("viewPendingHM") && Session["isHM"].Equals(1) ) {
-<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>Hiring Manager Set Up Form</b></h4></span></div></div>
+											// "Update Company Information"
+											} else if ( page.Equals("update") && Session["isHR"].Equals(1) ) {
+<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center">Edit Form Information</h4></span></div></div>
+													
+													<p><center>We understand that, over time, information may change or become obsolete. So we have tried to
+													combat that issue!<br/>
+													Choose an item from one of the drop down lists to modify information related to it.<br/><br/>
+													For any drop down list, you may select the bottom "Add New" to create a new entry for that.<br/>
+													You may also
+													delete that entry by selecting it and checking the "Delete" box!</center></p><br/><br/>
+													
+												<form method="post" action="handlers/updateInformation.cshtml" id="updateInfo">
+                                                    @RenderPage("forms/updateInformation.cshtml");
+												</form>
+												 
+											<a href="#" onClick="document.getElementById('updateInfo').submit();" style="margin-left:625px">Submit</a>
 												
-                                                var users = db.Query("SELECT * FROM users"); 
-                                                       
-                                                <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												    <select id="myList" onChange="updateArea('showForm','HM',0)">
-											 	        <option>Choose Employee</option>
-
-                                                        @foreach (var person in users) {
-                                                                <option value="@person.user">@person.user</option>
-                                                        }
-
-												    </select>
-                                                </div>
-												
-												<!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
-												<div id="showStatus" style="margin-top:15px"></div>
-												
-												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
-												<div id="displayForm"></div>
-												
-											
-											} 
                                             
-                                            //"View Pending IT forms"
-                                            else if ( page.Equals("viewPendingIT") && Session["isIT"].Equals(1)) {
-<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>IT Set Up Form</b></h4></span></div></div>
-												
-                                                var users = db.Query("SELECT * FROM users"); 
-                                                       
-                                                <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												    <select id="myList" onChange="updateArea('showForm','IT',0)">
-											 	        <option>Choose Employee</option>
+                                            //"View Forms"
+                                            } else if ( page.Equals("view") && Session["isHR"].Equals(1) ) {
+<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>View New Hires</b></h4></span></div></div>
 
-                                                        @foreach (var person in users) {
-                                                                <option value="@person.user">@person.user</option>
-                                                        }
+                                                    var users = db.Query("SELECT * FROM users"); 
+                                                    //Select which employee to view for
 
-												    </select>
+                                                <div>
+                                                    <div id="select" style="clear: none; float: left; margin-left: 100px;"><b>Select a user</b>:<br/>
+												        <select id="myList" onChange="showForm(0)">
+											 	            <option>Choose Employee</option>
+
+                                                            @foreach (var person in users) {
+                                                                    <option value="@person.user">@person.user</option>
+                                                            }
+
+												        </select>
+                                                    </div>
+
+                                                    <!--Select which form to view-->
+                                                    <div id="formSelect" style=" clear: none;  float: right; margin-right: 100px;"><b>Select a form</b>:<br/>
+                                                        <select id="formList" onChange="showForm(this.value)">
+                                                            <option value="status" selected="selected">Forms Status</option>
+                                                            <option value="HM">Hiring Manager Form</option>
+                                                            <option value="IT">IT Form</option>
+                                                            <option value="PR">Payroll Form</option>
+                                                        </select>
+                                                    </div>
+                                                    <br /><br /><br />
                                                 </div>
 												
-												<!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
-												<div id="showStatus" style="margin-top:15px"></div>
-
-												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
-												<div id="displayForm"></div>			
-											}  
-                                            
-                                            //"View pending PR forms"
-                                            else if ( page.Equals("viewPendingPR") && Session["isPR"].Equals(1) ) {
-<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>Payroll Set Up Form</b></h4></span></div></div>
-
-                                                var users = db.Query("SELECT * FROM users"); 
-                                                       
-                                                <div id="select" style="padding-right:50px;padding-left:50px;"><b>Select a user</b>:<br/>
-												    <select id="myList" onChange="updateArea('showForm','PR',0)">
-											 	        <option>Choose Employee</option>
-
-                                                        @foreach (var person in users) {
-                                                                <option value="@person.user">@person.user</option>
-                                                        }
-
-												    </select>
-                                                </div>
+												    <!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
+												    <div id="showStatus" style="margin-top:15px"></div>
 												
-												<!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
-												<div id="showStatus" style="margin-top:15px"></div>
-												
-												<!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
-												<div id="displayForm"></div>	
-											} 
+												    <!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
+												    <div id="displayForm"></div>
+                                             } 
                                             
                                             //"User added succesfully"
                                             else if ( page.Equals("addSuccess") ) {
@@ -385,26 +316,7 @@
 														<p>
 															<a href='cpanel.cshtml'>Click here to return to home</a>
 														</p>
-													</center>
-	
-												
-											// "Update Company Information"
-											} else if ( page.Equals("update") && Session["isHR"].Equals(1) ) {
-<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center">Edit Form Information</h4></span></div></div>
-													
-													<p><center>We understand that, over time, information may change or become obsolete. So we have tried to
-													combat that issue!<br/>
-													Choose an item from one of the drop down lists to modify information related to it.<br/><br/>
-													For any drop down list, you may select the bottom "Add New" to create a new entry for that.<br/>
-													You may also
-													delete that entry by selecting it and checking the "Delete" box!</center></p><br/><br/>
-													
-												<form method="post" action="handlers/updateInformation.cshtml" id="updateInfo">
-                                                    @RenderPage("forms/updateInformation.cshtml");
-												</form>
-												 
-											<a href="#" onClick="document.getElementById('updateInfo').submit();" style="margin-left:625px">Submit</a>
-																							
+													</center>											
 													
 											//"Form Submitted Succesfully"
 											} else if ( page.Equals("formSuccess") ) {
@@ -422,7 +334,7 @@
 													</center>
 											}
 											
-										//"homepage" to display for each person.
+										//"homepage" to display.
                                         else  {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center"><b>Welcome to the New Hire Portal!</b></h4></span></div></div>
                                             <p>
