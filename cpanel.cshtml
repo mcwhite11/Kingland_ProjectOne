@@ -20,6 +20,8 @@
 
     //Connnect to database
     var db = Database.Open("kinglandDatabase");
+    var gp = Database.Open("GP");
+
 }
 
 <!DOCTYPE html>
@@ -143,7 +145,16 @@
 														    *Department:<br/>
 														    <select name="dept" id="prDepartment">
 															    <option>Select...</option>
-															    <option selected="selected">None</option>
+                                                                @{
+                                                                    //Pull our Departments from GP
+                                                                    var Departments = gp.Query("SELECT * FROM UPR40300");
+
+                                                                    foreach ( var dept in Departments ) {
+                                                                        if ( @dept.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) { 
+                                                                            <text><option value ="@dept.DEPRTMNT">@dept.DSCRIPTN</text>
+                                                                        }
+                                                                    }
+                                                                }
 														    </select>
 													    </p>
 													
@@ -151,7 +162,17 @@
 														    *Position<br/>
 														    <select name="position" id="prPosition">
 															    <option>Select...</option>
-															    <option selected="selected">None</option>
+                                                                @{
+                                                                    //Pull our Departments from GP
+                                                                    var positions = gp.Query("SELECT * FROM UPR40301");
+
+                                                                    foreach ( var position in positions ) {
+
+                                                                        if ( @position.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) { 
+                                                                            <text><option value ="@position.JOBTITLE">@position.DSCRIPTN</text>
+                                                                        }
+                                                                    }
+                                                                }
 														    </select>
 													    </p>
 													
@@ -159,7 +180,17 @@
 														    *Supervisor: <br/>
 														    <select name="supervisor" id="prSupervisor" alt="GRABS FROM GP - LISTS First, Last -- Links to Email">
 															    <option>Select...</option>
-															    <option selected="selected">None</option>
+                                                                @{
+                                                                    //Pull our Departments from GP
+                                                                    var Supervisors = gp.Query("SELECT * FROM UPR41700");
+
+                                                                    foreach ( var superV in Supervisors ) {
+
+                                                                        if ( @superV.SUPERVISOR.ToString().ToUpper().Contains("NOT USE") == false ) { 
+                                                                            <text><option value ="@superV.EMPLOYID">@superV.SUPERVISOR</text>
+                                                                        }
+                                                                    }
+                                                                }
 														    </select>
 													    </p>
 													
@@ -189,7 +220,7 @@
                                                
                                                                         
                                                         foreach (var loc in locations) {
-                                                                <option>locations.location</option>
+                                                                <option>@loc.location</option>
                                                         }
                                                      }
 
@@ -209,7 +240,7 @@
 												    <input type="text" name="manualPassword">
 												    </p>
 													
-													    <a href="#" onClick="validateAddEmployee()" style="margin-left:540px">Add Employee</a>
+													    <a onClick="validateAddEmployee()" style="margin-left:540px; cursor: pointer; cursor: hand;">Add Employee</a>
 												    </form>
 											} 
                                              
@@ -248,7 +279,7 @@
                                                     @RenderPage("forms/updateInformation.cshtml");
 												</form>
 												 
-											<a href="#" onClick="document.getElementById('updateInfo').submit();" style="margin-left:625px">Submit</a>
+											<a onClick="document.getElementById('updateInfo').submit();" style="margin-left:625px">Submit</a>
 												
                                             
                                             //"View Forms"
@@ -271,6 +302,8 @@
                                                     </div>
 
                                                     <!--Select which form to view-->
+                                                    <!-- Currently removed due to lazyness with making things pretty 
+
                                                     <div id="formSelect" style=" clear: none;  float: right; margin-right: 100px;"><b>Select a form</b>:<br/>
                                                         <select id="formList" onChange="showForm(this.value)">
                                                             <option value="status" selected="selected">Forms Status</option>
@@ -279,8 +312,11 @@
                                                             <option value="PR">Payroll Form</option>
                                                         </select>
                                                     </div>
+                                                    -->
                                                     <br /><br /><br />
                                                 </div>
+
+                                                <hr>
 												
 												    <!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
 												    <div id="showStatus" style="margin-top:15px"></div>
@@ -292,13 +328,12 @@
                                             //"User added succesfully"
                                             else if ( page.Equals("addSuccess") ) {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center"><b>Employee created successfully!</b></h4></span></div></div>
-													<p>
+													<p style="text-align: left">
 														The new employee's account was created succesfully.<br />
 														The hiring manager has been sent an email to begin filling out the appropriate paper work.
-														The can expect to recieve this email within 24 hours.
-													</p>
-														
-													<p>
+														The can expect to recieve this email within 24 hours.<br /><br/>
+
+
 														<a href='cpanel.cshtml'>Click here to return to home</a>
 													</p>		
 											
@@ -320,7 +355,7 @@
 													
 											//"Form Submitted Succesfully"
 											} else if ( page.Equals("formSuccess") ) {
-<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center"><b>Form submitted successfully!</b></h4></span></div></div>
+<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: left"><b>Form submitted successfully!</b></h4></span></div></div>
 													<center>	
 														<p>
 															The form was submitted succesfully.<br/>
@@ -338,7 +373,18 @@
                                         else  {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center"><b>Welcome to the New Hire Portal!</b></h4></span></div></div>
                                             <p>
-                                                Some information about the portal.
+                                                Hello and welcome to the New Hire Portal! If you have any questions along the way, please refer to the FAQ at the bottom of the page.<br /><br />
+                                                <b>Human Resources</b><br />
+                                                In order to add a new employee, you must follow the "Add New Employee" link and fill out the entire form. At this point, an email will be sent to the Hiring Manager and IT to fill out the required forms. 
+                                                Once you are ready for the employee to login and fill out their pre-employment forms, you can click "Send Welcome Email", select the user, and send an email to instruct them on the next steps. Until this point, their account will be inactive and unable to login. 
+                                                Somewhere along the way you will also need to complete the Payroll Status Change form. To do this, click "forms" and select the user and Payroll Status Change form. Fill this out and submit it when ready. You will need to have this Reviewed and approved. 
+                                                At this point, you will be done until IT, the employee, and the Hiring Manager have completed their portions. When this happens, you will be emailed and will have to login and navigate to "View Forms", select the user, and click "Finalize Submission" will be in place of the status bar you would otherwise see.<br /><br />
+
+                                                <b>Hiring Managers</b><br />
+                                                If you have been emailed as a Hiring Manager, please navigate to the "View Forms" page, select the user, and then complete the Hiring Manage form. This is all that is required of you.<br /><br />
+
+                                                <b>IT</b><br />
+                                                If you have been emailed as an IT professional, please navigate to the "View Forms" page, select the user, and then complete the IT Form. This is all that is required of you.<br /><br />
                                             </p>
 										}
                                      }

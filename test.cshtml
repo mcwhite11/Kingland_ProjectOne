@@ -1,0 +1,130 @@
+﻿
+<!DOCTYPE html>
+
+@using System;
+@using System.Data;
+@using System.DirectoryServices;
+@using System.Security.Principal;
+@using System.DirectoryServices.AccountManagement;
+@using System.Collections;
+
+
+@helper doStuff(string location)
+{
+    string date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+    string username = "KINGLAND\\bmays";
+    string pass = "Today17Today";
+    @:<a id="@location"></a><h1>Showing Results for @location</h1></a>
+    @:<table border="1" style="width:1400px;margin:30px;font-size:25px;">
+    @:<tr><th>Name</th><th>KSC Email</th><th>Business Phone</th><th>Home Phone</th><th>Mobile Phone</th></tr>
+    
+    PrincipalContext ad = new PrincipalContext(ContextType.Domain, "10.1.40.50", "ou=" + location + ", DC=KINGLAND, DC=CC");
+    UserPrincipal u = new UserPrincipal(ad);
+    u.DisplayName = "*, *";
+    PrincipalSearcher search = new PrincipalSearcher(u); 
+    
+    int count = 0;
+    ArrayList employees = new ArrayList();
+    foreach(UserPrincipal result in search.FindAll())
+    {
+        DirectoryEntry lowerLdap = (DirectoryEntry)result.GetUnderlyingObject();
+        if (result.DistinguishedName != null)
+        { 
+            string cn = (string)lowerLdap.Properties["cn"].Value;
+            string email = (string)lowerLdap.Properties["mail"].Value;
+            string workPhone = (string)lowerLdap.Properties["telephoneNumber"].Value;
+            string homePhone = (string)lowerLdap.Properties["homePhone"].Value;
+            string cellPhone = (string)lowerLdap.Properties["mobile"].Value;
+            Employee test = new Employee(cn, email, workPhone, homePhone, cellPhone);
+            employees.Add(test);
+            count++;
+
+        }
+        
+    }
+    
+
+
+    
+
+   employees.Sort();
+    string csv = "";
+    foreach(Employee element in employees)
+    {
+        @:<tr>
+        @:<td>@element.getCn()</td>
+        @:<td>@element.getEmail()</td>
+        @:<td>@element.getWorkPhone()</td>
+        @:<td>@element.getHomePhone()</td>
+        @:<td>@element.getCellPhone()</td>
+        @:</tr>
+    csv += @element.getCn() + "," + @element.getEmail()  + "," + @element.getWorkPhone()  + "," + @element.getHomePhone()  + "," + @element.getCellPhone() + Environment.NewLine;
+    }
+    @:</table>
+    string directory = "C:\\Users\\bmays\\My Documents\\My Web Sites\\profileV1.1\\reports";
+    string[] files = Directory.GetFiles(directory);
+    
+    string end = date + location + ".csv";
+    string dateString = directory + "\\"+end;
+
+
+
+    foreach(string element in files)
+    {
+        string nameDate = element.Substring(61,4) + element.Substring(66,2)+element.Substring(69,2)+element.Substring(72,2);
+        int check = 0;
+        if(end.Substring(0,4) == nameDate.Substring(0,4))
+        {
+            if(end.Substring(5,2) == nameDate.Substring(4,2))
+            {
+                if(end.Substring(8,2) == nameDate.Substring(6,2))
+                {
+                    if(Int32.Parse(nameDate.Substring(8,2)) - Int32.Parse(end.Substring(11,2))<3)
+                    {
+                        check = 1;
+                    }
+                }
+            }
+        }
+        if(check == 0)
+        {
+            File.Delete(element);
+        }
+    }
+    
+    if(!File.Exists(dateString))
+    {
+        File.Create(dateString).Close();
+    }
+    File.WriteAllText(dateString, csv);
+    search.Dispose();
+    
+    <div><a href="reports\@end">Download @location CSV</a></div>  
+    
+}
+
+
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Phone Listing</title>
+        <style>
+		.quickJump{
+			margin:20px;
+            text-align: center;
+		}
+        </style>
+
+    </head>
+
+    <body>
+         <h1 style="font-size:48px;">Welcome to the Kingland Systems Phone Number Listing</h1>
+         <h2>(Use Ctrl + F to search)</h2>
+         <a class="quickJump" href="#China">China</a><a class="quickJump" href="#Clear Lake">Clear Lake</a><a class="quickJump" href="#Lake Mills">Lake Mills</a></h2>
+         @doStuff("Ames")
+         @doStuff("China")
+         @doStuff("Clear Lake")
+         @doStuff("Lake Mills")
+    </body>
+</html>

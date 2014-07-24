@@ -1,102 +1,132 @@
 ﻿@{    
     //Grab all information, and change first and last name to capital first letters 
     var first = Request.Form["first"];
+
     //Uppercase First name
-    var first = char.ToUpper(first[0]) + first.Substring(1);
+    first = char.ToUpper(first[0]) + first.Substring(1);
     var last = Request.Form["last"];
+
     //Uppercase Last Name
-    var last = char.ToUpper(last[0]) + last.Substring(1);
+    last = char.ToUpper(last[0]) + last.Substring(1);
     var email = Request.Form["email"];
-    var hmemail = Request.Form["hmemail"];
+    var hmemail = "pgerlich@iastate.edu"; //Grab this from GP. Set hardcoded to pgerlich@iastate.edu for now.
+
     //Uppercase Preferred Name
-    var prefName = char.ToUpper(Request.Form["preferred"][0]) + Request.Form["preferred"].Substring(1);
-    var position = Request.Form["position"];
+    var prefName = Request.Form["preferred"];
+
+    //Uppercase if it's not null!
+    if ( prefName != "" ) {
+        prefName = char.ToUpper(prefName[0]) + prefName.Substring(1);        
+    }
+
+
+    var position = Request.Form["position"].Trim();
     var location = Request.Form["location"];
     var manualPassword = Request.Form["manualPassword"];
     var manualID = Request.Form["manualID"];
-    var dept = Request.Form["dept"];
-    var sd = Request.Form["actSD"];
-    var hm = Request.Form["hm"];
+    var dept = Request.Form["dept"].Trim();
+    var startDate = Request.Form["actSD"];
+    var hmName = Request.Form["supervisor"].Trim();
     var emailAddition = Request.Form["newHireEmailAddition"];
     var isDRA = Request.Form["userIsDRA"];
     var empType = Request.Form["empType"];
+    string pass = "";
+	var user = manualID;
+    var itEmail = ""; //NEED TO SPECIFY GENERIC IT EMAIL
 
-	//Generate a Unique ID from First/Last name -- Unless one was specified
-	if ( manualID == "" ) {
-		var user = ""; //generateUniqueID(@first, @last);
-	} else {
-		 var user = manualID;
-	}
+    //Connect to and open Database
+    var db = Database.Open("kinglandDatabase");
+
+    <!-- End Variable Declarations -->
+
+
+
 	
 	//Auto Generate 20 digit random password if a manual one is not entered.
 	if ( manualPassword != "") {
-		var pass = Request.Form["manualPassword"];
+		pass = Request.Form["manualPassword"];
 	} else {
-		var pass = ""; //Generate Random Password function;
+		pass = myFuncs.randomPassword(15);
 	}
 
 	//Store plain text version for a minute
 	var plainPass = pass;
 	
-	pass = ""; //password_hash($pass, PASSWORD_BCRYPT);
+	pass = PasswordHash.CreateHash(pass);
 	
 	//Add user to users table with user information
-	db.Querysingle("INSERT INTO users (user, pass, isAdmin, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9 , @10, @11, @12, '0')", user, pass, isAdmin, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active);
+	db.QuerySingle("INSERT INTO users (user, pass, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, '0')", user, pass, first, last, email, hmemail, prefName, position, dept, startDate, hmName);
 	
 	//create entry to track overall progress in formInfo table
 	if ( isDRA == "yes" ) {
-		db.Querysingle("INSERT INTO formInfo (user, hrComplete, hmComplete, itComplete) VALUES (@0, '1', '1', '1')", user);
+		db.QuerySingle("INSERT INTO formInfo (user, hrComplete, hmComplete, itComplete) VALUES (@0, '1', '1', '1')", user);
 	} else {
-		db.Querysingle("INSERT INTO formInfo (user, hrComplete) VALUES (@0, '1')", user);
+		db.QuerySingle("INSERT INTO formInfo (user, hrComplete) VALUES (@0, '1')", user);
 	}
 	
 	//create entry to track HM form progress in hmForm table
 	if ( isDRA == "yes" ) {
-		db.Querysingle("INSERT INTO hmForm (specInstall, pcReq, deskLoc, netPort, permission, mks, user) VALUES ('none', 'none', 'none', 'none', 'none', 'no', @0)", user);
+		db.QuerySingle("INSERT INTO hmForm (specInstall, pcReq, deskLoc, netPort, permission, mks, user) VALUES ('none', 'none', 'none', 'none', 'none', 'no', @0)", user);
 	} else {
-		db.Querysingle("INSERT INTO hmForm (user) VALUES (@0)", user);
+		db.QuerySingle("INSERT INTO hmForm (user) VALUES (@0)", user);
 	}
 	
 	//create entry for Additional Info form progress in addInfo table
-	db.Querysingle("INSERT INTO addInfo (user) VALUES (@0)", user);
+	db.QuerySingle("INSERT INTO addInfo (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in authAgree table
-	db.Querysingle("INSERT INTO authAgree (user) VALUES (@0)", user);
+	db.QuerySingle("INSERT INTO authAgree (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in handbookReceipt table
-	db.Querysingle("INSERT INTO handbookReceipt (user) VALUES (@0)", user);
+	db.QuerySingle("INSERT INTO handbookReceipt (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in safeHarbor table
-	db.Querysingle("INSERT INTO safeHarbor (user) VALUES (@0)", user);
+	db.QuerySingle("INSERT INTO safeHarbor (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in studentConsent table
-	db.Querysingle("INSERT INTO studentConsent (user) VALUES (@0)", user);
+	db.QuerySingle("INSERT INTO studentConsent (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in payroll table
-	db.Querysingle("INSERT INTO payrollForm (user, empType, location) VALUES (@0, @1, @2)", user, empType, location);
+	db.QuerySingle("INSERT INTO payrollForm (user, empType, location) VALUES (@0, @1, @2)", user, empType, location);
 	
 	//create entry for Additional Info form progress in techAgree table
-	db.Querysingle("INSERT INTO techAgree (user) VALUES (@0)", user);
-	
-	
+	db.QuerySingle("INSERT INTO techAgree (user) VALUES (@0)", user);
+
+    <!-- Begin Mailing Portion -->
+
+
+
+    //string userSubject = "Welcome to Kingland Systems";
+    //string userMessage = "You have had an account created for you on Kingland Systems New Hire Portal. You will receive another email in the future when your account has been activated. When it has, your username will be: " + user + " and your password will be: " + plainPass + " The next email you receive will contain the URL to the New Hire Portal.";
+    //string HMSubject = "New Employee Notification";
+    //string HMMessage = "Hi There! \r\n \r\n " + first + " " + last + " ( " + user + " ) has been added as a new employee to our records. Upon creation, you were listed as the hiring manager for this employee.' . \r\n .  As such, we will need you to login to http://kingland.com/newhire to fill out a quick form with information for the IT department to get the new employee an account.\r\n\r\n If you have any questions, email an HR representative!";
+    //string ITEmail = "Hello! \r\n " + first + " " + last + " ( " + user + " ) has been added and will need to have the necessary forms filed on the newhire page at URLURLURLURLURLURLURLURLURL";
+
 	//Don't send the email for DRA's
-	if ( isDRA != "yes" ) {
-		//email hiring manager
-		//$subject = 'New Employee Notification';
-		//$message = 'Hi There!' . "\r\n" . "\r\n" . $first . ' ' . $last . ' ( ' . $user . ' ) has been added as a new employee to our records. Upon creation, you were listed as the hiring manager for this employee.' . "\r\n" . 
-		//			'As such, we will need you to login to http://newhire.kingland.com to fill out a quick form with information for the IT department to get the new employee an account.' . "\r\n" . "\r\n" . 
-		//			'If you have any questions, email an HR representative!';
-		//$headers = 'From: newhire@kingland.com';
-		
-		//mail($hmemail, $subject, $message, $headers);
-	}
-	
-	//email user to give them password
-	//$subject = 'Welcome to Kingland';
-	//$message = 'You have had an account created for you on Kingland Systems New Hire Portal. You will receive another email in the future when your account has been activated. When it has, your username will be: ' . $user .' and your password will be: ' . $plainPass . ' The next email you receive will contain the URL to the New Hire Portal.';
-	//$headers = 'From: newhire@kingland.com';
-	
-	//mail($email, $subject, $message, $headers);
-	 
-	Response.Redirect("../cpanel.php?page=addSuccess");
+	//if ( isDRA != "yes" ) {
+		// Send email to HM
+    //    WebMail.Send(to: hmemail,
+    //        subject: HMSubject,
+    //       body: HMMessage
+    //    );
+
+        //Send email to IT
+    //    WebMail.Send(to: itEmail,
+    //        subject: HMSubject,
+    //        body: HMMessage
+    //    );
+	//}
+
+    //string userSubject = "Welcome to Kingland Systems";
+    //string userMessage = "You have had an account created for you on Kingland Systems New Hire Portal. You will receive another email in the future when your account has been activated. When it has, your username will be: " + user + " and your password will be: " + plainPass + " The next email you receive will contain the URL to the New Hire Portal.";
+
+    // Send email to user
+    //WebMail.Send(to: email,
+    //   subject: userSubject,
+    //    body: userMessage
+    //);
+
+
+
+	Response.Redirect("../cpanel.cshtml?page=addSuccess");
 }

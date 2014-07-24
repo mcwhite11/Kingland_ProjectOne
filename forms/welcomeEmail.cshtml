@@ -29,8 +29,9 @@
 	<p> Preferred Phone Contact: <input type="text" name="phoneContact" value="(641) 355-1000" id="preferredPhone"></input></p>
 					
 	<!-- These are hidden fields so that the javascript fucntion can pull them into variables -->
-	<p><input type="hidden"  name="name" value = "@bckFill.first" id="name">
-	<input type="hidden"  name="startDate" value = "@bckFill.startDate" id="startDate"></input>
+	<p>
+        <input type="hidden"  name="name" value = "@bckFill.first" id="name">
+	    <input type="hidden"  name="startDate" value = "@bckFill.startDate" id="startDate"></input>
     </p>
 			
 	<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br>
@@ -40,6 +41,8 @@
 			
 	<p> Subject: <input type="text" name="emailSubject" value="Welcome to Kingland Systems Corporation"></input><br />
 	<p> Body: <font size="1">(note: If you modify the text within the body the text fields above will no longer update the body data!)</font>
+
+    <input type="text" name="myUser" value="@myUser">
 
 	<!--onfocus="here();" onblur="there();" -->
 	<textarea rows="10" cols="50" name="messageBody" id="messageBody" ></textarea></p>

@@ -1,0 +1,11 @@
+﻿@{
+    //Grab First/Last name and generate the Unique ID
+    var first = Request.Params["first"];
+    var last = Request.Params["last"];
+    var uniqueID = myFuncs.uniqueID(first,last);
+
+    //Print out the ID
+    <text>@uniqueID</text>
+
+    //It's a weird workaround, but AJAX is annoying.
+}

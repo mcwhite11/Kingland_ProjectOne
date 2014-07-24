@@ -4,6 +4,7 @@
 
     //Connect to database
     var db = Database.Open("kinglandDatabase");
+    var gp = Database.Open("GP");
 
     //Grab data to backfill
     var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
@@ -27,13 +28,31 @@
 				Employee ID:<br />
 				<input type="text" name="id" value="@bckFill.user" id="prEmpId" readonly>
 			</p>
-			<p>
-				Position<br />
-				<select name="position" id="prPosition">
-					<option>Select...</option>
-					<option selected="selected">None</option>
-				</select>
-			</p>
+													
+	        <p>
+		        *Position<br/>
+		        <select name="position" id="hrPosition">
+			        <option>Select...</option>
+                    @{
+                        //Pull our Departments from GP
+                        var positions = gp.Query("SELECT * FROM UPR40301");
+
+                        foreach ( var position in positions ) {
+
+                            //Exclude DO NOT USE
+                            if ( @position.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) {
+                                //Backfill value
+                                if ( @position.JOBTITLE.ToString().ToUpper().Contains(@bckFill.position) ) {
+                                    <text><option value ="@position.JOBTITLE" selected="selected">@position.DSCRIPTN</text>
+                                } else {
+                                    <text><option value ="@position.JOBTITLE">@position.DSCRIPTN</text>
+                                }
+                            }
+                        }
+                    }
+		        </select>
+	        </p>
+												
 			<p>
 				Division:<br />
 				<select name="division" id="division">
@@ -51,15 +70,27 @@
 				</select>
 			</p>
 
-					
-			<p>
-				Department:<br />
-				<select name="dept" id="prDepartment">
-					<option>Select...</option>
-					<option selected="selected">None</option>
-				</select>
-			</p>
-					
+	        <p>
+		        *Department:<br/>
+		        <select name="dept" id="hrDepartment">
+			        <option>Select...</option>
+                    @{
+                        //Pull our Departments from GP
+                        var Departments = gp.Query("SELECT * FROM UPR40300");
+
+                        foreach ( var dept in Departments ) {
+                            if ( @dept.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) {
+                                if ( @dept.DEPRTMNT.ToString().ToUpper().Contains(@bckFill.dept) ) {
+                                    <text><option value ="@dept.DEPRTMNT" selected="selected">@dept.DSCRIPTN</text>
+                                } else {
+                                    <text><option value ="@dept.DEPRTMNT">@dept.DSCRIPTN</text>
+                                }
+                            }
+                        }
+                    }
+		        </select>
+	        </p>
+		
 			<p>
 				Incentive Payment:<br />
 				<input type="text" name="incentive" value="@bckFillPR.incentive" id="prIncentivePayment">
@@ -68,7 +99,7 @@
 			<p>
 				Incentive Type:<br />
 				<select name="incentiveType" id="prIncentiveType">
-					<option>Select...</option>';
+					<option>Select...</option>
 							
                     <option @if  (bckFillPR.incentiveType == "Discretionary") { <text>selected = "selected"</text> }>Discretionary</option>
 
@@ -153,13 +184,29 @@
 				
 		<div style="clear:none;float:right;width:300px">
 					
-			<p>
-				Supervisor:<br />
-				<select name="supervisor" id="prSupervisor">
-					<option>Select...</option>
-					<option selected="selected">None</option>
-				</select>
-			</p>
+	        <p>
+		        *Supervisor: <br/>
+		        <select name="supervisor" id="hrSupervisor" >
+			        <option>Select...</option>
+                    @{
+                        //Pull our Departments from GP
+                        var Supervisors = gp.Query("SELECT * FROM UPR41700");
+
+                        foreach ( var superV in Supervisors ) {
+                            //Grab supervisors
+                            if ( @superV.SUPERVISOR.ToString().ToUpper().Contains("NOT USE") == false ) {
+                                //Backfill
+                                if ( @superV.EMPLOYID.ToString().ToUpper().Trim().Contains(@bckFill.hmName) ) {
+                                    <text><option value ="@superV.EMPLOYID" selected="selected">@superV.SUPERVISOR</option></text>
+                                    
+                                } else {
+                                    <text><option value ="@superV.EMPLOYID" selected="selected">@superV.SUPERVISOR</option></text>
+                                }
+                            }
+                        }
+                    }
+		        </select>
+	        </p>
 								
 			<p>
 				Employee Type:<br />
@@ -177,7 +224,7 @@
 			<p>
 				Employee Status:<br />
 				<select name="empStatus" id="prEmployeeStatus">
-					<option>Select...</option>';
+					<option>Select...</option>
 						
                         <option @if  (bckFillPR.empStatus == "Regular") { <text>selected = "selected"</text> }>Regular</option>
 						
@@ -211,8 +258,7 @@
 					
 			<p>
 				Employment Type:<br />
-				<select name="empTypeDetail" id="prEmploymentType">
-							
+				<select name="empTypeDetail" id="prEmploymentType">	
 					<option>Select...</option>
                     <option @if (bckFillPR.empTypeDetail == "Full Time - Regular" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
 							

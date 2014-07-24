@@ -1,31 +1,28 @@
 @{
     //Set username
-    var user = Session["user"];
-    
-    
-    
+    var thisUser = Request.Form["myUser"];
     
     var myUser = Request.Form["user"];
     var email = Request.Form["email"];
     var subject = Request.Form["emailSubject"];
     var message = Request.Form["messageBody"];
 
-    // Initialize WebMail helper
-    WebMail.SmtpServer = "your-SMTP-host";
-    WebMail.SmtpPort = 25;
-    WebMail.UserName = "your-user-name-here";
-    WebMail.Password = "your-account-password";
-    WebMail.From = "humanresources@kingland.com";
+    //Webmail info -- change to kinglands with kingland SMTP user
+    WebMail.SmtpServer = "smtp.gmail.com";
+    WebMail.SmtpPort = 587;
+    WebMail.EnableSsl = true;
+    WebMail.UserName = "pgerlich94";
+    WebMail.From = "pgerlich94@gmail.com";
+    WebMail.Password = "Er@41878394260Aq";
 
-    // Send email
-    WebMail.Send( to: email, subject: subject,  body: message );
+    // Send email to user
+    WebMail.Send(to: email,
+        subject: subject,
+        body: message
+    );
 
     db.QuerySingle("UPDATE users SET active = '1' WHERE user = @0", user);
 
-    Response.Redirect("../cpanel.php?page=emailSent");
-<<<<<<< HEAD
+    Response.Redirect("../cpanel.cshtml?page=emailSent");
+
 }
- 
-=======
-} 
->>>>>>> c4d8caf250fa9451c61811deb4d1e40c76d8c325

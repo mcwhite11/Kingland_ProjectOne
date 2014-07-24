@@ -1,0 +1,21 @@
+﻿@{
+   //Grab our user
+   var thisUser = Request.Params["id"];
+    
+   //Open and connect to database
+   var dbGP = Database.Open("GP");
+   var dbTMP = Database.Open("kinglandDatabase");
+
+   thisUser = thisUser.ToUpper();
+
+   var inGP = dbGP.QuerySingle("SELECT * FROM UPR00100 WHERE EMPLOYID = @0", thisUser);
+   var inTMP = dbTMP.QuerySingle("SELECT * FROM users WHERE user = @0", thisUser);
+
+   //Output 1 if the user is available, 0 if user is taken
+   if ( inGP == null && inTMP == null && thisUser.Length == 5) {
+       <text>1</text>
+   } else {
+       <text>0</text>
+   }
+
+}

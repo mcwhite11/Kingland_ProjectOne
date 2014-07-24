@@ -2,11 +2,12 @@
   //Grab the username from the page data being passed
   var myUser = PageData[0];   
 
-  //Connect to database
+  //Connect to databases
   var db = Database.Open("kinglandDatabase");
+  var gp = Database.Open("GP");
+
 
   var bckFill = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
-  
  }
 
 <form method="post" id="hrForm" action="handlers/modifyHR.cshtml" style="margin-left:80px;width:625px">
@@ -21,23 +22,80 @@
 
 	<p>*E-Mail:<br />
 	<input type="text" name="email" id="hrEmail" value = "@bckFill.email" ></p>
+
+	<p style="float:right;clear:none">
+		*Supervisor: <br/>
+		<select name="supervisor" id="hrSupervisor" >
+			<option>Select...</option>
+            @{
+                //Pull our Departments from GP
+                var Supervisors = gp.Query("SELECT * FROM UPR41700");
+
+                foreach ( var superV in Supervisors ) {
+                    //Grab supervisors
+                    if ( @superV.SUPERVISOR.ToString().ToUpper().Contains("NOT USE") == false ) {
+                        //Backfill
+                        if ( @superV.EMPLOYID.ToString().ToUpper().Trim().Contains(@bckFill.hmName) ) {
+                            <text><option value ="@superV.EMPLOYID" selected="selected">@superV.SUPERVISOR</option></text>
+                                    
+                        } else {
+                            <text><option value ="@superV.EMPLOYID" selected="selected">@superV.SUPERVISOR</option></text>
+                        }
+                    }
+                }
+            }
+		</select>
+	</p>
 		
-	<p>*Position:<br />
-	<input type="text" name="position" value = "@bckFill.position" id="hrPosition" ></p>
-		
-	<p>*Department:<br />
-	<input type="text" name="dept" value = "@bckFill.dept" id="hrDepartment" ></p>
+	<p>
+		*Position<br/>
+		<select name="position" id="hrPosition">
+			<option>Select...</option>
+            @{
+                //Pull our Departments from GP
+                var positions = gp.Query("SELECT * FROM UPR40301");
+
+                foreach ( var position in positions ) {
+
+                    //Exclude DO NOT USE
+                    if ( @position.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) {
+                        //Backfill value
+                        if ( @position.JOBTITLE.ToString().ToUpper().Contains(@bckFill.position) ) {
+                            <text><option value ="@position.JOBTITLE" selected="selected">@position.DSCRIPTN</text>
+                        } else {
+                            <text><option value ="@position.JOBTITLE">@position.DSCRIPTN</text>
+                        }
+                    }
+                }
+            }
+		</select>
+	</p>
+	
+	<p>
+		*Department:<br/>
+		<select name="dept" id="hrDepartment">
+			<option>Select...</option>
+            @{
+                //Pull our Departments from GP
+                var Departments = gp.Query("SELECT * FROM UPR40300");
+
+                foreach ( var dept in Departments ) {
+                    if ( @dept.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) {
+                        if ( @dept.DEPRTMNT.ToString().ToUpper().Contains(@bckFill.dept) ) {
+                            <text><option value ="@dept.DEPRTMNT" selected="selected">@dept.DSCRIPTN</text>
+                        } else {
+                            <text><option value ="@dept.DEPRTMNT">@dept.DSCRIPTN</text>
+                        }
+                    }
+                }
+            }
+		</select>
+	</p>
 		
 	<p>*Actual Start Date (mm/dd/yyyy):<br />
 	<input type="text" name="actSD" value = "@bckFill.startDate" id="hrActualStartDate" ></p>
 		
-	<p>*Hiring Manager (kingland ID):<br />
-	<input type="text" name="hm" value = "@bckFill.hmName" id="hrHiringManager" ></p>
-		
-	<p>*Hiring Manager E-Mail:<br />
-	<input type="text" name="hmemail"  value = "@bckFill.hmemail" id="hrHiringManagerEmail" ></p>
-		
-	<input type="hidden" name="user" value = "user">
+	<input type="hidden" name="thisUser" value = "@myUser">
 	
 	<a href="#" onClick="validateHRForm()" style="margin-left:625px">Change</a>
 </form>

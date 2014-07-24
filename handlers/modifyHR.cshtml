@@ -1,21 +1,33 @@
 @{
-    //Grab our username
-    var user = Session["user"];
-    
+    //Grab our username and other form data
+    var thisUser = Request.Form["thisUser"];
     var first = Request.Form["first"];
     var last = Request.Form["last"];
     var email = Request.Form["email"];
-    var hmemail = Request.Form["hmemail"];
     var prefName = Request.Form["prefName"];
-    var position = Request.Form["position"];
-    var dept = Request.Form["dept"];
+    var position = Request.Form["position"].Trim();
+    var dept = Request.Form["dept"].Trim();
+    var supervisor = Request.Form["supervisor"].Trim();
+    var hmEmail = "TEST@TEST.COM";//CREATE FUNCTION TO GRAB EMAIL WITH AD
     var actSD = Request.Form["actSD"];
-    var hm = Request.Form["hm"];
+
+    //Open and connect to DB
+    var db = Database.Open("kinglandDatabase");
     
-     //Update users table
-    db.QuerySingle("UPDATE users SET first = '@0', last = '@1', email = '@2', hmemail= '@3', prefName = '@4', position = '@5', dept = '@6', startDate = '@7', hmName = '@8' WHERE user = '@9'", first, last, email, hmemail, prefName, position, dept, actSD, hm, user);
+    //Grab old supervisor.. Did it change?
+    var checkSup = db.QuerySingle("SELECT hmName FROM users WHERE user = @0", thisUser);
+
+    //If it did, send our emails to inform old/new supervisor
+    if ( @checkSup.hmName.Equals(supervisor) == false ) {
+        //Send emails to respective people
+            //Send to old supervisor
+            //Send to new supervisor
+    }
+
+    //Update users table
+    db.QuerySingle("UPDATE users SET first = @0, last = @1, email = @2, hmemail = @3, prefName = @4, position = @5, dept = @6, startDate = @7, hmName = @8 WHERE user = @9", first, last, email, hmEmail, prefName, position, dept, actSD, supervisor, thisUser);
     
-    //Head to message
-	Response.redirect("../cpanel.php?page=formSuccess"); 
+    //Head to Check status
+	Response.Redirect("checkStatus.cshtml?user="+thisUser); 
 } 
 

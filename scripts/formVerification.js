@@ -9,7 +9,15 @@ function getFocus(name){
 /* this function is not being used
 function changeColor(name, color){
     document.getElementById(name).style.color=color;
-}
+}    //Grab old supervisor.. Did it change?
+    var checkSup = db.QuerySingle("SELECT hmName FROM users WHERE user = @0", thisUser);
+
+    //If it did, send our emails to inform old/new supervisor
+    if ( @checkSup.hmName.Equals(supervisor) == false ) {
+        //Send emails to respective people
+            //Send to old supervisor
+            //Send to new supervisor
+    }
 */
 
 // this function takes in a txt input to check if it only contains alpha chars
@@ -414,6 +422,12 @@ function validateAddEmployee(){
 		alert('Please select an employee location!');
 		getFocus('prLocation');
 	}
+
+    //check ID is just letters
+	else if(checkInput("manualID", "alpha")){
+		alert("The user ID must only be letters!");
+		getFocus("manualID");
+	}
 	
 	else {
 		//Call Generic AJAX function to use cshtml to check if the ID in the field is not in use
@@ -445,16 +459,16 @@ function validateHRForm(){
 	}
 	
 	//check position
-	else if(checkInput("hrPosition", "alpha")){
-		alert("You have to enter in a valid position!");
-		getFocus("hrPosition");
-	}
-	
+    else if (checkDropDownMenu("hrPosition")) {
+		alert("You have to select a position!");
+		getFocus("hrPosition");        
+    }
+
 	//check department
-	else if(checkInput("hrDepartment", "alpha")){
-		alert("You have to enter in a valid department!");
-		getFocus("hrDepartment");
-	}
+    else if (checkDropDownMenu("hrDepartment")) {
+		alert("You have to select a department!");
+		getFocus("hrDepartment");        
+    }
 	
 	//check actual start date
 	else if(checkInput("hrActualStartDate", "num")){
@@ -463,16 +477,10 @@ function validateHRForm(){
 	}
 	
 	//check hiring manager
-	else if(checkInput("hrHiringManager", "alpha")){
-		alert("You have to enter in a valid hiring manager!");
-		getFocus("hrHiringManager");
-	}
-	
-	//check hiring manager email
-	else if(checkInput("hrHiringManagerEmail", "alphanum")){
-		alert("You have to enter in a valid hiring manager E-mail!");
-		getFocus("hrHiringManagerEmail");
-	}
+    else if (checkDropDownMenu("hrSupervisor")) {
+		alert("You have to select a Supervisor!");
+		getFocus("hrSupervisor");        
+    }
 	
 	//if all is good, add employee
 	else {
@@ -542,18 +550,18 @@ function validateITForm(){
 		alert("You have to enter in a valid E-mail!");
 		getFocus("hrEmail");
 	}
-	
-	//check position
-	else if(checkInput("hrPosition", "alphanum")){
-		alert("You have to enter in a valid position!");
-		getFocus("hrPosition");
-	}
-	
+
+    //check position
+    else if (checkDropDownMenu("hrPosition")) {
+		alert("You have to select a position!");
+		getFocus("hrPosition");        
+    }
+
 	//check department
-	else if(checkInput("hrDepartment", "alphanum")){
-		alert("You have to enter in a valid department!");
-		getFocus("hrDepartment");
-	}
+    else if (checkDropDownMenu("hrDepartment")) {
+		alert("You have to select a department!");
+		getFocus("hrDepartment");        
+    }
 	
 	//check actual start date
 	else if(checkInput("hrActualStartDate", "num")){
@@ -562,10 +570,10 @@ function validateITForm(){
 	}
 	
 	//check hiring manager
-	else if(checkInput("hrHiringManager", "alphanum")){
-		alert("You have to enter in a valid hiring manager!");
-		getFocus("hrHiringManager");
-	}
+    else if (checkDropDownMenu("hrSupervisor")) {
+		alert("You have to select a Supervisor!");
+		getFocus("hrSupervisor");        
+    }
 
 
 	else if(checkInput("specialInstall", "alphanum")){

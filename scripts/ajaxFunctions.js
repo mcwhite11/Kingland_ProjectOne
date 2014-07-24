@@ -13,9 +13,9 @@ function shouldShowForms(id, holderID) {
 	formShown = !formShown;
 }
 
-//Make sure we are showing forms correctly
-function showForm(value) {
-    //If value is zero, we're selecting employee - and must grab the actual form value
+//If you uncomment the form selection box in Cpanel, move this code into showForm for it to function
+function OLDSHOWFORM(value) {
+        //If value is zero, we're selecting employee - and must grab the actual form value
     if ( value == 0 ) {
         otherList = document.getElementById('formList');
         value = otherList.options[otherList.selectedIndex].value;
@@ -55,9 +55,11 @@ function showForm(value) {
     if ( usrID == blankUsr ) {
         status.innerHTML = "";                    
 	} 
+}
 
-
-
+//Make sure we are showing forms correctly
+function showForm(value) {
+    updateArea('showStatus', value, 0);
 }
 
 
@@ -112,20 +114,21 @@ function updateArea(caller, val, name){
 	        }
 
 	        //Update Information Form
-	        if ( caller == "showForm" ) {
+	        if (caller == "showForm") {
 	            document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
 	        }
 
 	        //Update Information Form
-	        if ( caller == "showStatus" ) {
+	        if (caller == "showStatus") {
 	            document.getElementById("showStatus").innerHTML = xmlhttp.responseText;
 	        }
 
 	        //Updating the value of the manualUser ID Box
 	        if (caller == "userID") {
-	            document.getElementById(name).value = xmlhttp.responseText;
+	            document.getElementById(name).value = xmlhttp.responseText.trim();
 	        }
 
+            //Checks against return value.
 	        if (caller == "checkUserID") {
 	            if (xmlhttp.responseText.indexOf("1") != -1) {
 	                document.getElementById('addUser').submit();
@@ -151,13 +154,15 @@ function updateArea(caller, val, name){
         if ( caller == "showStatus" ) {
             xmlhttp.open("GET","forms/updateUser.cshtml?q="+usrID,true);
         }
-			
+
+		//Generates a Unique ID from First/Last name boxes.	
 		if ( caller == "userID" ) {
 			var first = document.getElementById('newFirstName').value;
 			var last = document.getElementById('newLastName').value;
-			xmlhttp.open("GET","handlers/generateID.cshtml?first="+first+"&last="+last, true);
+			xmlhttp.open("GET","functions/generateID.cshtml?first="+first+"&last="+last, true);
 		}
 			
+        //If they manually enter a userID, we want to make sure we check that it's unique and valid
 		if ( caller == "checkUserID" ) {
 			xmlhttp.open("GET","functions/checkID.cshtml?id="+val, true);
 		}

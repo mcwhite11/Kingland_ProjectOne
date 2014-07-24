@@ -1,22 +1,16 @@
 @{
-    //Grab our username
-    var user = Session["user"];
-    
-    
-
     //Grab our variables from HR Form
     var thisUser = Request.Form["myUser"];
-
-
+    
     var first = Request.Form["first"];
     var last = Request.Form["last"];
     var email = Request.Form["email"];
-    var hmemail = Request.Form["hmemail"];
+    var hmemail = "";//MAKE FUNCTION WITH AD
     var prefName = Request.Form["prefName"];
-    var position = Request.Form["position"];
-    var dept = Request.Form["dept"];
+    var position = Request.Form["position"].Trim();
+    var dept = Request.Form["dept"].Trim();
     var actSD = Request.Form["actSD"];
-    var hm = Request.Form["hm"];
+    var supervisor = Request.Form["supervisor"].Trim();
     
 
     //Grab variables from HM Form
@@ -27,28 +21,29 @@
     var userPermission = Request.Form["userPermission"];
     var mks = Request.Form["mks"];
 
-    
-    
-    //Update hr info table 
-    db.QuerySingle("UPDATE users SET first = '@0', last = '@1', email = '@2', hmemail= '@3', prefName = '@4', position = '@5', dept = '@6', startDate = '@7', hmName = '@8' WHERE user = '@9'", first, last, email, hmemail, prefName, position, dept, actSD, hm, user);
-
-//Update hm info table
-db.QuerySingle("UPDATE users SET specialInstall = '@0', pcReq = '@1', deskLoc= '@2', netPort= '@3', permission = '@4', mks = '@5' WHERE user = '@6'", specialInstall , pcRequirement , deskLocation , assignedNetworkPort , userPermission , mks , user );
-    
-    //Head to message
-	Response.redirect("../cpanel.php?page=formSuccess"); 
-
-
     //Connect and open the database
     var db = Database.Open("kinglandDatabase");
-    
+
+
+    //Grab old supervisor.. Did it change?
+    var checkSup = db.QuerySingle("SELECT hmName FROM users WHERE user = @0", thisUser);
+
+    //If it did, send our emails to inform old/new supervisor
+    if ( @checkSup.hmName.Equals(supervisor) == false ) {
+        //Send emails to respective people
+            //Send to old supervisor
+            //Send to new supervisor
+    }
     
     //Update hr info table 
-    db.QuerySingle("UPDATE users SET first = @0, last = @1, email = @2, hmemail= @3, prefName = @4, position = @5, dept = @6, startDate = @7, hmName = @8 WHERE user = @9", first, last, email, hmemail, prefName, position, dept, actSD, hm, thisUser);
+    db.QuerySingle("UPDATE users SET first = @0, last = @1, email = @2, hmemail= @3, prefName = @4, position = @5, dept = @6, startDate = @7, hmName = @8 WHERE user = @9", first, last, email, hmemail, prefName, position, dept, actSD, supervisor, thisUser);
 
     //Update hm info table
     db.QuerySingle("UPDATE hmForm SET specInstall = @0, pcReq = @1, deskLoc= @2, netPort= @3, permission = @4, mks = @5 WHERE user = @6", specialInstall, pcRequirement, deskLocation, assignedNetworkPort, userPermission, mks, thisUser);
     
-    //Head to message
-	Response.Redirect("../cpanel.cshtml?page=formSuccess"); 
+    //Update form info table
+    db.QuerySingle("UPDATE forminfo SET itComplete = '1' WHERE user = @0", thisUser);
+
+    //Head to Check status
+	Response.Redirect("checkStatus.cshtml?user="+thisUser); 
 }
