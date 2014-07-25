@@ -1,16 +1,98 @@
 var formShown = false;
 
+//If each of these forms are shown
+var emp, HR, HM, IT, PR  = false;
+
+//Returns which form is currently shown
+function whichFormShown() {
+
+    if ( emp ) {
+        return "emp";
+    }
+
+    else if ( HR ) {
+        return "HR";
+    }
+
+    else if ( HM ) {
+        return "HM";
+    }
+
+    else if ( IT ) {
+        return "IT";
+    }
+
+    else if ( PR ) {
+        return "PR";
+    } else {
+        return "NONE";
+    }
+}
+
+//Toggles if the given form is shown or not.
+function toggleForm(id) {
+   
+   if ( id == "emp" ) {
+        if ( emp ) {
+           emp = false;  
+        } else {
+           emp = true; 
+        }
+    }
+
+    else if ( id == "HR" ) {
+        if ( HR ) {
+           HR = false;  
+        } else {
+           HR = true; 
+        }
+    }
+
+    else if ( id == "HM" ) {
+        if ( HM ) {
+           HM = false;  
+        } else {
+           HM = true; 
+        }
+    }
+
+    else if ( id == "IT" ) {
+        if ( IT ) {
+           IT = false;  
+        } else {
+           IT = true; 
+        }
+    }
+
+    else if ( id == "PR" ) {
+        if ( PR ) {
+           PR = false;  
+        } else {
+           PR = true; 
+        }
+    }
+}
+
 function shouldShowForms(id, holderID) {
 
 	if ( formShown ) {
-		document.getElementById(holderID).innerHTML = "v Show v";
-        //Display form should disappear with some pretty jQuery
-        document.getElementById("displayForm").innerHTML = "";
+        //If the form we are trying to hide is the current form. Otherwise do nothing.
+	    if (id == whichFormShown()) {
+	        document.getElementById(holderID).innerHTML = "v Show v";
+	        //Display form should disappear with some pretty jQuery
+	        slideHolderUp("displayForm", id);
+	    }
 	} else {
-		document.getElementById(holderID).innerHTML = "^ Hide ^";
-        updateArea('showForm', id, 0);
+	        document.getElementById(holderID).innerHTML = "^ Hide ^";
+	        //Display form should disappear with some pretty jQuery
+	        $("#displayForm").slideDown("slow");
+	        updateArea('showForm', id, 0);
 	}
-	formShown = !formShown;
+
+	if (id == whichFormShown() || !formShown) {
+        formShown = !formShown;
+        toggleForm(id);
+	}
 }
 
 //If you uncomment the form selection box in Cpanel, move this code into showForm for it to function
@@ -59,6 +141,14 @@ function OLDSHOWFORM(value) {
 
 //Make sure we are showing forms correctly
 function showForm(value) {
+    //Reload status bar with some fancy jQuery
+    reloadUser("displayStatus");
+
+    //Clear any status variables of which form is shown
+    emp = HR = HM = IT = PR = formShown = false;
+    document.getElementById('displayForm').innerHTML = " ";
+
+    //Show the new users status
     updateArea('showStatus', value, 0);
 }
 

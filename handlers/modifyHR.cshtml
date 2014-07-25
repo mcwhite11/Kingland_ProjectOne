@@ -4,11 +4,12 @@
     var first = Request.Form["first"];
     var last = Request.Form["last"];
     var email = Request.Form["email"];
-    var prefName = Request.Form["prefName"];
+    var prefName = Request.Form["preferred"];
     var position = Request.Form["position"].Trim();
     var dept = Request.Form["dept"].Trim();
     var supervisor = Request.Form["supervisor"].Trim();
-    var hmEmail = "TEST@TEST.COM";//CREATE FUNCTION TO GRAB EMAIL WITH AD
+    var location = Request.Form["location"];
+    var hmEmail = myFuncs.getEmail(supervisor);
     var actSD = Request.Form["actSD"];
 
     //Open and connect to DB
@@ -25,9 +26,9 @@
     }
 
     //Update users table
-    db.QuerySingle("UPDATE users SET first = @0, last = @1, email = @2, hmemail = @3, prefName = @4, position = @5, dept = @6, startDate = @7, hmName = @8 WHERE user = @9", first, last, email, hmEmail, prefName, position, dept, actSD, supervisor, thisUser);
+    db.QuerySingle("UPDATE users SET first = @0, last = @1, email = @2, hmemail = @3, prefName = @4, position = @5, dept = @6, startDate = @7, hmName = @8, location = @9 WHERE user = @10", first, last, email, hmEmail, prefName, position, dept, actSD, supervisor, location, thisUser);
     
     //Head to Check status
-	Response.Redirect("checkStatus.cshtml?user="+thisUser); 
+	Response.Redirect("../cpanel.cshtml?page=formSuccess"); 
 } 
 

@@ -22,24 +22,28 @@
 
 	<tr>
 		<td style="text-align: center">
-        @{
-			//Display if the user is active or not. 
-			var isActive = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
-				if ( isActive.active.Equals(0) ) {
-					<p style="color:red;padding-top:15px;"><b>No</b></p>
-				} else {
-					<p style="color:green;padding-top:15px;"><b>Yes</b></p>
-				}
-		}
-
-	</td>
+            @{
+			    //Display if the user is active or not. 
+			    var isActive = db.QuerySingle("SELECT * FROM users WHERE user = @0", myUser);
+				    if ( isActive.active.Equals(0) ) {
+					    <p title="Double click to Enable @myUser" onDblClick="toggleActivate(@isActive.active)" style="color:red;padding-top:15px;"><b>No</b></p>
+				    } else {
+					    <p title="Double click to Disable @myUser" ondblclick="toggleActivate(@isActive.active)" style="color:green;padding-top:15px;"><b>Yes</b></p>
+				    }
+                            
+                <form method="post" action="functions/toggleActivate.cshtml" id="toggleUserActivationForm">
+				    <input type="hidden" value = "@isActive.active" name="status" >
+                    <input type="hidden" value = "@myUser" name ="myUser" >
+			    </form>
+		    }
+	    </td>
 		<td style="padding:5px;text-align: center">
             @{
 			    if ( formInfo.emComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="showAll" style="color:green;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
+				    <b><a title = 'Form(s) Complete: Click to show/hide' id="empStatus" style="color:green;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="showAll" style="color:red;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
+				    <b><a title = ' Form(s) Incomplete: Click to show/hide' id="empStatus" style="color:red;" href="#" onClick="shouldShowForms('emp', this.id)">v Show v</a></b>
 			    }
             }
 	</td>
@@ -49,9 +53,9 @@
             @{
 			    if ( formInfo.hrComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="hrStatus" style="color:green;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
+				    <b><a title = 'Form Complete: Click to show/hide' id="hrStatus" style="color:green;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="hrStatus" style="color:red;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
+				    <b><a title = ' Form Incomplete: Click to show/hide' id="hrStatus" style="color:red;" href="#" onClick="shouldShowForms('HR', this.id)">v Show v</a></b>
 			    }
             }
 			
@@ -60,9 +64,9 @@
 	        @{
 			    if ( formInfo.hmComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
+				    <b><a title = 'Form Complete: Click to show/hide' id="hmStatus" style="color:green;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
+				    <b><a title = ' Form Incomplete: Click to show/hide' id="hmStatus" style="color:red;" href="#" onClick="shouldShowForms('HM', this.id)">v Show v</a></b>
 			    }
              }
 
@@ -71,9 +75,9 @@
 	        @{
 			    if ( formInfo.itComplete.Equals(1) ) {
                     meterVal++;
-				    <b><a id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
+				    <b><a title = 'Form Complete: Click to show/hide' id="itStatus" style="color:green;" href="#"  onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="itStatus" style="color:red;" href="#" onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
+				    <b><a title = ' Form Incomplete: Click to show/hide' id="itStatus" style="color:red;" href="#" onClick="shouldShowForms('IT', this.id)">v Show v</a></b>
 			    }
              }
 
@@ -82,16 +86,16 @@
 	        @{
 			    if ( formInfo.prComplete.Equals(1) ) {
 				    meterVal++;
-				    <b><a id="prStatus" style="color:green;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
+				    <b><a title = 'Form Complete: Click to show/hide' id="prStatus" style="color:green;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
 			    } else {
-				    <b><a id="prStatus" style="color:red;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
+				    <b><a title = ' Form Incomplete: Click to show/hide' id="prStatus" style="color:red;" href="#" onClick="shouldShowForms('PR', this.id)">v Show v</a></b>
 			    }
              }
 
 		</td>
 		<td>
 			<form method="post" action="functions/deleteUser.cshtml" id="deleteUserViewForm">
-				<input style="margin-left:18px" type="checkbox" value = "@myUser" name="deleteUserCheckbox" id="deleteUserCheckbox" onChange="deleteUser()">
+				<input title = "Select to delete user @myUser" style="margin-left:18px" type="checkbox" value = "@myUser" name="deleteUserCheckbox" id="deleteUserCheckbox" onChange="deleteUser()">
 			</form>
 		</td>
 			

@@ -1,20 +1,5 @@
 ﻿@{
-    //Grab our user
-    var thisUser = Request.Params["user"];
-    
-    //Open DB and connect
-    var db = Database.Open("kinglandDatabase");
-
-    var fs = db.QuerySingle("SELECT * FROM forminfo WHERE user = @0", thisUser);
-
-    if ( fs.emComplete == 1 && fs.hrComplete == 1 && fs.hmComplete == 1 && fs.itComplete == 1 && fs.prComplete == 1 ) {
-        db.QuerySingle("UPDATE forminfo SET finished = '1' WHERE user = @0", thisUser);
-        // Send email to HR
-        //    WebMail.Send(to: hmemail,
-        //        subject: HMSubject,
-        //       body: HMMessage
-        //    );
-    }
+    //Deprecated.. 
 
 
     //Now send to thank you message

@@ -31,7 +31,7 @@
 													
 	        <p>
 		        *Position<br/>
-		        <select name="position" id="hrPosition">
+		        <select name="position" id="prPosition">
 			        <option>Select...</option>
                     @{
                         //Pull our Departments from GP
@@ -72,7 +72,7 @@
 
 	        <p>
 		        *Department:<br/>
-		        <select name="dept" id="hrDepartment">
+		        <select name="dept" id="prDepartment">
 			        <option>Select...</option>
                     @{
                         //Pull our Departments from GP
@@ -183,30 +183,6 @@
 		</div>
 				
 		<div style="clear:none;float:right;width:300px">
-					
-	        <p>
-		        *Supervisor: <br/>
-		        <select name="supervisor" id="hrSupervisor" >
-			        <option>Select...</option>
-                    @{
-                        //Pull our Departments from GP
-                        var Supervisors = gp.Query("SELECT * FROM UPR41700");
-
-                        foreach ( var superV in Supervisors ) {
-                            //Grab supervisors
-                            if ( @superV.SUPERVISOR.ToString().ToUpper().Contains("NOT USE") == false ) {
-                                //Backfill
-                                if ( @superV.EMPLOYID.ToString().ToUpper().Trim().Contains(@bckFill.hmName) ) {
-                                    <text><option value ="@superV.EMPLOYID" selected="selected">@superV.SUPERVISOR</option></text>
-                                    
-                                } else {
-                                    <text><option value ="@superV.EMPLOYID" selected="selected">@superV.SUPERVISOR</option></text>
-                                }
-                            }
-                        }
-                    }
-		        </select>
-	        </p>
 								
 			<p>
 				Employee Type:<br />
@@ -260,17 +236,17 @@
 				Employment Type:<br />
 				<select name="empTypeDetail" id="prEmploymentType">	
 					<option>Select...</option>
-                    <option @if (bckFillPR.empTypeDetail == "Full Time - Regular" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+                    <option @if (bckFillPR.empTypeDetail == "Full Time - Regular" ) {<text>selected = "selected"</text>}>Full Time - Regular</option>
 							
-                    <option @if (bckFillPR.empTypeDetail == "Full Time - Temp" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+                    <option @if (bckFillPR.empTypeDetail == "Full Time - Temp" ) {<text>selected = "selected"</text>}>Full Time - Temp</option>
 
-                    <option @if (bckFillPR.empTypeDetail == "Part Time - Regular" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+                    <option @if (bckFillPR.empTypeDetail == "Part Time - Regular" ) {<text>selected = "selected"</text>}>Part Time - Regular</option>
 
-                    <option @if (bckFillPR.empTypeDetail == "Part Time - Temp" ) { <text>selected = "selected"</text>} >@bckFillPR.empTypeDetail</option>
+                    <option @if (bckFillPR.empTypeDetail == "Part Time - Temp" ) { <text>selected = "selected"</text>} >Part Time - Temp</option>
 
-                    <option @if (bckFillPR.empTypeDetail == "Intern" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+                    <option @if (bckFillPR.empTypeDetail == "Intern" ) {<text>selected = "selected"</text>}>Intern</option>
 
-                    <option @if (bckFillPR.empTypeDetail == "Other" ) {<text>selected = "selected"</text>}>@bckFillPR.empTypeDetail</option>
+                    <option @if (bckFillPR.empTypeDetail == "Other" ) {<text>selected = "selected"</text>}>Other</option>
 				</select>
 			</p>
 					
@@ -278,9 +254,9 @@
 				Pay Type:<br />
 				<select name="payType" id="prPayType">
 					<option>Select...</option>';
-                    <option @if (bckFillPR.payType == "Salary (Exempt)" ) {<text>selected = "selected"</text>}>@bckFillPR.payType</option>
+                    <option @if (bckFillPR.payType == "Salary (Exempt)" ) {<text>selected = "selected"</text>}>Salary (Exempt)</option>
 
-                    <option @if (bckFillPR.payType == "Hourly (Not Exempt)" ) {<text>selected = "selected"</text>}>@bckFillPR.payType</option>	
+                    <option @if (bckFillPR.payType == "Hourly (Not Exempt)" ) {<text>selected = "selected"</text>}>Hourly (Not Exempt)</option>	
 				</select>
 			</p>
 					

@@ -464,6 +464,12 @@ function validateHRForm(){
 		getFocus("hrPosition");        
     }
 
+	//check position
+    else if (checkDropDownMenu("hrLocation")) {
+		alert("You have to select a loation!");
+		getFocus("hrLocation");        
+    }
+
 	//check department
     else if (checkDropDownMenu("hrDepartment")) {
 		alert("You have to select a department!");
@@ -675,12 +681,6 @@ function validatePRForm(){
 	else if(checkInput("prReferralPayment", "alphanum")){
 		alert("You have to fill out the referral payments section, or specify none!");
 		getFocus("prReferralPayment");
-	}
-	
-	//check supervisor 
-	else if(checkDropDownMenu("prSupervisor")){
-		alert("You have to select a supervisor for the employee!");
-		getFocus("prSupervisor");
 	}
 	
 	//check employee type  

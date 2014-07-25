@@ -57,6 +57,19 @@ function deleteUser() {
 	}
 }
 
+//Processes selecting the delete user checkbox in "View Existing Newhires"
+function toggleActivate(isActive) {
+    if ( isActive == 0 ) {
+        var msg = "Are you sure you want to enable this user?";
+    } else {
+        var msg = "Are you sure you want to disable this user?";
+    }
+
+	if ( confirm(msg) ) {
+		document.getElementById("toggleUserActivationForm").submit();
+	}
+}
+
 //Displays information about why we are using the persons Social Security Number
 function displaySocInfo(){
     alert("To steal your identity and buy a company boat! :D");

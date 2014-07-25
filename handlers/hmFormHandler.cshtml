@@ -18,5 +18,5 @@
     db.QuerySingle("UPDATE forminfo SET hmComplete = '1' WHERE user = @0", user);
 
     //Head to Check status
-	Response.Redirect("checkStatus.cshtml?user="+@user); 
+	Response.Redirect("../cpanel.cshtml?page=formSuccess"); 
 }

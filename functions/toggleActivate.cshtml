@@ -1,0 +1,20 @@
+﻿@{
+    //Grab our data from the form
+    var thisUser = Request.Form["myUser"];
+    var activeStatus = Request.Form["status"].AsInt();
+
+    //Open connection to the database
+    var db = Database.Open("kinglandDatabase");
+    
+    //Activate/Deactivate user
+    if ( activeStatus == 0 ) {
+        db.QuerySingle("UPDATE users SET active = '1' WHERE user = @0", thisUser);   
+        <text>UPDATE users SET active = '1' WHERE user = @thisUser</text> 
+    } else {
+        db.QuerySingle("UPDATE users SET active = '0' WHERE user = @0", thisUser);
+        <text>UPDATE users SET active = '0' WHERE user = @thisUser</text>
+    }
+
+    //Redirect them back to the view forms page
+    Response.Redirect("../cpanel.cshtml?page=view");
+}

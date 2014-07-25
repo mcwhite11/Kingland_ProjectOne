@@ -9,5 +9,5 @@ function slideHolderUp(holder, id) {
 }
 
 function reloadUser(holder){
-	$("#"+holder).slideUp("slow").slideDown("slow");
+	$("#"+holder).slideUp("fast").slideDown("fast");
 }

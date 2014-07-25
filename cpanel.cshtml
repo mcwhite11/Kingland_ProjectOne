@@ -213,18 +213,18 @@
 													    <p style="clear:none;">
 														    Location:<br/>
 														    <select name="location" id="prLocation">
-														    <option> Select... </option>
+														        <option> Select... </option>
 
-                                                    @{
-                                                        var locations = db.Query("SELECT * FROM location");
+                                                                @{
+                                                                    var locations = db.Query("SELECT * FROM location");
                                                
                                                                         
-                                                        foreach (var loc in locations) {
-                                                                <option>@loc.location</option>
-                                                        }
-                                                     }
+                                                                    foreach (var loc in locations) {
+                                                                            <option>@loc.location</option>
+                                                                    }
+                                                                 }
 
-												    </select>
+												            </select>
 													    </p>
 										
 													
@@ -283,7 +283,7 @@
 												
                                             
                                             //"View Forms"
-                                            } else if ( page.Equals("view") && Session["isHR"].Equals(1) ) {
+                                            } else if ( page.Equals("view") ) {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>View New Hires</b></h4></span></div></div>
 
                                                     var users = db.Query("SELECT * FROM users"); 
@@ -291,7 +291,7 @@
 
                                                 <div>
                                                     <div id="select" style="clear: none; float: left; margin-left: 100px;"><b>Select a user</b>:<br/>
-												        <select id="myList" onChange="showForm(0)">
+												        <select id="myList" onChange="showForm(0)" title="Choose an employee to begin">
 											 	            <option>Choose Employee</option>
 
                                                             @foreach (var person in users) {
@@ -317,6 +317,7 @@
                                                 </div>
 
                                                 <hr>
+
 												
 												    <!--This shows the forms to display -- Replaced with ajax from updateUser.cshtml-->
 												    <div id="showStatus" style="margin-top:15px"></div>

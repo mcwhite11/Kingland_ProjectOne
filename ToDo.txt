@@ -1,7 +1,5 @@
 ﻿Add Emailing -- Change to Kingland info
 
-Add JQuery?
-
 Connect to LDAP
 
 Connect to GP
@@ -10,22 +8,16 @@ Connect to Temp DB (mySQL)
 
 connect to Exchange
 
-Send email when all forms completed to HR to finalize the submission and create the accounts.
-    Make account deletion functionality
-        -Include all entries in database
-        -Include pdf forms on front end
+Make account deletion functionality
+    -Include all entries in database
+    -Include pdf forms on front end
 
 
 password hashing -- Done, just add to PHP
 
-
-
-Make sure Javascript form validation is working with current version of forms
-
-
-Need to pull HM email from AD
-    --Add to Modify HR and to Add function
+Need to get IT Generic email?
 
 Make sure supervisor's title/description is also stored? is this necessary?
 
-Fix PR form EmpType/PayType
+Make Return to Home return to previous page based on post data.
+

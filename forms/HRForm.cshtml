@@ -71,6 +71,28 @@
 		</select>
 	</p>
 	
+    <p style="float:right;clear:none">
+		*Location:<br/>
+		<select name="location" id="hrLocation">
+			<option> Select... </option>
+
+            @{
+                var locations = db.Query("SELECT * FROM location");
+                                               
+                                                                        
+                foreach (var loc in locations) {
+                        if ( @bckFill.location == @loc.location ) {
+                            <option selected="selected">@loc.location</option>
+                        } else {
+                            <option>@loc.location</option>
+                        }
+                        
+                }
+            }
+
+		</select>
+	</p>
+
 	<p>
 		*Department:<br/>
 		<select name="dept" id="hrDepartment">

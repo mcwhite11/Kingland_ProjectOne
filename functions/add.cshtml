@@ -9,7 +9,6 @@
     //Uppercase Last Name
     last = char.ToUpper(last[0]) + last.Substring(1);
     var email = Request.Form["email"];
-    var hmemail = "pgerlich@iastate.edu"; //Grab this from GP. Set hardcoded to pgerlich@iastate.edu for now.
 
     //Uppercase Preferred Name
     var prefName = Request.Form["preferred"];
@@ -33,6 +32,7 @@
     string pass = "";
 	var user = manualID;
     var itEmail = ""; //NEED TO SPECIFY GENERIC IT EMAIL
+    var hmemail = myFuncs.getEmail(hmName); //Grab this from GP. Set hardcoded to pgerlich@iastate.edu for now.
 
     //Connect to and open Database
     var db = Database.Open("kinglandDatabase");
@@ -55,7 +55,7 @@
 	pass = PasswordHash.CreateHash(pass);
 	
 	//Add user to users table with user information
-	db.QuerySingle("INSERT INTO users (user, pass, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, '0')", user, pass, first, last, email, hmemail, prefName, position, dept, startDate, hmName);
+	db.QuerySingle("INSERT INTO users (user, pass, first, last, email, hmemail, prefName, position, dept, startDate, hmName, active, location) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, '0', @11)", user, pass, first, last, email, hmemail, prefName, position, dept, startDate, hmName, location);
 	
 	//create entry to track overall progress in formInfo table
 	if ( isDRA == "yes" ) {
@@ -87,7 +87,7 @@
 	db.QuerySingle("INSERT INTO studentConsent (user) VALUES (@0)", user);
 	
 	//create entry for Additional Info form progress in payroll table
-	db.QuerySingle("INSERT INTO payrollForm (user, empType, location) VALUES (@0, @1, @2)", user, empType, location);
+	db.QuerySingle("INSERT INTO payrollForm (user, empType) VALUES (@0, @1)", user, empType);
 	
 	//create entry for Additional Info form progress in techAgree table
 	db.QuerySingle("INSERT INTO techAgree (user) VALUES (@0)", user);
