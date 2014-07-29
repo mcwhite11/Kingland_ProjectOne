@@ -1,0 +1,23 @@
+﻿@{
+    //Grab the user name entered
+    var value = Request.Params["val"];
+
+}
+
+<p style="float:right;position:relative;left:50px;text-align:center;">
+	Delete:</br> <input type="checkbox" name="adminDelete" value="delete">
+</p>
+
+<div style="clear:none;float:left;width:100px;margin-right:15px;">
+	<p> Name: </br>
+    @{
+		if ( value.Equals("Add New...") ) {
+			<input type="text" name="adminName" id="adminName">
+			<input type="hidden" name = "adminAdd" value="add">
+		} else {
+			<input type="hidden" name="adminName" value="@value">
+		    @value
+		}
+    }
+	</p>
+</div>

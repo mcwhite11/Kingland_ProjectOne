@@ -737,6 +737,31 @@ function validatePRForm(){
 	}
 }
 
+function validateModifyAdmin(){
+    
+    //check pay type 
+	if( checkDropDownMenu("users") ){
+		alert("You have to select a user/function!");
+		getFocus("users");
+	} 
+   
+    //If adding a new user..
+    else if ( document.getElementById("users").value == "Add New..." ) {
+        
+        //check ID is just letters
+	    if(checkInput("adminName", "alpha")){
+		    alert("The user ID must only be letters!");
+		    getFocus("manualID");
+	    }
+	
+	    else {
+            document.getElementById("addUser").submit();
+        }
+    } else {
+        document.getElementById("addUser").submit();
+    }
+}
+
 //this function is used to generate the email body on the send welcome email page
 function generateEmailBody(){
 

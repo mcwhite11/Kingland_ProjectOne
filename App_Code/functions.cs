@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Net;
 using System.DirectoryServices;
 using System.Security.Principal;
 using System.DirectoryServices.AccountManagement;
@@ -205,6 +206,26 @@ public class myFuncs
         //Grab the attributes of that user for printing or manipulation
         //To find these, go in Active Directory controls and find a user -- then find the "Attribute Editor" which will tell you the attribute's names to be used below
         return (string) lowerLdap.Properties["mail"].Value;
+    }
+
+    //Deletes a file on a server -- Used from Msdn Example code
+    public static bool DeleteFileOnServer(Uri serverUri) {
+        // The serverUri parameter should use the ftp:// scheme. 
+        // It contains the name of the server file that is to be deleted. 
+        // Example: ftp://contoso.com/someFile.txt. 
+        //  
+
+        if (serverUri.Scheme != Uri.UriSchemeFtp)
+        {
+            return false;
+        }
+        // Get the object used to communicate with the server.
+        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
+        request.Method = WebRequestMethods.Ftp.DeleteFile;
+
+        FtpWebResponse response = (FtpWebResponse) request.GetResponse();
+        response.Close();
+        return true;
     }
         
           

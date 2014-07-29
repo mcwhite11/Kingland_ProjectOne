@@ -53,6 +53,8 @@ function deleteUser() {
 	if ( document.getElementById("deleteUserCheckbox").checked ) {
 		if ( confirm("Are you sure you want to delete this user?") ) {
 			document.getElementById("deleteUserViewForm").submit();
+		} else {
+		    document.getElementById("deleteUserCheckbox").checked = false;
 		}
 	}
 }

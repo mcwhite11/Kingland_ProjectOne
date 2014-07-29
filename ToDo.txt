@@ -1,23 +1,26 @@
 ﻿Add Emailing -- Change to Kingland info
+    -- Getting emails from nate
 
-Connect to LDAP
+Connect to LDAP -- Adding user
 
-Connect to GP
+Connect to GP -- Adding User
 
-Connect to Temp DB (mySQL)
+Connect to Temp DB (mySQL) -- Need to connect
 
-connect to Exchange
+connect to Exchange -- What happens with this?
+
+
+
 
 Make account deletion functionality
-    -Include all entries in database
     -Include pdf forms on front end
-
 
 password hashing -- Done, just add to PHP
 
-Need to get IT Generic email?
+Need to get IT Generic email? -- Waiting on Nate
 
-Make sure supervisor's title/description is also stored? is this necessary?
+Make sure supervisor's title/description is also stored.
+    -Do this by passing an array with EMPLOYID/SUPERVISOR
 
-Make Return to Home return to previous page based on post data.
-
+Make Return to Home ret urn to previous page based on post data.
+    -DO THIS

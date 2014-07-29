@@ -1,0 +1,13 @@
+﻿@{
+    //Connect and open DB
+    var db = Database.Open("kinglandDatabase");
+
+    var name = Request.Form["adminName"];
+	if ( Request.Form["adminDelete"] == "delete" ) {
+		db.QuerySingle("DELETE FROM permissions WHERE user = @0", name);
+	} else if ( Request.Form["adminAdd"] == "add" ) {
+		db.QuerySingle("INSERT INTO permissions (user, isAdmin) VALUES (@0, '1')", name);
+	} 
+
+   Response.Redirect("../cpanel.cshtml?page=addUser");
+}

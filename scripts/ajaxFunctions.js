@@ -182,8 +182,15 @@ function updateArea(caller, val, name){
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
+    //updateInformation: Remove fields and skip rest of function
+    if (val == "Select..." && caller == "updateAdmin") {
+        document.getElementById(name + "Update").innerHTML = " ";
+    
+    //showForm: Blank form and skip rest of function
+    }
+
 	//updateInformation: Remove fields and skip rest of function
-    if (val == "Select..." && caller == "updateInformation") {
+    else if (val == "Select..." && caller == "updateInformation") {
         document.getElementById(name + "Update").innerHTML = " ";
     
     //showForm: Blank form and skip rest of function
@@ -203,6 +210,11 @@ function updateArea(caller, val, name){
 	            document.getElementById(name + "Update").innerHTML = xmlhttp.responseText;
 	        }
 
+	        //Add/modify admin form
+	        if (caller == "updateAdmin") {
+	            document.getElementById("usersUpdate").innerHTML = xmlhttp.responseText;
+	        }
+
 	        //Update Information Form
 	        if (caller == "showForm") {
 	            document.getElementById("displayForm").innerHTML = xmlhttp.responseText;
@@ -218,7 +230,7 @@ function updateArea(caller, val, name){
 	            document.getElementById(name).value = xmlhttp.responseText.trim();
 	        }
 
-            //Checks against return value.
+	        //Checks against return value.
 	        if (caller == "checkUserID") {
 	            if (xmlhttp.responseText.indexOf("1") != -1) {
 	                document.getElementById('addUser').submit();
@@ -233,6 +245,11 @@ function updateArea(caller, val, name){
 		//Pass the Field and the value of that field	
 		if ( caller == "updateInformation" ) {
 			xmlhttp.open("GET","forms/updateInformation-AJAX.cshtml?name="+name+"&val="+val,true);
+		}
+
+        //Pass the Field and the value of that field	
+		if ( caller == "updateAdmin" ) {
+			xmlhttp.open("GET","forms/updateAdmin-AJAX.cshtml?val="+val,true);
 		}
 
         //If we're showing one of the front page forms

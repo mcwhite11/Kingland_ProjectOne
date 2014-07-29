@@ -1,19 +1,19 @@
 @{
-    //Set username
+    //Set username and grab variables
     var thisUser = Request.Form["myUser"];
-    
     var myUser = Request.Form["user"];
     var email = Request.Form["email"];
     var subject = Request.Form["emailSubject"];
     var message = Request.Form["messageBody"];
 
+    var db = Database.Open("kinglandDatabase");
+
     //Webmail info -- change to kinglands with kingland SMTP user
-    WebMail.SmtpServer = "smtp.gmail.com";
-    WebMail.SmtpPort = 587;
-    WebMail.EnableSsl = true;
-    WebMail.UserName = "pgerlich94";
-    WebMail.From = "pgerlich94@gmail.com";
-    WebMail.Password = "Er@41878394260Aq";
+    WebMail.SmtpServer = "CWPAPP02MAIL.KINGLAND.CC";
+    WebMail.SmtpPort = 21;
+    WebMail.UserName = "pgerl";
+    WebMail.From = "paul.gerlich@kingland.com";
+    WebMail.Password = "Mattis4douche!";
 
     // Send email to user
     WebMail.Send(to: email,
@@ -21,7 +21,7 @@
         body: message
     );
 
-    db.QuerySingle("UPDATE users SET active = '1' WHERE user = @0", user);
+    db.QuerySingle("UPDATE users SET active = '1' WHERE user = @0", thisUser);
 
     Response.Redirect("../cpanel.cshtml?page=emailSent");
 }

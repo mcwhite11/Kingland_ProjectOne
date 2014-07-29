@@ -103,6 +103,7 @@
 							
 							<a href="cpanel.cshtml">Home</a> | 
                             <a href="?page=add">Add New Employee</a> |
+                            <a href="?page=addUser">Add/Modify Administrators</a> |
 							<a href="?page=welcome">Send Welcome Email | </a>
 							<a href="?page=update">Update Company Information | </a>
 							<a href="?page=view">View Forms | </a>
@@ -122,7 +123,7 @@
 					
                                        
   										@{ //"Add New Employee"
-											if ( page.Equals("add") && Session["isHR"].Equals(1) ) {
+											if ( page.Equals("add") ) {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>Add Employee</b></h4></span></div></div>
 												    <form method="post" action="functions/add.cshtml" style="margin-left:20px;width:625px;" id="addUser">
 											    	
@@ -245,7 +246,7 @@
 											} 
                                              
                                              //"Send Welcome Email"
-                                             else if ( page.Equals("welcome") && Session["isHR"].Equals(1) ) {
+                                             else if ( page.Equals("welcome") ) {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>Send Welcome Email</b></h4></span></div></div>
 												
                                                 var users = db.Query("SELECT * FROM users");
@@ -265,7 +266,7 @@
 												<div id="displayForm"></div>
 
 											// "Update Company Information"
-											} else if ( page.Equals("update") && Session["isHR"].Equals(1) ) {
+											} else if ( page.Equals("update") ) {
 <div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4 style="text-align: center">Edit Form Information</h4></span></div></div>
 													
 													<p><center>We understand that, over time, information may change or become obsolete. So we have tried to
@@ -324,6 +325,18 @@
 												
 												    <!--This shows the form selected above to display -- Replaced with ajax from updateForm.cshtml-->
 												    <div id="displayForm"></div>
+
+                                             //"Add User"
+                                            } else if ( page.Equals("addUser") ) {
+<div class="blog_head blog_inner"><div class="meta"><span   class="last_item"><h4><b>Add/Modify Admins</b></h4></span></div></div>
+
+
+												<form method="post" action="handlers/updateAdmin.cshtml" id="addUser">
+                                                    @RenderPage("forms/updateAdmin.cshtml");
+												</form>
+
+                                                <a onClick="validateModifyAdmin();" style="margin-left:625px">Submit</a>
+
                                              } 
                                             
                                             //"User added succesfully"

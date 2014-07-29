@@ -1,0 +1,27 @@
+﻿@{
+    var db = Database.Open("kinglandDatabase");
+}
+
+<div style="width:700px;min-height:80px;">
+	<div style="clear:none;float:left;margin-left:50px;">
+			<p>
+				Modify/Add user:<br />
+				<select name="user" id="users" onChange="updateArea('updateAdmin', this.value, 0)">
+					<option>Select...</option>
+				@{
+					var users = db.Query("SELECT * FROM permissions");
+					foreach (var user in users) {
+						<option>@user.user</option>
+					}
+                }
+					
+				<option>Add New...</option>
+				</select>
+			</p>
+
+	</div>
+	
+		<div id="usersUpdate" style="clear:none;float:right;width:375px;">
+			
+		</div>
+</div>
