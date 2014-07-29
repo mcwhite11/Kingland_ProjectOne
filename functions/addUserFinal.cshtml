@@ -1,0 +1,94 @@
+﻿
+
+@using System;
+@using System.Data;
+@using System.DirectoryServices;
+@using System.Security.Principal;
+@using System.DirectoryServices.AccountManagement;
+@using System.Collections;
+
+@{
+    var thisUser = Request.Params["thisUser"];    
+
+    //Grab variables from users account.
+    var db = Database.Open("kinglandDatabase");
+        
+    //User info from user table
+    var userInfo = db.QuerySingle("SELECT * FROM users WHERE user = @0", thisUser);
+
+    //Determine if we use first or pref name
+    var first = "";
+    if ( userInfo.prefName == "" ) {
+        first = userInfo.first;
+    } else {
+        first = userInfo.prefName;
+    }
+
+    //location of new user down to the desired cn
+    PrincipalContext ad = new PrincipalContext(ContextType.Domain, "10.1.40.50","OU=" + userInfo.location + ", DC=KINGLAND,DC=CC");
+
+    //make them a userprincipal object
+    UserPrincipal up = new UserPrincipal(ad);
+
+    //system admin account create
+    up.SamAccountName = thisUser.ToLower();
+
+    //give a pass, enable them, etc
+    up.SetPassword("K1ngland");
+
+    //Set Display Name
+    up.DisplayName = up.Name = userInfo.last + ", " + first;
+
+    //Set Description -- This is their position // Grab from GP and remove #
+    up.Description = userInfo.position;
+
+    //Sets the User Principal account so they can login
+    up.UserPrincipalName = thisUser.ToLower() + "@KINGLAND.CC";
+
+    //Set first name
+    up.GivenName = first;
+
+    //Set Last Name
+    up.Surname = userInfo.last;
+
+    //Unlock account
+    up.UnlockAccount();
+
+    //Enable user and make their password expire (so they set one at login)
+    up.Enabled = true;
+    up.ExpirePasswordNow();
+
+    //save changes!
+    up.Save();
+
+    //Now we can do some more nitty gritty editing
+    DirectoryEntry toUpdate = (DirectoryEntry)up.GetUnderlyingObject();
+
+    //Set company
+    toUpdate.Properties["company"].Value = "Kingland Systems";
+
+    //Set Office
+    toUpdate.Properties["physicalDeliveryOfficeName"].Value = userInfo.location;
+
+    //Set Title -- Removes #
+    toUpdate.Properties["title"].Value = userInfo.position;
+
+    //Grab Street address from DB
+    string street = db.QuerySingle("SELECT * FROM location WHERE location = @0", userInfo.location).address;
+
+    //Set Street Address
+    toUpdate.Properties["streetAddress"].Value = street;
+
+    //Set City
+    toUpdate.Properties["l"].Value = userInfo.location;
+
+    //Set Manager
+    toUpdate.Properties["manager"].Value = myFuncs.getDN(userInfo.hmName);
+
+    //Set Department
+    toUpdate.Properties["department"].Value = userInfo.dept;
+
+    //update them -- CAll every time change is made
+    toUpdate.CommitChanges();
+}
+

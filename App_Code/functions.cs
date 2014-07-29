@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Net;
+using System.IO;
 using System.DirectoryServices;
 using System.Security.Principal;
 using System.DirectoryServices.AccountManagement;
@@ -208,24 +209,101 @@ public class myFuncs
         return (string) lowerLdap.Properties["mail"].Value;
     }
 
-    //Deletes a file on a server -- Used from Msdn Example code
-    public static bool DeleteFileOnServer(Uri serverUri) {
-        // The serverUri parameter should use the ftp:// scheme. 
-        // It contains the name of the server file that is to be deleted. 
-        // Example: ftp://contoso.com/someFile.txt. 
-        //  
+    //Given an Employee ID - Returns that users DN.
+    public static string getDN(string EMPLOYID) {
+        EMPLOYID = EMPLOYID.ToUpper();
 
-        if (serverUri.Scheme != Uri.UriSchemeFtp)
-        {
-            return false;
+        //Connect to DB and Open
+        var gp = Database.Open("GP");
+
+        //Now get their Location, Nickname, Last, First from GP
+        var loc = gp.QuerySingle("SELECT LOCATNID  FROM UPR00100 WHERE EMPLOYID = @0", EMPLOYID);
+        
+        //Determine location
+        string location = loc.LOCATNID.Trim();
+
+        //Convert from GP to AD terms
+        if ( location == "AM" ) {
+            location = "Ames";
+        } else if ( location == "CL" ) {
+            location = "Clear Lake";
+        } else if ( location == "DA" ) {
+            location = "China";
+        } else if ( location == "RO" ) {
+            location = "Clear Lake";
+        } else if ( location == "LM" ) {
+            location = "Lake Mills";
         }
-        // Get the object used to communicate with the server.
-        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
-        request.Method = WebRequestMethods.Ftp.DeleteFile;
 
-        FtpWebResponse response = (FtpWebResponse) request.GetResponse();
-        response.Close();
+        //Create a search context/specific location for this search
+        PrincipalContext ad = new PrincipalContext(ContextType.Domain, "10.1.40.50", "ou=" + @location + ", DC=KINGLAND, DC=CC");
+    
+        //Returns a "user principal" in that DN?
+        UserPrincipal u = new UserPrincipal(ad);
+
+        //Search filter - For filters reference http://msdn.microsoft.com/en-us/library/system.directoryservices.accountmanagement.userprincipal_properties(v=vs.110).aspx
+        u.SamAccountName = EMPLOYID;
+
+        //"Search Engine Object" of sorts, based on filters specified above
+        PrincipalSearcher search = new PrincipalSearcher(u); 
+
+        //Returns essentially a user object based on that filter
+        UserPrincipal result =  (UserPrincipal) search.FindOne();
+
+        //Return DN
+        return (string) result.DistinguishedName;
+    }
+
+
+    //Given a directory, deletes all relevant files in the directory and that folder.
+    public static bool DeleteDirectory(string directory) {
+        string fileDirectory = "ftp://newhire.kingland.com/PDFStorage/" + directory + "/" + directory;
+        string actDirectory = "ftp://newhire.kingland.com/PDFStorage/" + directory;
+        string FTPRequestType = "file";
+
+        //Array of each file
+        Uri[] files = {  new Uri(fileDirectory + "AdditionalInformation.pdf" ), new Uri(fileDirectory + "DirectDeposit.pdf" ),
+                        new Uri(fileDirectory + "EmployeeHandbook.pdf" ), new Uri(fileDirectory + "SafeHarbor.pdf" ),
+                        new Uri(fileDirectory + "StudentVerification.pdf" ), new Uri(fileDirectory + "TechnologyAgreement.pdf" ) };
+
+        //Delete each file
+        foreach ( Uri file in files ) {
+            DeleteFileOnServer(file, FTPRequestType);
+        }
+
+        FTPRequestType = "directory";
+        DeleteFileOnServer(new Uri(actDirectory), FTPRequestType );
+
         return true;
+    }
+
+
+    //Deletes a file on a server -- Used from Msdn Example code
+    public static bool DeleteFileOnServer(Uri serverUri, string FTPRequestType) {
+
+        try {
+            //Set the file
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
+
+            //Specificy Credentials
+            request.Credentials = new NetworkCredential("newhire@kingland.com", "K1ngl@nD!"); 
+
+            if ( FTPRequestType.Equals("file") ) {
+                request.Method = WebRequestMethods.Ftp.DeleteFile;
+            } else if ( FTPRequestType.Equals("directory") ) {
+                request.Method = WebRequestMethods.Ftp.RemoveDirectory;
+            }
+            
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+            response.Close();
+
+            return true;
+        } 
+           
+        catch (WebException W) {
+            return true;
+        }
+
     }
         
           

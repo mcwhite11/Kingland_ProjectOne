@@ -184,7 +184,7 @@ function updateArea(caller, val, name){
 
     //updateInformation: Remove fields and skip rest of function
     if (val == "Select..." && caller == "updateAdmin") {
-        document.getElementById(name + "Update").innerHTML = " ";
+        document.getElementById("usersUpdate").innerHTML = " ";
     
     //showForm: Blank form and skip rest of function
     }

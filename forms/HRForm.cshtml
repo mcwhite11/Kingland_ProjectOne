@@ -60,10 +60,10 @@
                     //Exclude DO NOT USE
                     if ( @position.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) {
                         //Backfill value
-                        if ( @position.JOBTITLE.ToString().ToUpper().Contains(@bckFill.position) ) {
-                            <text><option value ="@position.JOBTITLE" selected="selected">@position.DSCRIPTN</text>
+                        if ( @position.DSCRIPTN.ToString().Contains(@bckFill.position) ) {
+                            <text><option value ="@position.DSCRIPTN" selected="selected">@position.DSCRIPTN</text>
                         } else {
-                            <text><option value ="@position.JOBTITLE">@position.DSCRIPTN</text>
+                            <text><option value ="@position.DSCRIPTN">@position.DSCRIPTN</text>
                         }
                     }
                 }
@@ -103,10 +103,10 @@
 
                 foreach ( var dept in Departments ) {
                     if ( @dept.DSCRIPTN.ToString().ToUpper().Contains("NOT USE") == false ) {
-                        if ( @dept.DEPRTMNT.ToString().ToUpper().Contains(@bckFill.dept) ) {
-                            <text><option value ="@dept.DEPRTMNT" selected="selected">@dept.DSCRIPTN</text>
+                        if ( @dept.DSCRIPTN.ToString().Contains(@bckFill.dept) ) {
+                            <text><option value ="@dept.DSCRIPTN" selected="selected">@dept.DSCRIPTN</text>
                         } else {
-                            <text><option value ="@dept.DEPRTMNT">@dept.DSCRIPTN</text>
+                            <text><option value ="@dept.DSCRIPTN">@dept.DSCRIPTN</text>
                         }
                     }
                 }
